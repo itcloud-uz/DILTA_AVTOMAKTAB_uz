@@ -33,106 +33,101 @@
 
     <style>
         body {
-            background-color: #f1f5f9;
+            background-color: #f8fafc;
             font-family: 'Inter', sans-serif;
             color: #0f172a;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+            letter-spacing: -0.011em;
         }
 
         .timer-circle {
             transition: stroke-dashoffset 1s linear;
         }
 
-        /* Sharp 3D Card System (No perspective rotation to prevent text blurring) */
+        /* Minimalist Modern Card System */
         .card-3d {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-bottom: 5px solid #94a3b8;
-            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transition: all 0.2s ease-in-out;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .card-3d:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.05);
-            border-bottom: 5px solid #64748b;
+            box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.06);
+            border-color: #cbd5e1;
         }
 
-        /* 3D Physical Push Button Style */
+        /* Minimalist Button System */
         .btn-3d {
-            transition: all 0.1s ease-in-out;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            border-radius: 1rem;
+        }
+
+        .btn-3d:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.08);
         }
 
         .btn-3d:active:not(:disabled) {
-            transform: translateY(2px) !important;
-            border-bottom-width: 1px !important;
+            transform: translateY(0);
         }
 
         .btn-3d-blue {
-            background: linear-gradient(180deg, #3b82f6 0%, #0066cc 100%);
-            border-bottom: 4px solid #004fad;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 4px 6px rgba(0, 102, 204, 0.2);
+            background: #0066cc;
+            border: 1px solid #0052a3;
+            box-shadow: 0 4px 14px rgba(0, 102, 204, 0.25);
             color: white;
         }
 
         .btn-3d-blue:hover:not(:disabled) {
-            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-            border-bottom-color: #1e3a8a;
+            background: #0052a3;
         }
 
-        .btn-3d-blue:active:not(:disabled) {
-            box-shadow: 0 1px 2px rgba(0, 102, 204, 0.1);
-        }
-
-        /* 3D Keypad Button (Pagination) */
+        /* Minimalist Pagination Keys */
         .key-3d {
             position: relative;
             background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-bottom: 3px solid #94a3b8;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
             color: #334155;
-            transition: all 0.1s ease-in-out;
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .key-3d:hover:not(:disabled) {
-            background: #f8fafc;
-            border-color: #94a3b8;
-            border-bottom-color: #64748b;
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
         }
 
         .key-3d:active:not(:disabled) {
-            transform: translateY(2px);
-            border-bottom-width: 1px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+            transform: translateY(0);
         }
 
         .key-3d-active {
-            background: linear-gradient(180deg, #3b82f6 0%, #0066cc 100%) !important;
-            border-color: #005bb7 !important;
-            border-bottom: 3px solid #004fad !important;
+            background: #0066cc !important;
+            border-color: #0052a3 !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3) !important;
         }
 
         .key-3d-correct {
-            background: linear-gradient(180deg, #34d399 0%, #10b981 100%) !important;
+            background: #10b981 !important;
             border-color: #059669 !important;
-            border-bottom: 3px solid #047857 !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
         }
 
         .key-3d-incorrect {
-            background: linear-gradient(180deg, #f87171 0%, #ef4444 100%) !important;
+            background: #ef4444 !important;
             border-color: #dc2626 !important;
-            border-bottom: 3px solid #b91c1c !important;
             color: #ffffff !important;
-            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
         }
 
         /* ==================== DARK THEME RULES ==================== */

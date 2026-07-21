@@ -1472,7 +1472,7 @@
             <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-8">
                 
                 <!-- Controls and Navigation Row -->
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-[#1a2332] p-6 rounded-2xl border border-slate-700/60 shadow-lg">
                     
                     <!-- Timer and Finish button -->
                     <div class="flex items-center gap-6">
@@ -1481,7 +1481,7 @@
                             <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                 <circle 
                                     cx="50" cy="50" r="42" 
-                                    stroke="#e2e8f0" stroke-width="6" 
+                                    stroke="#334155" stroke-width="6" 
                                     fill="transparent" 
                                 />
                                 <circle 
@@ -1493,13 +1493,13 @@
                                     :stroke-dashoffset="dashOffset"
                                 />
                             </svg>
-                            <span class="absolute text-xl font-bold text-slate-800">[[ formattedTime ]]</span>
+                            <span class="absolute text-xl font-bold text-white">[[ formattedTime ]]</span>
                         </div>
 
                         <!-- Terminate Button -->
                         <button 
                             @click="finishTest"
-                            class="px-5 py-3.5 bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-2xl text-xs font-bold uppercase tracking-wider text-gray-600 transition-all border border-transparent hover:border-red-200/60"
+                            class="px-5 py-3.5 bg-slate-800/80 hover:bg-rose-900/60 hover:text-rose-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-rose-700/60"
                         >
                             TESTNI YAKUNLASH
                         </button>
@@ -1512,7 +1512,7 @@
                             <button 
                                 @click="prevQuestion"
                                 :disabled="currentQuestionIndex === 0"
-                                class="w-9 h-9 flex items-center justify-center border border-gray-200 bg-white rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                                class="w-9 h-9 flex items-center justify-center border border-slate-700 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                             >
                                 &laquo;
                             </button>
@@ -1542,7 +1542,7 @@
                             <!-- Next Arrow -->
                             <button 
                                 @click="nextQuestion"
-                                class="w-9 h-9 flex items-center justify-center border border-gray-200 bg-white rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                                class="w-9 h-9 flex items-center justify-center border border-slate-700 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                             >
                                 &raquo;
                             </button>
@@ -1552,29 +1552,29 @@
                 </div>
 
                 <!-- Active Question and Options Area -->
-                <div class="card-3d p-8 rounded-3xl flex flex-col items-center">
+                <div class="bg-[#1a2332] border border-slate-700/60 p-8 rounded-3xl flex flex-col items-center shadow-2xl">
                     
                     <!-- SVG Illustration representation of current question -->
-                    <div class="mb-8 w-full max-w-sm h-48 bg-gray-50/50 rounded-2xl flex items-center justify-center p-6 border border-gray-100/60 shadow-inner question-illustration-container">
+                    <div class="mb-8 w-full max-w-sm h-48 bg-[#0f1728] rounded-2xl flex items-center justify-center p-6 border border-slate-800/80 shadow-inner question-illustration-container">
                         <!-- Dynamic SVG based on question index -->
                         <div v-html="getQuestionIllustration(currentQuestion)"></div>
                     </div>
 
                     <!-- Question Text and Action Buttons -->
                     <div class="flex flex-col items-center gap-4 mb-8 w-full max-w-3xl">
-                        <h2 class="text-xl font-bold text-slate-800 text-center leading-relaxed">
+                        <h2 class="text-xl font-bold text-white text-center leading-relaxed">
                             [[ currentQuestionData.question ]]
                         </h2>
                         <div class="flex flex-wrap items-center justify-center gap-2.5">
                             <button 
                                 @click="readQuestionAloud"
-                                class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-blue-50 text-[#0066cc] hover:bg-blue-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-blue-100 dark:bg-slate-800 dark:text-[#60a5fa] dark:border-slate-700"
+                                class="flex items-center gap-1.5 px-4 py-2 bg-[#223147] hover:bg-[#2c3d59] text-slate-200 rounded-full text-xs font-bold transition-all border border-slate-600/70 shadow-sm"
                             >
                                 🔊 SAVOLNI TINGLASH
                             </button>
                             <button 
                                 @click="openAddQuestionModal"
-                                class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-emerald-200/80 dark:bg-slate-800 dark:text-emerald-400 dark:border-slate-700"
+                                class="flex items-center gap-1.5 px-4 py-2 bg-[#223147] hover:bg-[#2c3d59] text-[#a78bfa] hover:text-white rounded-full text-xs font-bold transition-all border border-slate-600/70 shadow-sm"
                             >
                                 ➕ O'Z SAVOLINGIZNI QO'SHISH
                             </button>
@@ -1588,30 +1588,30 @@
                             :key="opt.id"
                             @click="selectOption(opt.id)"
                             :disabled="userAnswers[currentQuestionId] !== undefined"
-                            class="btn-3d w-full text-left p-5 rounded-2xl transition-all duration-150 group flex items-center justify-between"
+                            class="w-full text-left p-5 rounded-2xl transition-all duration-150 group flex items-center justify-between border"
                             :class="[
                                 userAnswers[currentQuestionId] !== undefined
                                     ? opt.id === currentCorrectOptionId
-                                        ? 'bg-emerald-50 border border-emerald-400 text-emerald-800 font-semibold border-b-[5px] border-b-emerald-600'
+                                        ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200 font-bold'
                                         : userAnswers[currentQuestionId] === opt.id
-                                            ? 'bg-rose-50 border border-rose-400 text-rose-800 font-semibold border-b-[5px] border-b-rose-600'
-                                            : 'bg-gray-50/40 border border-gray-100 text-gray-400 opacity-60 border-b-[2px] border-b-gray-200'
-                                    : 'bg-white border border-gray-200 text-slate-700 hover:bg-gray-50/80 border-b-[5px] border-b-slate-200'
+                                            ? 'bg-rose-950/80 border-rose-500 text-rose-200 font-bold'
+                                            : 'bg-[#151f2d]/50 border-slate-800 text-slate-400 opacity-50'
+                                    : 'bg-[#1e2a3c] border-slate-700/80 text-white hover:bg-[#26364d] hover:border-slate-500'
                             ]"
                         >
-                            <span class="text-sm font-semibold">[[ opt.text ]]</span>
+                            <span class="text-sm font-bold leading-snug pr-4">[[ opt.text ]]</span>
                             <div 
-                                class="w-5 h-5 rounded-full border flex items-center justify-center transition-all"
+                                class="w-5 h-5 shrink-0 rounded-full border flex items-center justify-center transition-all"
                                 :class="[
                                     userAnswers[currentQuestionId] !== undefined
                                         ? opt.id === currentCorrectOptionId
-                                            ? 'border-emerald-500 bg-emerald-500'
+                                            ? 'border-emerald-400 bg-emerald-500'
                                             : userAnswers[currentQuestionId] === opt.id
-                                                ? 'border-rose-500 bg-rose-500'
-                                                : 'border-gray-200 bg-transparent'
+                                                ? 'border-rose-400 bg-rose-500'
+                                                : 'border-slate-700 bg-transparent'
                                         : userAnswers[currentQuestionId] === opt.id
-                                            ? 'border-[#0066cc] bg-[#0066cc]'
-                                            : 'border-gray-300 group-hover:border-gray-400 bg-white'
+                                            ? 'border-blue-400 bg-blue-500'
+                                            : 'border-slate-500/70 group-hover:border-slate-300 bg-transparent'
                                 ]"
                             >
                                 <div v-if="userAnswers[currentQuestionId] === opt.id || (userAnswers[currentQuestionId] !== undefined && opt.id === currentCorrectOptionId)" class="w-2.5 h-2.5 rounded-full bg-white"></div>
@@ -1624,20 +1624,20 @@
                         v-if="audioMessage"
                         class="w-full max-w-2xl mt-6 rounded-2xl p-4 flex items-start gap-3 transition-all"
                         :class="audioMessage.type === 'correct' 
-                            ? 'bg-emerald-50 border border-emerald-300' 
-                            : 'bg-amber-50 border border-amber-300'"
+                            ? 'bg-emerald-950/90 border border-emerald-600' 
+                            : 'bg-amber-950/90 border border-amber-600'"
                     >
                         <span class="text-2xl mt-0.5">🔊</span>
                         <div class="flex flex-col gap-1">
                             <span 
                                 class="text-xs font-bold uppercase tracking-wider"
-                                :class="audioMessage.type === 'correct' ? 'text-emerald-700' : 'text-amber-700'"
+                                :class="audioMessage.type === 'correct' ? 'text-emerald-400' : 'text-amber-400'"
                             >
                                 [[ audioMessage.type === 'correct' ? '✅ TO\'G\'RI JAVOB' : '📖 TO\'G\'RI JAVOB' ]]
                             </span>
                             <p 
                                 class="text-sm font-semibold leading-relaxed"
-                                :class="audioMessage.type === 'correct' ? 'text-emerald-900' : 'text-amber-900'"
+                                :class="audioMessage.type === 'correct' ? 'text-emerald-200' : 'text-amber-200'"
                             >
                                 [[ audioMessage.text ]]
                             </p>

@@ -602,7 +602,7 @@
                         class="w-full text-left px-5 py-5 rounded-xl font-extrabold text-sm flex items-center gap-3 transition-all"
                         :class="activeAdminTab === 'savollar' ? 'bg-[#0066cc] text-white border-b-4 border-b-[#004fad]' : 'bg-transparent text-gray-600 hover:bg-gray-100/70 border-b-2 border-b-transparent'"
                     >
-                        ❓ SAVOLLAR BOSHQARUVI
+                        ➕ TEST QO'SHISH
                     </button>
                     
                     <button 
@@ -1303,12 +1303,12 @@
                         </div>
                     </div>
 
-                <!-- ==================== TAB: SAVOLLAR BOSHQARUVI ==================== -->
+                <!-- ==================== TAB: TEST QO'SHISH ==================== -->
                 <div v-else-if="activeAdminTab === 'savollar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// IMMTIHON SAVOLLARI BOSHQARUVI</h2>
-                            <p class="text-xs text-gray-500 font-mono">Imtihon savollarini boshqarish va yangi savollarni ma'lumotlar bazasiga saqlash</p>
+                            <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// TEST QO'SHISH & BAZA BOSHQARUVI</h2>
+                            <p class="text-xs text-gray-500 font-mono">Yangi imtihon testlarini kiritish va bazadagi savollarni boshqarish</p>
                         </div>
                         <button 
                             @click="openAddQuestionModal"

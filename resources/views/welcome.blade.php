@@ -598,6 +598,14 @@
                     </button>
                     
                     <button 
+                        @click="activeAdminTab = 'savollar'" 
+                        class="w-full text-left px-5 py-5 rounded-xl font-extrabold text-sm flex items-center gap-3 transition-all"
+                        :class="activeAdminTab === 'savollar' ? 'bg-[#0066cc] text-white border-b-4 border-b-[#004fad]' : 'bg-transparent text-gray-600 hover:bg-gray-100/70 border-b-2 border-b-transparent'"
+                    >
+                        ❓ SAVOLLAR BOSHQARUVI
+                    </button>
+                    
+                    <button 
                         @click="activeAdminTab = 'sozlamalar'" 
                         class="w-full text-left px-5 py-5 rounded-xl font-extrabold text-sm flex items-center gap-3 transition-all"
                         :class="activeAdminTab === 'sozlamalar' ? 'bg-[#0066cc] text-white border-b-4 border-b-[#004fad]' : 'bg-transparent text-gray-600 hover:bg-gray-100/70 border-b-2 border-b-transparent'"
@@ -1295,6 +1303,62 @@
                         </div>
                     </div>
 
+                <!-- ==================== TAB: SAVOLLAR BOSHQARUVI ==================== -->
+                <div v-else-if="activeAdminTab === 'savollar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// IMMTIHON SAVOLLARI BOSHQARUVI</h2>
+                            <p class="text-xs text-gray-500 font-mono">Imtihon savollarini boshqarish va yangi savollarni ma'lumotlar bazasiga saqlash</p>
+                        </div>
+                        <button 
+                            @click="openAddQuestionModal"
+                            class="btn-3d px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 border-b-[3px] border-b-emerald-800 flex items-center gap-2 self-start sm:self-auto"
+                        >
+                            ➕ BAZAGA YANGI SAVOL QO'SHISH
+                        </button>
+                    </div>
+
+                    <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between text-xs">
+                        <span class="font-bold text-blue-900">📊 Tizimda joriy yuklangan savollar soni: <strong class="text-blue-600">[[ questions.length ]] ta</strong></span>
+                        <span class="text-[11px] font-mono text-blue-700 font-semibold">WebAssembly SQLite Engine Active ✅</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50 border-b text-gray-500 font-bold uppercase tracking-wider">
+                                    <th class="p-3">ID</th>
+                                    <th class="p-3">Savol matni</th>
+                                    <th class="p-3">To'g'ri javob</th>
+                                    <th class="p-3">Bosqich</th>
+                                    <th class="p-3 text-right">Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-slate-700">
+                                <tr v-for="(q, idx) in questions" :key="q.id" class="hover:bg-slate-50/60 transition-all font-medium">
+                                    <td class="p-3 font-mono font-bold text-gray-400">#[[ q.id ]]</td>
+                                    <td class="p-3 font-semibold text-slate-800 max-w-xs truncate">
+                                        [[ q.translations && q.translations.uz_lat ? q.translations.uz_lat.question : q.translations?.uz_cyr?.question || 'Savol matni' ]]
+                                    </td>
+                                    <td class="p-3 text-emerald-600 font-bold max-w-xs truncate">
+                                        [[ getCorrectOptionText(q) || 'To\'g\'ri javob variant A' ]]
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-600 border border-blue-100">
+                                            [[ q.level ]]-bosqich
+                                        </span>
+                                    </td>
+                                    <td class="p-3 text-right">
+                                        <button @click="openAddQuestionModal" class="text-xs text-[#0066cc] font-bold hover:underline">
+                                            ✏️ Tahrirlash / Nusxalash
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- ==================== TAB: SOZLAMALAR ==================== -->
                 <div v-else-if="activeAdminTab === 'sozlamalar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left">
                     <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// TIZIM SOZLAMALARI</h2>
@@ -1566,12 +1630,6 @@
                                 class="flex items-center gap-1.5 px-4 py-2 bg-[#223147] hover:bg-[#2c3d59] text-slate-200 rounded-full text-xs font-bold transition-all border border-slate-600/70 shadow-sm"
                             >
                                 🔊 SAVOLNI TINGLASH
-                            </button>
-                            <button 
-                                @click="openAddQuestionModal"
-                                class="flex items-center gap-1.5 px-4 py-2 bg-[#223147] hover:bg-[#2c3d59] text-[#a78bfa] hover:text-white rounded-full text-xs font-bold transition-all border border-slate-600/70 shadow-sm"
-                            >
-                                ➕ O'Z SAVOLINGIZNI QO'SHISH
                             </button>
                         </div>
                     </div>

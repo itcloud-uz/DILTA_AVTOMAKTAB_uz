@@ -252,10 +252,23 @@
         }
 
         .dark-theme code,
-        .dark-theme .bg-gray-200 {
-            background-color: #334155 !important; /* slate-700 background */
-            color: #cbd5e1 !important; /* slate-300 text */
+        .dark-theme .bg-gray-200,
+        .dark-theme .bg-slate-200,
+        .dark-theme .bg-slate-300,
+        .dark-theme .bg-slate-100,
+        .dark-theme .bg-gray-100 {
+            background-color: #334155 !important; /* slate-700 dark background */
+            color: #f8fafc !important; /* white high-contrast text */
             border: 1px solid #475569 !important;
+        }
+
+        .dark-theme .bg-slate-200:hover,
+        .dark-theme .bg-slate-300:hover,
+        .dark-theme .bg-slate-100:hover,
+        .dark-theme .bg-gray-200:hover,
+        .dark-theme .bg-gray-100:hover {
+            background-color: #475569 !important;
+            color: #ffffff !important;
         }
 
         .dark-theme .grade-delete-btn {

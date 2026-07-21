@@ -509,6 +509,44 @@ app.get('/api/v1/questions', (req, res) => {
     }
 });
 
+// Create Question Route
+app.post('/api/v1/questions', (req, res) => {
+    try {
+        const { translations, correct_option_id, level } = req.body;
+        if (!translations || !correct_option_id) {
+            return res.status(422).json({ error: "Bo'sh ma'lumotlar kiritildi" });
+        }
+        const lvl = parseInt(level || 1, 10);
+        const stmt = db.prepare("INSERT INTO questions (translations, correct_option_id, level, created_at, updated_at) VALUES (:tr, :cor, :lvl, datetime('now'), datetime('now'))");
+        stmt.run({
+            ':tr': JSON.stringify(translations),
+            ':cor': correct_option_id,
+            ':lvl': lvl
+        });
+        stmt.free();
+
+        // Save SQLite database file to disk
+        const data = db.export();
+        const buffer = Buffer.from(data);
+        fs.writeFileSync('./database/database.sqlite', buffer);
+
+        // Get last inserted ID
+        const resId = db.exec("SELECT last_insert_rowid() as id")[0].values[0][0];
+
+        res.json({
+            data: {
+                id: resId,
+                translations,
+                correct_option_id,
+                level: lvl
+            }
+        });
+    } catch (e) {
+        console.error("API Create Question Error:", e);
+        res.status(500).json({ error: "Server failed to save question" });
+    }
+});
+
 // Fallback all static assets
 app.use(express.static('./public'));
 

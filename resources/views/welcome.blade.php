@@ -1560,17 +1560,31 @@
                         <div v-html="getQuestionIllustration(currentQuestion)"></div>
                     </div>
 
-                    <!-- Question Text and Speak Button -->
-                    <div class="flex flex-col items-center gap-3 mb-8 w-full max-w-3xl">
+                    <!-- Question Text and Action Buttons -->
+                    <div class="flex flex-col items-center gap-4 mb-8 w-full max-w-3xl">
                         <h2 class="text-xl font-bold text-slate-800 text-center leading-relaxed">
                             [[ currentQuestionData.question ]]
                         </h2>
-                        <button 
-                            @click="readQuestionAloud"
-                            class="btn-3d flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-[#0066cc] hover:bg-blue-100 rounded-xl text-[10px] font-extrabold transition-all shadow-sm border border-blue-100 dark:bg-slate-800 dark:text-[#60a5fa] dark:border-slate-700"
-                        >
-                            🔊 SAVOLNI TINGLASH
-                        </button>
+                        <div class="flex flex-wrap items-center justify-center gap-2.5">
+                            <button 
+                                @click="readQuestionAloud"
+                                class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-blue-50 text-[#0066cc] hover:bg-blue-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-blue-100 dark:bg-slate-800 dark:text-[#60a5fa] dark:border-slate-700"
+                            >
+                                🔊 SAVOLNI TINGLASH
+                            </button>
+                            <button 
+                                @click="openExplanationModal"
+                                class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-amber-50 text-amber-800 hover:bg-amber-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-amber-200/80 dark:bg-slate-800 dark:text-amber-400 dark:border-slate-700"
+                            >
+                                💡 QOIDA / BILIMNI OSHIRISH
+                            </button>
+                            <button 
+                                @click="openAddQuestionModal"
+                                class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-emerald-200/80 dark:bg-slate-800 dark:text-emerald-400 dark:border-slate-700"
+                            >
+                                ➕ O'Z SAVOLINGIZNI QO'SHISH
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Answer Options Stack -->
@@ -1855,6 +1869,159 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- ==================== ADD CUSTOM QUESTION MODAL ==================== -->
+        <div v-if="showAddQuestionModal" class="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <div class="card-3d bg-white rounded-3xl w-full max-w-lg shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
+                <!-- Header -->
+                <div class="p-5 border-b bg-emerald-50 border-emerald-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-inner font-extrabold text-lg">
+                            ➕
+                        </div>
+                        <div class="flex flex-col text-left">
+                            <span class="text-sm font-black text-emerald-900 uppercase">Tizimga Yangi Savol Qo'shish</span>
+                            <span class="text-[10px] font-mono text-emerald-600">// Ma'lumotlar bazasi va onlayn test uchun</span>
+                        </div>
+                    </div>
+                    <button @click="showAddQuestionModal = false" class="w-8 h-8 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 flex items-center justify-center transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+
+                <!-- Body Form -->
+                <div class="p-6 space-y-4 overflow-y-auto max-h-[70vh]">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Savol matni (YHQ qoidasi bo'yicha):</label>
+                        <textarea 
+                            v-model="customQuestionText" 
+                            rows="3"
+                            placeholder="Masalan: Haydovchi qaysi hollarda o'z o'rnini tark etishi yoki transport vositasini qoldirishi mumkin?"
+                            class="w-full p-3 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-slate-800"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-emerald-700 mb-1">Variant A (To'g'ri javob ✅):</label>
+                        <input 
+                            type="text" 
+                            v-model="customOptA" 
+                            placeholder="To'g'ri javob variantini kiriting..."
+                            class="w-full p-3 border border-emerald-300 bg-emerald-50/30 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none font-semibold text-emerald-900"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Variant B (Noto'g'ri javob ❌):</label>
+                        <input 
+                            type="text" 
+                            v-model="customOptB" 
+                            placeholder="Noto'g'ri variant 1..."
+                            class="w-full p-3 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-slate-800"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Variant C (Noto'g'ri javob ❌):</label>
+                        <input 
+                            type="text" 
+                            v-model="customOptC" 
+                            placeholder="Noto'g'ri variant 2..."
+                            class="w-full p-3 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-slate-800"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-amber-700 mb-1">Qoida tushuntirishi / Bilimni oshirish uchun izoh (Optional):</label>
+                        <textarea 
+                            v-model="customExplanation" 
+                            rows="2"
+                            placeholder="YHQ 12.4 bandiga asosan..."
+                            class="w-full p-3 border border-amber-200 bg-amber-50/30 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 outline-none text-slate-800"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Qiyinchilik darajasi:</label>
+                        <select v-model="customLevel" class="w-full p-3 border border-gray-200 rounded-xl text-xs focus:ring-2 focus:ring-emerald-500 outline-none text-slate-800">
+                            <option :value="1">1-Bosqich (Boshlang'ich)</option>
+                            <option :value="2">2-Bosqich (O'rta)</option>
+                            <option :value="3">3-Bosqich (Murakkab)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="p-4 bg-gray-50 border-t flex items-center justify-end gap-3">
+                    <button 
+                        @click="showAddQuestionModal = false"
+                        class="px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                    >
+                        BEKOR QILISH
+                    </button>
+                    <button 
+                        @click="handleSaveCustomQuestion"
+                        :disabled="isSubmittingCustomQuestion"
+                        class="btn-3d px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black transition-all shadow-md shadow-emerald-500/20 border-b-[3px] border-b-emerald-800 disabled:opacity-50"
+                    >
+                        <span v-if="!isSubmittingCustomQuestion">💾 BAZAGA QO'SHISH VA SAQLASH</span>
+                        <span v-else>SAQLANMOQDA...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== EXPLANATION MODAL ==================== -->
+        <div v-if="showExplanationModal" class="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <div class="card-3d bg-white rounded-3xl w-full max-w-lg shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
+                <!-- Header -->
+                <div class="p-5 border-b bg-amber-50 border-amber-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white shadow-inner font-extrabold text-lg">
+                            💡
+                        </div>
+                        <div class="flex flex-col text-left">
+                            <span class="text-sm font-black text-amber-900 uppercase">Bilimni Oshirish & YHQ Izohi</span>
+                            <span class="text-[10px] font-mono text-amber-600">// Yo'l Harakati Qoidalari bo'yicha tushuntirish</span>
+                        </div>
+                    </div>
+                    <button @click="showExplanationModal = false" class="w-8 h-8 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 flex items-center justify-center transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6 space-y-4 overflow-y-auto max-h-[70vh]">
+                    <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl">
+                        <span class="text-xs font-bold text-blue-900 block mb-1">❓ Hozirgi Savol:</span>
+                        <p class="text-xs text-blue-800 leading-relaxed font-semibold">[[ currentQuestionData.question ]]</p>
+                    </div>
+
+                    <div class="p-4 bg-amber-50/60 border border-amber-200/80 rounded-2xl space-y-2">
+                        <span class="text-xs font-black text-amber-900 block flex items-center gap-1">
+                            📖 YHQ Qoidasi va Rasmiy Izoh:
+                        </span>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            [[ currentQuestion.translations && currentQuestion.translations[currentLang] && currentQuestion.translations[currentLang].explanation ? currentQuestion.translations[currentLang].explanation : "O'zbekiston Respublikasi Yo'l Harakati Qoidalariga muvofiq, haydovchi o'z o'rnini tark etishi yoki transport vositasini qoldirishi oldidan uning o'z-o'zidan harakatlanib ketishi va undan haydovchisiz foydalanishning oldini oluvchi choralarni ko'rishi shart." ]]
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-center">
+                        <span class="text-[11px] font-bold text-emerald-800">✅ To'g'ri javob: [[ getCorrectOptionText(currentQuestion) ]]</span>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="p-4 bg-gray-50 border-t flex justify-end">
+                    <button 
+                        @click="showExplanationModal = false"
+                        class="px-5 py-2 bg-[#0066cc] text-white font-extrabold text-xs rounded-xl shadow-md hover:bg-blue-600 transition-all"
+                    >
+                        TUSHUNDIM (YOPISH)
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -2448,6 +2615,17 @@
                 const showAdminVerifyModal = ref(false);
                 const adminVerifyPasswordInput = ref('');
                 const adminVerifyError = ref('');
+                
+                // Custom question & explanation modal states
+                const showAddQuestionModal = ref(false);
+                const customQuestionText = ref('');
+                const customOptA = ref('');
+                const customOptB = ref('');
+                const customOptC = ref('');
+                const customExplanation = ref('');
+                const customLevel = ref(1);
+                const isSubmittingCustomQuestion = ref(false);
+                const showExplanationModal = ref(false);
                 
                 // Manager Panel states
                 const newStudent = ref({ name: '', class_name: 'A-10', login: '', password: '', subscription_end_date: '2026-08-08' });
@@ -3652,6 +3830,108 @@
                     openPaymentChatForCurrentStudent(studentId);
                 };
 
+                const openAddQuestionModal = () => {
+                    customQuestionText.value = '';
+                    customOptA.value = '';
+                    customOptB.value = '';
+                    customOptC.value = '';
+                    customExplanation.value = '';
+                    customLevel.value = 1;
+                    showAddQuestionModal.value = true;
+                };
+
+                const openExplanationModal = () => {
+                    showExplanationModal.value = true;
+                };
+
+                const getCorrectOptionText = (q) => {
+                    if (!q || !q.translations) return '';
+                    const langData = q.translations[currentLang.value] || q.translations['uz_lat'];
+                    if (!langData || !langData.options) return '';
+                    const correctOpt = langData.options.find(o => o.id === q.correct_option_id);
+                    return correctOpt ? correctOpt.text : '';
+                };
+
+                const handleSaveCustomQuestion = async () => {
+                    if (!customQuestionText.value.trim() || !customOptA.value.trim() || !customOptB.value.trim() || !customOptC.value.trim()) {
+                        alert("Iltimos, savol matni va kamida 3 ta variantni kiriting!");
+                        return;
+                    }
+
+                    isSubmittingCustomQuestion.value = true;
+
+                    const translations = {
+                        uz_lat: {
+                            question: customQuestionText.value.trim(),
+                            options: [
+                                { id: 'a', text: customOptA.value.trim() },
+                                { id: 'b', text: customOptB.value.trim() },
+                                { id: 'c', text: customOptC.value.trim() }
+                            ],
+                            explanation: customExplanation.value.trim() || "Ushbu savol YHQ qoidalariga muvofiq kiritildi."
+                        },
+                        uz_cyr: {
+                            question: customQuestionText.value.trim(),
+                            options: [
+                                { id: 'a', text: customOptA.value.trim() },
+                                { id: 'b', text: customOptB.value.trim() },
+                                { id: 'c', text: customOptC.value.trim() }
+                            ]
+                        },
+                        ru: {
+                            question: customQuestionText.value.trim(),
+                            options: [
+                                { id: 'a', text: customOptA.value.trim() },
+                                { id: 'b', text: customOptB.value.trim() },
+                                { id: 'c', text: customOptC.value.trim() }
+                            ]
+                        },
+                        en: {
+                            question: customQuestionText.value.trim(),
+                            options: [
+                                { id: 'a', text: customOptA.value.trim() },
+                                { id: 'b', text: customOptB.value.trim() },
+                                { id: 'c', text: customOptC.value.trim() }
+                            ]
+                        },
+                        qr: {
+                            question: customQuestionText.value.trim(),
+                            options: [
+                                { id: 'a', text: customOptA.value.trim() },
+                                { id: 'b', text: customOptB.value.trim() },
+                                { id: 'c', text: customOptC.value.trim() }
+                            ]
+                        }
+                    };
+
+                    try {
+                        const response = await fetch('/api/v1/questions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                translations,
+                                correct_option_id: 'a',
+                                level: customLevel.value
+                            })
+                        });
+
+                        const resData = await response.json();
+                        if (response.ok && resData.data) {
+                            const newQ = shuffleQuestionOptions(resData.data);
+                            questions.value.push(newQ);
+                            showAddQuestionModal.value = false;
+                            alert("🎉 Yangi savolingiz ma'lumotlar bazasiga muvaffaqiyatli saqlandi hamda ushbu test ro'yxatiga qo'shildi!");
+                        } else {
+                            alert("Xatolik: " + (resData.error || "Savol saqlanmadi"));
+                        }
+                    } catch (err) {
+                        console.error("Save custom question error:", err);
+                        alert("Server bilan bog'lanishda xatolik yuz berdi!");
+                    } finally {
+                        isSubmittingCustomQuestion.value = false;
+                    }
+                };
+
                 // Computed finance summaries
                 const financeSummary = computed(() => {
                     // Let's calculate total income from transactions
@@ -3873,6 +4153,19 @@
                     handleStudentPanelUnlock,
                     handleLogin,
                     handleLogout,
+                    showAddQuestionModal,
+                    customQuestionText,
+                    customOptA,
+                    customOptB,
+                    customOptC,
+                    customExplanation,
+                    customLevel,
+                    isSubmittingCustomQuestion,
+                    showExplanationModal,
+                    openAddQuestionModal,
+                    openExplanationModal,
+                    getCorrectOptionText,
+                    handleSaveCustomQuestion,
                     t
                 };
             },

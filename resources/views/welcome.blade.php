@@ -2495,11 +2495,11 @@
                 ]);
 
                 const studentsList = ref(JSON.parse(localStorage.getItem('students_list')) || [
-                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: '123' },
-                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: '123' },
-                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: '123' },
-                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: '123' },
-                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: '123' }
+                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: '12345' },
+                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: '12345' },
+                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: '12345' },
+                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: '12345' },
+                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: '12345' }
                 ]);
 
                 // Test attempts tracking state
@@ -3733,6 +3733,12 @@
                 }, { deep: true });
 
                 onMounted(async () => {
+                    studentsList.value.forEach(s => {
+                        if (s.password === '123') {
+                            s.password = '12345';
+                        }
+                    });
+                    localStorage.setItem('students_list', JSON.stringify(studentsList.value));
                     await loadQuestions();
                 });
 

@@ -1573,12 +1573,6 @@
                                 🔊 SAVOLNI TINGLASH
                             </button>
                             <button 
-                                @click="openExplanationModal"
-                                class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-amber-50 text-amber-800 hover:bg-amber-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-amber-200/80 dark:bg-slate-800 dark:text-amber-400 dark:border-slate-700"
-                            >
-                                💡 QOIDA / BILIMNI OSHIRISH
-                            </button>
-                            <button 
                                 @click="openAddQuestionModal"
                                 class="btn-3d flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-xl text-xs font-extrabold transition-all shadow-sm border border-emerald-200/80 dark:bg-slate-800 dark:text-emerald-400 dark:border-slate-700"
                             >

@@ -7,3 +7,87 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Bo'rtib chiqqan tugma/karta uchun */
+.neumorphic-card {
+  background: #E0E5EC;
+  box-shadow: 9px 9px 16px #a3b1c6,
+             -9px -9px 16px #ffffff;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+/* Ichkariga botgan (inset) element uchun */
+.neumorphic-input {
+  background: #E0E5EC;
+  box-shadow: inset 3px 3px 6px #b8b9be,
+              inset -3px -3px 6px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.neumorphic-input:focus {
+  box-shadow: inset 2px 2px 4px #b8b9be,
+              inset -2px -2px 4px #ffffff;
+  outline: none;
+}
+
+/* Dark theme neumorphic elements */
+.dark-theme .neumorphic-card {
+  background: #0f172a;
+  box-shadow: 8px 8px 16px #060a12,
+              -8px -8px 16px #182442;
+}
+
+.dark-theme .neumorphic-input {
+  background: #0f172a;
+  box-shadow: inset 3px 3px 6px #060a12,
+              inset -3px -3px 6px #182442;
+}
+
+.dark-theme .neumorphic-input:focus {
+  box-shadow: inset 2px 2px 4px #060a12,
+              inset -2px -2px 4px #182442;
+}
+
+/* Neumorphic Active Button */
+.btn-neumorphic {
+  background: #E0E5EC;
+  box-shadow: 6px 6px 10px #a3b1c6,
+              -6px -6px 10px #ffffff;
+  border-radius: 12px;
+  font-weight: bold;
+  color: #1e293b;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-neumorphic:hover {
+  color: #0f172a;
+  box-shadow: 3px 3px 6px #a3b1c6,
+              -3px -3px 6px #ffffff;
+}
+
+.btn-neumorphic:active {
+  box-shadow: inset 4px 4px 6px #a3b1c6,
+              inset -4px -4px 6px #ffffff;
+}
+
+/* Dark mode for neumorphic button */
+.dark-theme .btn-neumorphic {
+  background: #0f172a;
+  box-shadow: 6px 6px 10px #060a12,
+              -6px -6px 10px #182442;
+  color: #cbd5e1;
+}
+
+.dark-theme .btn-neumorphic:hover {
+  color: #ffffff;
+  box-shadow: 3px 3px 6px #060a12,
+              -3px -3px 6px #182442;
+}
+
+.dark-theme .btn-neumorphic:active {
+  box-shadow: inset 4px 4px 6px #060a12,
+              inset -4px -4px 6px #182442;
+}

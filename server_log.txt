@@ -1,0 +1,8 @@
+--- SERVER START TIME: Fri 07/17/2026  5:10:49.97 --- 
+Checking php version... 
+'C:\php\php.exe' was blocked by your organization's Device Guard policy.
+Contact your support person for more info.
+ 
+Starting php artisan serve... 
+'C:\php\php.exe' was blocked by your organization's Device Guard policy.
+Contact your support person for more info.

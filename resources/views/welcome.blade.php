@@ -319,6 +319,90 @@
             background-color: #475569 !important; /* slate-600 */
             color: #ffffff !important;
         }
+
+        /* Bo'rtib chiqqan tugma/karta uchun */
+        .neumorphic-card {
+            background: #E0E5EC;
+            box-shadow: 9px 9px 16px #a3b1c6,
+                        -9px -9px 16px #ffffff;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Ichkariga botgan (inset) element uchun */
+        .neumorphic-input {
+            background: #E0E5EC;
+            box-shadow: inset 3px 3px 6px #b8b9be,
+                        inset -3px -3px 6px #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .neumorphic-input:focus {
+            box-shadow: inset 2px 2px 4px #b8b9be,
+                        inset -2px -2px 4px #ffffff;
+            outline: none;
+        }
+
+        /* Dark theme neumorphic elements */
+        .dark-theme .neumorphic-card {
+            background: #0f172a;
+            box-shadow: 8px 8px 16px #060a12,
+                        -8px -8px 16px #182442;
+        }
+
+        .dark-theme .neumorphic-input {
+            background: #0f172a;
+            box-shadow: inset 3px 3px 6px #060a12,
+                        inset -3px -3px 6px #182442;
+        }
+
+        .dark-theme .neumorphic-input:focus {
+            box-shadow: inset 2px 2px 4px #060a12,
+                        inset -2px -2px 4px #182442;
+        }
+
+        /* Neumorphic Active Button */
+        .btn-neumorphic {
+            background: #E0E5EC;
+            box-shadow: 6px 6px 10px #a3b1c6,
+                        -6px -6px 10px #ffffff;
+            border-radius: 12px;
+            font-weight: bold;
+            color: #1e293b;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-neumorphic:hover {
+            color: #0f172a;
+            box-shadow: 3px 3px 6px #a3b1c6,
+                        -3px -3px 6px #ffffff;
+        }
+
+        .btn-neumorphic:active {
+            box-shadow: inset 4px 4px 6px #a3b1c6,
+                        inset -4px -4px 6px #ffffff;
+        }
+
+        /* Dark mode for neumorphic button */
+        .dark-theme .btn-neumorphic {
+            background: #0f172a;
+            box-shadow: 6px 6px 10px #060a12,
+                        -6px -6px 10px #182442;
+            color: #cbd5e1;
+        }
+
+        .dark-theme .btn-neumorphic:hover {
+            color: #ffffff;
+            box-shadow: 3px 3px 6px #060a12,
+                        -3px -3px 6px #182442;
+        }
+
+        .dark-theme .btn-neumorphic:active {
+            box-shadow: inset 4px 4px 6px #060a12,
+                        inset -4px -4px 6px #182442;
+        }
     </style>
 </head>
 <body class="bg-gray-50/50 min-h-screen flex flex-col justify-between">
@@ -383,91 +467,48 @@
         <!-- ==================== MAIN CONTENT ==================== -->
         
         <!-- ==================== LOGIN WORKSPACE ==================== -->
-        <div v-if="!isLoggedIn" class="max-w-md mx-auto my-auto px-4 py-12 flex-grow w-full flex flex-col justify-center items-center">
-            <div class="card-3d p-8 rounded-3xl w-full text-center flex flex-col gap-6 bg-white border border-slate-200 shadow-xl">
-                <div class="w-16 h-16 bg-blue-50 text-[#0066cc] rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-sm border border-blue-100">
+        <div v-if="!isLoggedIn" class="max-w-md mx-auto my-auto px-6 py-12 flex-grow w-full flex flex-col justify-center items-center bg-[#E0E5EC] dark:bg-slate-900 rounded-3xl shadow-2xl transition-all duration-300">
+            <div class="neumorphic-card p-8 w-full text-center flex flex-col gap-6 border-none">
+                <div class="w-16 h-16 neumorphic-input rounded-full flex items-center justify-center text-3xl mx-auto border-none">
                     🔑
                 </div>
                 <div class="space-y-1">
-                    <h2 class="text-2xl font-black text-slate-800 tracking-tight">TIZIMGA KIRISH</h2>
-                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">DELTA_AVTOMAKTAB_UZ PORTALI</p>
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">TIZIMGA KIRISH</h2>
+                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">DELTA_AVTOMAKTAB_UZ PORTALI</p>
                 </div>
                 
-                <!-- Tabs to choose login mode -->
-                <div class="flex border-b border-gray-100 pb-2 gap-2 justify-center">
-                    <button 
-                        @click="loginTab = 'student'; authError = '';"
-                        class="px-4 py-2 text-xs font-extrabold rounded-lg transition-all"
-                        :class="loginTab === 'student' ? 'bg-[#0066cc] text-white shadow-sm' : 'text-gray-400 hover:text-gray-600'"
-                    >
-                        👨‍🎓 O'QUVCHI TIZIMI
-                    </button>
-                    <button 
-                        @click="loginTab = 'admin'; authError = '';"
-                        class="px-4 py-2 text-xs font-extrabold rounded-lg transition-all"
-                        :class="loginTab === 'admin' ? 'bg-[#0066cc] text-white shadow-sm' : 'text-gray-400 hover:text-gray-600'"
-                    >
-                        ⚙️ ADMIN PANEL
-                    </button>
-                </div>
-
-                <!-- 1. Student Panel Unlock Form -->
-                <form v-if="loginTab === 'student'" @submit.prevent="handleStudentPanelUnlock" class="flex flex-col gap-4 text-left">
+                <!-- Unified Login Form -->
+                <form @submit.prevent="handleLogin" class="flex flex-col gap-4 text-left">
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">O'quvchi paneliga kirish paroli</label>
-                        <input 
-                            type="password" 
-                            v-model="studentPanelUnlockPassword" 
-                            placeholder="Parolni kiriting" 
-                            class="p-3 rounded-xl border text-xs bg-slate-50 focus:bg-white text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                            required
-                        />
-                    </div>
-                    
-                    <div v-if="authError" class="p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-xs font-bold text-center">
-                        [[ authError ]]
-                    </div>
-                    
-                    <button 
-                        type="submit"
-                        class="btn-3d w-full py-3 bg-[#0066cc] text-white rounded-xl text-xs font-extrabold shadow-md transition-all border-b-[4px] border-b-[#004fad] hover:bg-blue-600"
-                    >
-                        TIZIMGA KIRISH
-                    </button>
-                </form>
-
-                <!-- 2. Admin Login Form -->
-                <form v-else @submit.prevent="handleLogin" class="flex flex-col gap-4 text-left">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Admin Login (Foydalanuvchi nomi)</label>
+                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Foydalanuvchi nomi (Login)</label>
                         <input 
                             type="text" 
                             v-model="authUsername" 
-                            placeholder="Admin loginini kiriting" 
-                            class="p-3 rounded-xl border text-xs bg-slate-50 focus:bg-white text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            placeholder="Loginni kiriting" 
+                            class="neumorphic-input p-3.5 rounded-xl text-xs text-slate-800 dark:text-slate-100 font-semibold focus:outline-none w-full border-none"
                             required
                         />
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Admin maxfiy paroli</label>
+                        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Maxfiy parol</label>
                         <input 
                             type="password" 
                             v-model="authPassword" 
-                            placeholder="Admin paroloni kiriting" 
-                            class="p-3 rounded-xl border text-xs bg-slate-50 focus:bg-white text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            placeholder="Parolingizni kiriting" 
+                            class="neumorphic-input p-3.5 rounded-xl text-xs text-slate-800 dark:text-slate-100 font-semibold focus:outline-none w-full border-none"
                             required
                         />
                     </div>
                     
-                    <div v-if="authError" class="p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-xs font-bold text-center">
+                    <div v-if="authError" class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-600 dark:text-red-400 text-xs font-bold text-center">
                         [[ authError ]]
                     </div>
                     
                     <button 
                         type="submit"
-                        class="btn-3d w-full py-3 bg-[#0066cc] text-white rounded-xl text-xs font-extrabold shadow-md transition-all border-b-[4px] border-b-[#004fad] hover:bg-blue-600"
+                        class="btn-neumorphic w-full py-3.5 text-xs font-extrabold shadow-md transition-all border-none"
                     >
-                        ADMIN PANELGA KIRISH
+                        TIZIMGA KIRISH
                     </button>
                 </form>
             </div>
@@ -1350,16 +1391,19 @@
                                     <div class="text-[10px] text-gray-400 uppercase font-mono">Guruh: [[ studentsList.find(s => s.id === loggedInStudentId).class_name ]]</div>
                                 </div>
                             </div>
-                            <span class="px-2.5 py-1 rounded-full text-[9px] uppercase"
-                                  :class="getStudentSubscriptionStatusById(loggedInStudentId) === 'Faol' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'">
-                                [[ getStudentSubscriptionStatusById(loggedInStudentId) === 'Faol' ? 'Faol obuna' : 'Obuna tugagan' ]]
+                            <span 
+                                @click="handleObunaButtonClick(loggedInStudentId || selectedStudentId)"
+                                class="px-2.5 py-1 rounded-full text-[9px] uppercase cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-sm font-extrabold"
+                                :title="getStudentSubscriptionStatusById(loggedInStudentId || selectedStudentId) === 'Faol' ? 'Obuna faol' : 'Obunani uzaytirish uchun bosing'"
+                                :class="getStudentSubscriptionStatusById(loggedInStudentId || selectedStudentId) === 'Faol' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800 hover:bg-rose-200'"
+                            >
+                                [[ getStudentSubscriptionStatusById(loggedInStudentId || selectedStudentId) === 'Faol' ? 'Faol obuna' : 'Obuna tugagan (Uzaytirish 🔄)' ]]
                             </span>
                         </div>
                         
                         <div v-else class="flex flex-col gap-2">
                             <select 
                                 v-model="selectedStudentId" 
-                                @change="studentSelectPassword = ''; studentSelectError = '';"
                                 class="w-full p-3 rounded-xl border text-xs bg-white font-semibold text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                             >
                                 <option :value="null">-- O'quvchi profilini tanlang --</option>
@@ -1367,20 +1411,6 @@
                                     [[ s.name ]] ([[ s.class_name ]])
                                 </option>
                             </select>
-
-                            <!-- Student password field -->
-                            <div v-if="selectedStudentId !== null" class="flex flex-col gap-1.5 mt-2">
-                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">O'quvchi maxfiy paroli</label>
-                                <input 
-                                    type="password" 
-                                    v-model="studentSelectPassword" 
-                                    placeholder="Parolingizni kiriting" 
-                                    class="w-full p-3 rounded-xl border text-xs bg-white font-semibold text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                />
-                            </div>
-                            <div v-if="studentSelectError" class="p-2.5 bg-red-50 border border-red-100 rounded-xl text-red-600 text-[10px] font-bold text-center mt-1">
-                                [[ studentSelectError ]]
-                            </div>
                         </div>
                     </div>
 
@@ -1396,6 +1426,12 @@
                             Hurmatli o'quvchi, sizning oylik obuna to'lovi muddati tugaganligi sababli akkauntingiz vaqtincha bloklandi.
                             Test topshirishni davom ettirish uchun to'lovni amalga oshiring. To'lov amalga oshirilishi bilan akkaunt avtomatik ravishda ishga tushadi.
                         </p>
+                        <button 
+                            @click="handleObunaButtonClick(selectedStudentId)"
+                            class="btn-3d w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow-md transition-all border-b-[4px] border-b-emerald-800 flex items-center justify-center gap-2 cursor-pointer mt-1"
+                        >
+                            <span>💳 TO'LOV QILISH VA OBUNANI UZAYTIRISH (+30 KUN)</span>
+                        </button>
                     </div>
 
                     <!-- Exam Start Button (Only visible if active) -->
@@ -2439,23 +2475,23 @@
                     commission: 10
                 });
 
-                const partnersList = ref([
+                const partnersList = ref(JSON.parse(localStorage.getItem('partners_list')) || [
                     { id: 1, name: 'Trans-Avto LLC', phone: '+998 (90) 123-45-67', commission: 15, joined_date: '2026-01-15', status: 'Active' },
                     { id: 2, name: 'YHQ Milliy Maktab', phone: '+998 (94) 987-65-43', commission: 10, joined_date: '2026-03-20', status: 'Active' },
                     { id: 3, name: 'Avto-Drayv Hamkor', phone: '+998 (99) 444-55-66', commission: 12, joined_date: '2026-05-02', status: 'Active' }
                 ]);
 
-                const studentsList = ref([
-                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-10', login: 'alijon', password: '123' },
-                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-05', login: 'madina', password: '123' },
-                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-15', login: 'sardor', password: '123' },
-                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-20', login: 'durdona', password: '123' },
-                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-02', login: 'javohir', password: '123' }
+                const studentsList = ref(JSON.parse(localStorage.getItem('students_list')) || [
+                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: '123' },
+                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: '123' },
+                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: '123' },
+                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: '123' },
+                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: '123' }
                 ]);
 
                 // Test attempts tracking state
                 const selectedReportStudentId = ref(null);
-                const studentTestAttemptsList = ref([
+                const studentTestAttemptsList = ref(JSON.parse(localStorage.getItem('attempts_list')) || [
                     { id: 1, student_id: 1, student_name: 'Alijon Karimov', date: '2026-07-08 11:30', score: 18, total_questions: 20, level: 1, status: 'Yiqildi (18/20)' },
                     { id: 2, student_id: 1, student_name: 'Alijon Karimov', date: '2026-07-08 12:15', score: 20, total_questions: 20, level: 1, status: "O'tdi (20/20)" },
                     { id: 3, student_id: 2, student_name: 'Madina Rustamova', date: '2026-07-07 15:40', score: 15, total_questions: 20, level: 1, status: 'Yiqildi (15/20)' },
@@ -2465,7 +2501,7 @@
                     { id: 7, student_id: 5, student_name: 'Javohir Toshpulatov', date: '2026-07-05 09:30', score: 12, total_questions: 20, level: 1, status: 'Yiqildi (12/20)' }
                 ]);
 
-                const classesList = ref([
+                const classesList = ref(JSON.parse(localStorage.getItem('classes_list')) || [
                     { name: 'A-10', type: 'Yengil avtomobillar (B)' },
                     { name: 'B-12', type: 'Yuk avtomobillari (C)' },
                     { name: 'C-05', type: 'Tirkamalar (E)' }
@@ -2478,7 +2514,7 @@
                     { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0 }
                 ]);
 
-                const financeTransactionsList = ref([
+                const financeTransactionsList = ref(JSON.parse(localStorage.getItem('finance_transactions_list')) || [
                     { id: 1, type: 'kirim', category: 'O\'quvchi to\'lovi (Alijon Karimov)', amount: 800000, date: '2026-07-08 09:15' },
                     { id: 2, type: 'kirim', category: 'O\'quvchi to\'lovi (Sardorbek Olimov)', amount: 800000, date: '2026-07-08 10:30' },
                     { id: 3, type: 'chiqim', category: 'Ofis ijarasi va elektr energiyasi', amount: 1500000, date: '2026-07-07 18:00' },
@@ -2917,15 +2953,6 @@
                     if (loggedInUserType.value !== 'student' && selectedStudentId.value !== null) {
                         const student = studentsList.value.find(s => s.id === selectedStudentId.value);
                         if (student) {
-                            if (!studentSelectPassword.value) {
-                                studentSelectError.value = "O'quvchi maxfiy parolini kiriting!";
-                                return;
-                            }
-                            if (student.password !== studentSelectPassword.value) {
-                                studentSelectError.value = "Kiritilgan o'quvchi paroli noto'g'ri!";
-                                return;
-                            }
-                            // Save selected student ID to loggedInStudentId to log the test attempts correctly
                             loggedInStudentId.value = student.id;
                         }
                     }
@@ -3154,19 +3181,12 @@
                     if (!student) return;
                     
                     student.tuition_status = "To'lagan";
-                    
-                    financeTransactionsList.value.unshift({
-                        id: financeTransactionsList.value.length + 1,
-                        type: 'kirim',
-                        category: `O'quvchi to'lovi (${student.name}) - ${chatSelectedPaymentMethod.value}`,
-                        amount: chatEnteredAmount.value,
-                        date: new Date().toISOString().replace('T', ' ').substring(0, 16)
-                    });
+                    renewStudentSubscription(student.id);
                     
                     chatMessages.value.push({ sender: 'user', text: "Tasdiqlayman" });
                     
                     addBotMessage(
-                        `🎉 Muvaffaqiyatli! ${student.name} uchun ${formatMoney(chatEnteredAmount.value)} miqdoridagi to'lov qabul qilindi. Kassa va moliya balansi muvaffaqiyatli yangilandi.`,
+                        `🎉 Muvaffaqiyatli! ${student.name} uchun ${formatMoney(chatEnteredAmount.value)} miqdoridagi to'lov qabul qilindi. Endi "TEST TOPSHIRISHNI BOSHLAYMIZ" tugmasi orqali imtihon topshirishingiz mumkin!`,
                         'success'
                     );
                 };
@@ -3438,11 +3458,11 @@
                         loggedInStudentId.value = student.id;
                         selectedStudentId.value = student.id;
                         isAdminMode.value = false;
+                        isTestStarted.value = false;
 
-                        if (getStudentSubscriptionStatus(student) === 'Faol') {
-                            loadQuestions().then(() => {
-                                startActualTest();
-                            });
+                        // Check subscription status - if not active, pop up payment assistant!
+                        if (getStudentSubscriptionStatus(student) !== 'Faol') {
+                            openPaymentChatForCurrentStudent(student.id);
                         }
                         return;
                     }
@@ -3567,6 +3587,7 @@
 
                 const getStudentSubscriptionStatus = (student) => {
                     if (!student || !student.subscription_end_date) return 'Muddati tugagan';
+                    if (student.tuition_status === 'Kutilmoqda') return 'Muddati tugagan';
                     const endDate = new Date(student.subscription_end_date);
                     const todayDate = new Date('2026-07-08');
                     return endDate >= todayDate ? 'Faol' : 'Muddati tugagan';
@@ -3604,6 +3625,18 @@
                         amount: 800000,
                         date: new Date().toISOString().replace('T', ' ').substring(0, 16)
                     });
+                };
+
+                const openPaymentChatForCurrentStudent = (studentId) => {
+                    openPaymentChat();
+                    const sId = studentId || loggedInStudentId.value || selectedStudentId.value;
+                    if (sId) {
+                        handleSelectStudentInChat(sId);
+                    }
+                };
+
+                const handleObunaButtonClick = (studentId) => {
+                    openPaymentChatForCurrentStudent(studentId);
                 };
 
                 // Computed finance summaries
@@ -3664,6 +3697,27 @@
                     if (!q || !q.translations) return { question: '', options: [] };
                     return q.translations[lang] || q.translations['uz_lat'] || { question: '', options: [] };
                 };
+
+                // LocalStorage sync watchers
+                watch(studentsList, (newVal) => {
+                    localStorage.setItem('students_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                watch(studentTestAttemptsList, (newVal) => {
+                    localStorage.setItem('attempts_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                watch(classesList, (newVal) => {
+                    localStorage.setItem('classes_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                watch(partnersList, (newVal) => {
+                    localStorage.setItem('partners_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                watch(financeTransactionsList, (newVal) => {
+                    localStorage.setItem('finance_transactions_list', JSON.stringify(newVal));
+                }, { deep: true });
 
                 onMounted(async () => {
                     await loadQuestions();
@@ -3767,6 +3821,7 @@
                     getStudentSubscriptionStatus,
                     getStudentSubscriptionStatusById,
                     renewStudentSubscription,
+                    handleObunaButtonClick,
                     isLoggedIn,
                     loggedInUserType,
                     loggedInStudentId,

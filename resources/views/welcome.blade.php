@@ -642,9 +642,9 @@
                             <span class="text-3xl font-black text-slate-800 my-2">[[ staffList.length ]] ta</span>
                             <span class="text-[10px] text-gray-500 font-semibold">🧑‍🏫 3 xil to'lov modeli</span>
                         </div>
-                        <div class="card-3d p-5 rounded-2xl flex flex-col justify-between border-b-[5px] border-b-amber-500">
+                        <div class="card-3d p-5 rounded-2xl flex flex-col justify-between border-b-[5px] transition-all duration-200" :class="financeSummary.profit >= 0 ? 'border-b-emerald-500' : 'border-b-rose-500'">
                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Kassa Balansi (Net)</span>
-                            <span class="text-3xl font-black text-emerald-600 my-2">[[ formatMoney(financeSummary.profit) ]]</span>
+                            <span class="text-3xl font-black my-2 font-mono" :class="financeSummary.profit >= 0 ? 'text-emerald-600' : 'text-rose-500'">[[ formatMoney(financeSummary.profit) ]]</span>
                             <span class="text-[10px] text-gray-500 font-semibold">💰 Kirim - Chiqim ko'rsatkichi</span>
                         </div>
                     </div>
@@ -665,8 +665,8 @@
                                         <span class="font-bold text-rose-500 font-mono">[[ formatMoney(financeSummary.chiqim) ]]</span>
                                     </div>
                                     <div class="pt-1 flex justify-between items-center text-xs font-extrabold">
-                                        <span class="text-slate-800">Sof Foyda:</span>
-                                        <span class="text-emerald-600 font-mono text-sm">[[ formatMoney(financeSummary.profit) ]]</span>
+                                        <span class="text-slate-800">[[ financeSummary.profit >= 0 ? 'Sof Foyda:' : 'Zarar (Minusda):' ]]</span>
+                                        <span class="font-mono text-sm" :class="financeSummary.profit >= 0 ? 'text-emerald-600' : 'text-rose-500'">[[ formatMoney(financeSummary.profit) ]]</span>
                                     </div>
                                 </div>
                             </div>
@@ -993,10 +993,15 @@
                         </div>
                         <div 
                             @click="openProfitChat"
-                            class="p-4 bg-blue-50 rounded-2xl border border-blue-100 text-center cursor-pointer hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 hover:shadow-sm"
+                            class="p-4 rounded-2xl text-center cursor-pointer hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 hover:shadow-sm"
+                            :class="financeSummary.profit >= 0 
+                                ? 'bg-blue-50 border border-blue-100 text-blue-600' 
+                                : 'bg-red-50 border border-red-100 text-red-600'"
                         >
-                            <span class="text-[10px] font-bold text-blue-600 block uppercase">// NET PROFIT (BOSING)</span>
-                            <span class="text-xl font-bold text-blue-600 font-mono">[[ formatMoney(financeSummary.profit) ]]</span>
+                            <span class="text-[10px] font-bold block uppercase" :class="financeSummary.profit >= 0 ? 'text-blue-600' : 'text-red-500'">
+                                [[ financeSummary.profit >= 0 ? '// NET PROFIT (BOSING)' : '// ZARAR / DEFICIT (BOSING)' ]]
+                            </span>
+                            <span class="text-xl font-bold font-mono">[[ formatMoney(financeSummary.profit) ]]</span>
                         </div>
                     </div>
 
@@ -3981,29 +3986,16 @@
 
                 // Computed finance summaries
                 const financeSummary = computed(() => {
-                    // Let's calculate total income from transactions
-                    let kirim = financeTransactionsList.value
+                    // Calculate total income from transactions (no double counting)
+                    const kirim = financeTransactionsList.value
                         .filter(t => t.type === 'kirim')
                         .reduce((sum, t) => sum + t.amount, 0);
-                        
-                    // Let's add student tuitions as prospective income
-                    studentsList.value.forEach(s => {
-                        if (s.tuition_status === 'To\'lagan') {
-                            kirim += 800000;
-                        }
-                    });
 
-                    // Chiqim (salaries + other expenses)
-                    let staffPayouts = 0;
-                    staffList.value.forEach(t => {
-                        staffPayouts += calculateTeacherSalary(t);
-                    });
-
-                    const expenses = financeTransactionsList.value
+                    // Calculate total expenses from actual transactions (no automatic salary subtraction)
+                    const chiqim = financeTransactionsList.value
                         .filter(t => t.type === 'chiqim')
                         .reduce((sum, t) => sum + t.amount, 0);
 
-                    const chiqim = staffPayouts + expenses;
                     const profit = kirim - chiqim;
 
                     return { kirim, chiqim, profit };

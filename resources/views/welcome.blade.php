@@ -2955,11 +2955,11 @@
                 ]);
 
                 const studentsList = ref(JSON.parse(localStorage.getItem('students_list')) || [
-                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: '12345' },
-                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: '12345' },
-                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: '12345' },
-                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: '12345' },
-                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: '12345' }
+                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: 'alijon_avto#2026' },
+                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: 'madina_avto#2026' },
+                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: 'sardor_avto#2026' },
+                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: 'durdona_avto#2026' },
+                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: 'javohir_avto#2026' }
                 ]);
 
                 // Test attempts tracking state
@@ -2992,10 +2992,10 @@
                 ]);
 
                 const staffList = ref(JSON.parse(localStorage.getItem('staff_list')) || [
-                    { id: 1, name: 'Shavkat Rahmonov', role: 'Katta o\'qituvchi', payment_type: 'percentage', base_salary: 3000000, percentage_rate: 40, students_count: 12, tuition_fee_per_student: 800000, login: 'shavkat', password: '123' },
-                    { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000, login: 'malika', password: '123' },
-                    { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000, login: 'jamshid', password: '123' },
-                    { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0, login: 'nodira', password: '123' }
+                    { id: 1, name: 'Shavkat Rahmonov', role: 'Katta o\'qituvchi', payment_type: 'percentage', base_salary: 3000000, percentage_rate: 40, students_count: 12, tuition_fee_per_student: 800000, login: 'shavkat', password: 'shavkat_avto#2026' },
+                    { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000, login: 'malika', password: 'malika_avto#2026' },
+                    { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000, login: 'jamshid', password: 'jamshid_avto#2026' },
+                    { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0, login: 'nodira', password: 'nodira_avto#2026' }
                 ]);
 
                 const financeTransactionsList = ref(JSON.parse(localStorage.getItem('finance_transactions_list')) || [
@@ -4343,12 +4343,22 @@
                 };
 
                 onMounted(async () => {
+                    // Migrate student passwords to secure format if they are simple defaults
                     studentsList.value.forEach(s => {
-                        if (s.password === '123') {
-                            s.password = '12345';
+                        if (s.password === '123' || s.password === '12345') {
+                            s.password = s.login + '_avto#2026';
                         }
                     });
                     localStorage.setItem('students_list', JSON.stringify(studentsList.value));
+
+                    // Migrate staff/teacher passwords to secure format if they are simple defaults
+                    staffList.value.forEach(t => {
+                        if (t.password === '123' || t.password === '12345') {
+                            t.password = t.login + '_avto#2026';
+                        }
+                    });
+                    localStorage.setItem('staff_list', JSON.stringify(staffList.value));
+
                     await loadQuestions();
                 });
 

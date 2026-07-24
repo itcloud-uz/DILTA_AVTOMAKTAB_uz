@@ -526,7 +526,7 @@
         <template v-else>
         
         <!-- ==================== ADMIN PANEL WORKSPACE ==================== -->
-        <div v-if="isAdminMode" class="max-w-full mx-auto px-4 md:px-8 py-8 flex-grow w-full flex flex-col md:flex-row gap-6">
+        <div v-if="loggedInUserType === 'admin' && isAdminMode" class="max-w-full mx-auto px-4 md:px-8 py-8 flex-grow w-full flex flex-col md:flex-row gap-6">
             
             <!-- Sidebar (Left navigation) -->
             <aside class="w-full md:w-96 flex flex-col gap-3">
@@ -931,6 +931,7 @@
                                     <th class="p-3 text-gray-400 font-bold">TO'LOV MODELI</th>
                                     <th class="p-3 text-gray-400 font-bold">MIQDORI / FOIZI</th>
                                     <th class="p-3 text-gray-400 font-bold">O'QUVCHILARI</th>
+                                    <th class="p-3 text-gray-400 font-bold">TIZIMGA KIRISH (LOGIN/PAROL)</th>
                                     <th class="p-3 text-gray-400 font-bold text-right">HISOB-KITOB TO'LOVI</th>
                                 </tr>
                             </thead>
@@ -960,6 +961,22 @@
                                         <span class="text-[10px] text-gray-400 ml-1">[[ t.payment_type === 'fixed' ? 'UZS' : '%' ]]</span>
                                     </td>
                                     <td class="p-3 font-bold">[[ t.students_count || 0 ]] ta</td>
+                                    <td class="p-3">
+                                        <div class="flex items-center gap-1.5">
+                                            <input 
+                                                v-model="t.login" 
+                                                type="text" 
+                                                placeholder="Login" 
+                                                class="w-20 p-1 border rounded text-xs bg-white text-slate-700 font-semibold" 
+                                            />
+                                            <input 
+                                                v-model="t.password" 
+                                                type="text" 
+                                                placeholder="Parol" 
+                                                class="w-16 p-1 border rounded text-xs bg-white text-slate-700 font-mono" 
+                                            />
+                                        </div>
+                                    </td>
                                     <td class="p-3 text-right font-mono font-extrabold text-slate-800">
                                         [[ formatMoney(calculateTeacherSalary(t)) ]]
                                     </td>
@@ -1403,6 +1420,196 @@
             </main>
         </div>
 
+        <!-- ==================== TEACHER PANEL WORKSPACE ==================== -->
+        <div v-else-if="loggedInUserType === 'teacher'" class="max-w-full mx-auto px-4 md:px-8 py-8 flex-grow w-full flex flex-col md:flex-row gap-6 text-left">
+            
+            <!-- Sidebar (Left navigation) -->
+            <aside class="w-full md:w-96 flex flex-col gap-3">
+                <div class="card-3d p-6 rounded-2xl flex flex-col gap-4 min-h-[500px]">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider px-4 py-1">// O'QITUVCHI PROFILI</span>
+                    
+                    <!-- Profile Card -->
+                    <div class="p-4 bg-slate-50 border rounded-2xl flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-md">
+                                🧑‍🏫
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-black text-slate-800">[[ staffList.find(t => t.id === loggedInTeacherId)?.name ]]</span>
+                                <span class="text-[10px] font-mono text-blue-600 font-bold uppercase">[[ staffList.find(t => t.id === loggedInTeacherId)?.role ]]</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation tabs -->
+                    <div class="flex flex-col gap-2 mt-4">
+                        <button 
+                            @click="activeTeacherTab = 'students'" 
+                            class="w-full text-left px-5 py-4 rounded-xl font-extrabold text-sm flex items-center gap-3 transition-all"
+                            :class="activeTeacherTab === 'students' ? 'bg-[#0066cc] text-white border-b-4 border-b-[#004fad]' : 'bg-transparent text-gray-600 hover:bg-gray-100/70 border-b-2 border-b-transparent'"
+                        >
+                            🎓 O'QUVCHILAR BILIMI
+                        </button>
+                        
+                        <button 
+                            @click="activeTeacherTab = 'feedback'" 
+                            class="w-full text-left px-5 py-4 rounded-xl font-extrabold text-sm flex items-center gap-3 transition-all"
+                            :class="activeTeacherTab === 'feedback' ? 'bg-[#0066cc] text-white border-b-4 border-b-[#004fad]' : 'bg-transparent text-gray-600 hover:bg-gray-100/70 border-b-2 border-b-transparent'"
+                        >
+                            ✍️ TAVSIYALAR BERISH
+                        </button>
+                    </div>
+
+                    <div class="mt-auto p-4 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-800 leading-relaxed font-semibold">
+                        💡 Tizim orqali o'quvchilarning imtihon ko'rsatkichlarini kuzatib borishingiz va qiyinchiliklar bo'yicha tushunchalar yozishingiz mumkin.
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Panel (Right side) -->
+            <main class="flex-grow flex flex-col gap-6">
+                
+                <!-- TAB: STUDENTS PERFORMANCE -->
+                <div v-if="activeTeacherTab === 'students'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 animate-fadeIn">
+                    <div class="border-b pb-4 flex flex-col text-left">
+                        <h2 class="text-base font-black text-slate-800 tracking-tight uppercase">O'quvchilar Bilimi Va Natijalari</h2>
+                        <span class="text-[9px] font-mono text-gray-400 uppercase">// O'quvchilar reytingi, imtihon ko'rsatkichlari va o'rtacha ballari</span>
+                    </div>
+
+                    <div class="overflow-x-auto text-[11px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-gray-400 font-mono border-b pb-2 uppercase text-[9px] tracking-wider">
+                                    <th class="pb-2 font-bold">O'quvchi</th>
+                                    <th class="pb-2 font-bold text-center">Guruh</th>
+                                    <th class="pb-2 font-bold text-center">Topshirgan testlar</th>
+                                    <th class="pb-2 font-bold text-center">O'rtacha ball</th>
+                                    <th class="pb-2 font-bold text-center">Bilim darajasi</th>
+                                    <th class="pb-2 font-bold text-right">Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="s in studentsList" :key="s.id" class="border-b hover:bg-slate-50/50">
+                                    <td class="py-3 font-bold text-slate-700">[[ s.name ]]</td>
+                                    <td class="py-3 text-center text-gray-500 font-mono font-bold">[[ s.class_name ]]</td>
+                                    <td class="py-3 text-center font-mono font-bold text-slate-800">
+                                        [[ studentTestAttemptsList.filter(item => item.student_id === s.id).length ]] marta
+                                    </td>
+                                    <td class="py-3 text-center">
+                                        <span class="px-2 py-0.5 rounded font-mono font-bold text-xs" :class="getAverageScoreClassForStudent(s.id)">
+                                            [[ getAverageScoreForStudent(s.id) ]] / 20
+                                        </span>
+                                    </td>
+                                    <td class="py-3 text-center">
+                                        <span 
+                                            class="px-2.5 py-1 rounded-full text-[9px] font-extrabold shadow-sm"
+                                            :class="[
+                                                parseFloat(getAverageScoreForStudent(s.id)) >= 18 
+                                                    ? 'bg-emerald-100 text-emerald-800' 
+                                                    : parseFloat(getAverageScoreForStudent(s.id)) >= 15 
+                                                        ? 'bg-amber-100 text-amber-800' 
+                                                        : 'bg-rose-100 text-rose-800'
+                                            ]"
+                                        >
+                                            [[ 
+                                                parseFloat(getAverageScoreForStudent(s.id)) >= 18 
+                                                    ? '🏆 A\'lochi' 
+                                                    : parseFloat(getAverageScoreForStudent(s.id)) >= 15 
+                                                        ? '⚡️ O\'rtacha' 
+                                                        : '⚠️ Zaif (Qoniqarsiz)' 
+                                            ]]
+                                        </span>
+                                    </td>
+                                    <td class="py-3 text-right">
+                                        <button 
+                                            @click="selectedFeedbackStudentId = s.id; activeTeacherTab = 'feedback'"
+                                            class="px-2.5 py-1.5 bg-[#0066cc] text-white rounded-lg font-bold text-[9px] transition-all hover:bg-blue-600"
+                                        >
+                                            ✍️ Tushuncha berish
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB: FEEDBACK WRITING -->
+                <div v-else-if="activeTeacherTab === 'feedback'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 animate-fadeIn">
+                    <div class="border-b pb-4 flex flex-col text-left">
+                        <h2 class="text-base font-black text-slate-800 tracking-tight uppercase">O'quvchiga Tavsiya Va Tushuncha Yuborish</h2>
+                        <span class="text-[9px] font-mono text-gray-400 uppercase">// Test savollari yoki amaliy darslar bo'yicha yo'riqnomalar yozish</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs font-semibold">
+                        <!-- Left: Form to submit feedback -->
+                        <div class="p-5 bg-slate-50 border rounded-2xl flex flex-col gap-4">
+                            <span class="font-black text-slate-700 block uppercase tracking-wide">// YANGI TUSHUNCHA YUBORISH</span>
+                            
+                            <div class="flex flex-col gap-1.5 text-left">
+                                <label class="text-gray-500 font-bold">O'quvchini tanlang:</label>
+                                <select v-model="selectedFeedbackStudentId" class="p-2.5 rounded-xl border bg-white font-semibold text-slate-700 text-xs">
+                                    <option v-for="s in studentsList" :key="s.id" :value="s.id">
+                                        [[ s.name ]] ([[ s.class_name ]])
+                                    </option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex flex-col gap-1.5 text-left">
+                                <label class="text-gray-500 font-bold">Tavsiya va Tushuntirish matni:</label>
+                                <textarea 
+                                    v-model="newFeedbackMessage" 
+                                    placeholder="Masalan: Yo'l belgilari va imtihondagi tezlik savollariga ko'proq e'tibor bering..." 
+                                    rows="6"
+                                    class="p-3 rounded-xl border bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-xs animate-none"
+                                ></textarea>
+                            </div>
+                            
+                            <button 
+                                @click="submitFeedbackFromTeacher"
+                                class="w-full py-3 bg-[#0066cc] hover:bg-blue-600 text-white rounded-xl font-bold uppercase transition-all shadow-md mt-2 text-center"
+                            >
+                                🚀 TAVSIYANI YUBORISH
+                            </button>
+                        </div>
+
+                        <!-- Right: Feedback logs/history -->
+                        <div class="flex flex-col gap-4">
+                            <span class="font-black text-slate-700 block uppercase tracking-wide">// YUBORILGAN TAVSIYALAR TARIXI</span>
+                            
+                            <div class="max-h-[350px] overflow-y-auto space-y-2.5 pr-1">
+                                <div v-if="studentFeedbackList.length === 0" class="text-center py-10 text-gray-400 font-semibold">
+                                    Hozircha yuborilgan tavsiyalar mavjud emas.
+                                </div>
+                                <div 
+                                    v-else
+                                    v-for="f in studentFeedbackList" 
+                                    :key="f.id"
+                                    class="p-3 bg-white border border-gray-100 rounded-xl shadow-sm flex flex-col gap-2"
+                                >
+                                    <div class="flex justify-between items-center text-[9px] font-mono text-gray-400">
+                                        <span class="font-bold text-[#0066cc]">🎓 [[ studentsList.find(s => s.id === f.student_id)?.name || 'O\'quvchi' ]]</span>
+                                        <span>[[ f.date ]]</span>
+                                    </div>
+                                    <p class="text-xs text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
+                                    <div class="flex justify-between items-center border-t pt-2 text-[9px] font-mono text-gray-400">
+                                        <span>Yozdi: [[ f.teacher_name ]]</span>
+                                        <button 
+                                            @click="deleteFeedbackByTeacher(f.id)"
+                                            class="text-rose-600 hover:underline font-bold"
+                                        >
+                                            🗑 O'chirish
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
         <!-- ==================== STUDENT WORKSPACE ==================== -->
         <main v-else class="max-w-full mx-auto px-4 md:px-8 py-8 flex-grow w-full flex flex-col items-center">
             
@@ -1488,6 +1695,29 @@
                                     [[ s.name ]] ([[ s.class_name ]])
                                 </option>
                             </select>
+                        </div>
+                    </div>
+
+                    <!-- O'qituvchi Tavsiyalari va Tushunchalari -->
+                    <div 
+                        v-if="(loggedInStudentId || selectedStudentId) !== null && studentFeedbackList.filter(f => f.student_id === (loggedInStudentId || selectedStudentId)).length > 0"
+                        class="w-full p-4 bg-blue-50/70 border border-blue-100 rounded-2xl flex flex-col gap-3 text-left"
+                    >
+                        <div class="flex items-center gap-2 text-blue-800 font-extrabold text-[10px] uppercase tracking-wider font-mono">
+                            <span>🧑‍🏫 O'QITUVCHILARDAN TAVSIYA VA TUSHUNCHALAR</span>
+                        </div>
+                        <div class="space-y-2.5 max-h-[180px] overflow-y-auto pr-1">
+                            <div 
+                                v-for="f in studentFeedbackList.filter(f => f.student_id === (loggedInStudentId || selectedStudentId))"
+                                :key="f.id"
+                                class="p-3 bg-white border border-blue-50 rounded-xl flex flex-col gap-1 shadow-sm"
+                            >
+                                <div class="flex justify-between items-center text-[9px] font-mono text-gray-400">
+                                    <span class="font-bold text-[#0066cc]">[[ f.teacher_name ]]</span>
+                                    <span>[[ f.date ]]</span>
+                                </div>
+                                <p class="text-xs text-slate-700 leading-relaxed font-medium">[[ f.message ]]</p>
+                            </div>
                         </div>
                     </div>
 
@@ -2744,17 +2974,28 @@
                     { id: 7, student_id: 5, student_name: 'Javohir Toshpulatov', date: '2026-07-05 09:30', score: 12, total_questions: 20, level: 1, status: 'Yiqildi (12/20)' }
                 ]);
 
+                // Student Feedback & Suggestions state
+                const studentFeedbackList = ref(JSON.parse(localStorage.getItem('student_feedback_list')) || [
+                    { id: 1, student_id: 1, teacher_name: 'Shavkat Rahmonov', message: 'Nazariya testini topshirishda ko\'proq harakat qiling. Tezlik cheklovlariga oid 5 va 6-savollarga e\'tibor bering. Natijangiz o\'tish baliga yaqin qoldi!', date: '2026-07-08 12:30' },
+                    { id: 2, student_id: 2, teacher_name: 'Malika Sobirova', message: 'Tushunmagan savollaringiz bo\'lsa, bemalol dars davomida so\'rashingiz mumkin. Davomat va amaliyot darslarini yaxshilang.', date: '2026-07-07 16:00' }
+                ]);
+
+                const loggedInTeacherId = ref(null);
+                const activeTeacherTab = ref('students');
+                const selectedFeedbackStudentId = ref(null);
+                const newFeedbackMessage = ref('');
+
                 const classesList = ref(JSON.parse(localStorage.getItem('classes_list')) || [
                     { name: 'A-10', type: 'Yengil avtomobillar (B)' },
                     { name: 'B-12', type: 'Yuk avtomobillari (C)' },
                     { name: 'C-05', type: 'Tirkamalar (E)' }
                 ]);
 
-                const staffList = ref([
-                    { id: 1, name: 'Shavkat Rahmonov', role: 'Katta o\'qituvchi', payment_type: 'percentage', base_salary: 3000000, percentage_rate: 40, students_count: 12, tuition_fee_per_student: 800000 },
-                    { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000 },
-                    { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000 },
-                    { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0 }
+                const staffList = ref(JSON.parse(localStorage.getItem('staff_list')) || [
+                    { id: 1, name: 'Shavkat Rahmonov', role: 'Katta o\'qituvchi', payment_type: 'percentage', base_salary: 3000000, percentage_rate: 40, students_count: 12, tuition_fee_per_student: 800000, login: 'shavkat', password: '123' },
+                    { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000, login: 'malika', password: '123' },
+                    { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000, login: 'jamshid', password: '123' },
+                    { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0, login: 'nodira', password: '123' }
                 ]);
 
                 const financeTransactionsList = ref(JSON.parse(localStorage.getItem('finance_transactions_list')) || [
@@ -3691,6 +3932,21 @@
                         return;
                     }
 
+                    // Check if it's a teacher login
+                    const teacher = staffList.value.find(
+                        t => t.login && t.login.toLowerCase().trim() === authUsername.value.toLowerCase().trim() && t.password === authPassword.value
+                    );
+
+                    if (teacher) {
+                        isLoggedIn.value = true;
+                        loggedInUserType.value = 'teacher';
+                        loggedInTeacherId.value = teacher.id;
+                        isAdminMode.value = false;
+                        activeTeacherTab.value = 'students';
+                        selectedFeedbackStudentId.value = studentsList.value.length ? studentsList.value[0].id : null;
+                        return;
+                    }
+
                     const student = studentsList.value.find(
                         s => s.login === authUsername.value.toLowerCase().trim() && s.password === authPassword.value
                     );
@@ -4051,6 +4307,41 @@
                     localStorage.setItem('finance_transactions_list', JSON.stringify(newVal));
                 }, { deep: true });
 
+                watch(staffList, (newVal) => {
+                    localStorage.setItem('staff_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                watch(studentFeedbackList, (newVal) => {
+                    localStorage.setItem('student_feedback_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                const submitFeedbackFromTeacher = () => {
+                    if (!selectedFeedbackStudentId.value || !newFeedbackMessage.value.trim()) {
+                        alert("Iltimos, o'quvchini tanlang va tavsiya matnini kiriting!");
+                        return;
+                    }
+                    const teacher = staffList.value.find(t => t.id === loggedInTeacherId.value);
+                    const teacherName = teacher ? teacher.name : "O'qituvchi";
+                    
+                    const newFeedback = {
+                        id: studentFeedbackList.value.length ? Math.max(...studentFeedbackList.value.map(f => f.id)) + 1 : 1,
+                        student_id: selectedFeedbackStudentId.value,
+                        teacher_name: teacherName,
+                        message: newFeedbackMessage.value.trim(),
+                        date: new Date().toISOString().replace('T', ' ').substring(0, 16)
+                    };
+                    
+                    studentFeedbackList.value.unshift(newFeedback);
+                    newFeedbackMessage.value = '';
+                    alert("Tavsiya o'quvchiga muvaffaqiyatli yuborildi!");
+                };
+
+                const deleteFeedbackByTeacher = (feedbackId) => {
+                    if (confirm("Ushbu tavsiyani o'chirmoqchimisiz?")) {
+                        studentFeedbackList.value = studentFeedbackList.value.filter(f => f.id !== feedbackId);
+                    }
+                };
+
                 onMounted(async () => {
                     studentsList.value.forEach(s => {
                         if (s.password === '123') {
@@ -4062,6 +4353,13 @@
                 });
 
                 return {
+                    studentFeedbackList,
+                    loggedInTeacherId,
+                    activeTeacherTab,
+                    selectedFeedbackStudentId,
+                    newFeedbackMessage,
+                    submitFeedbackFromTeacher,
+                    deleteFeedbackByTeacher,
                     questions,
                     currentLevel,
                     currentQuestionIndex,

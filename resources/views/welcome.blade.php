@@ -3992,6 +3992,13 @@
                 };
 
                 const handleLogout = () => {
+                    try {
+                        if (window.speechSynthesis) {
+                            window.speechSynthesis.cancel();
+                        }
+                    } catch (e) {
+                        console.error("Speech cancel error:", e);
+                    }
                     isLoggedIn.value = false;
                     loggedInUserType.value = '';
                     loggedInStudentId.value = null;

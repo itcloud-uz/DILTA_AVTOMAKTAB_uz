@@ -2955,11 +2955,11 @@
                 ]);
 
                 const studentsList = ref(JSON.parse(localStorage.getItem('students_list')) || [
-                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: 'Alijon_Safe#582' },
-                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: 'Madina_Road$739' },
-                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: 'Sardor_Rules@841' },
-                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: 'Durdona_Class!162' },
-                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: 'Javohir_Sign#304' }
+                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: 'Alj58' },
+                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: 'Mdn73' },
+                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: 'Srd84' },
+                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: 'Drd16' },
+                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: 'Jvh30' }
                 ]);
 
                 // Test attempts tracking state
@@ -2992,10 +2992,10 @@
                 ]);
 
                 const staffList = ref(JSON.parse(localStorage.getItem('staff_list')) || [
-                    { id: 1, name: 'Shavkat Rahmonov', role: 'Katta o\'qituvchi', payment_type: 'percentage', base_salary: 3000000, percentage_rate: 40, students_count: 12, tuition_fee_per_student: 800000, login: 'shavkat', password: 'Shavkat_Avto#982' },
-                    { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000, login: 'malika', password: 'Malika_Test$471' },
-                    { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000, login: 'jamshid', password: 'Jamshid_Drive@628' },
-                    { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0, login: 'nodira', password: 'Nodira_Kassa!395' }
+                    { id: 1, name: 'Shavkat Rahmonov', role: 'Katta o\'qituvchi', payment_type: 'percentage', base_salary: 3000000, percentage_rate: 40, students_count: 12, tuition_fee_per_student: 800000, login: 'shavkat', password: 'Shv98' },
+                    { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000, login: 'malika', password: 'Mlk47' },
+                    { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000, login: 'jamshid', password: 'Jms62' },
+                    { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0, login: 'nodira', password: 'Ndr39' }
                 ]);
 
                 const financeTransactionsList = ref(JSON.parse(localStorage.getItem('finance_transactions_list')) || [
@@ -4345,22 +4345,22 @@
                 onMounted(async () => {
                     const uniquePasswordsMap = {
                         // Teachers
-                        'shavkat': 'Shavkat_Avto#982',
-                        'malika': 'Malika_Test$471',
-                        'jamshid': 'Jamshid_Drive@628',
-                        'nodira': 'Nodira_Kassa!395',
+                        'shavkat': 'Shv98',
+                        'malika': 'Mlk47',
+                        'jamshid': 'Jms62',
+                        'nodira': 'Ndr39',
                         // Students
-                        'alijon': 'Alijon_Safe#582',
-                        'madina': 'Madina_Road$739',
-                        'sardor': 'Sardor_Rules@841',
-                        'durdona': 'Durdona_Class!162',
-                        'javohir': 'Javohir_Sign#304'
+                        'alijon': 'Alj58',
+                        'madina': 'Mdn73',
+                        'sardor': 'Srd84',
+                        'durdona': 'Drd16',
+                        'javohir': 'Jvh30'
                     };
 
                     // Migrate student passwords to unique format if they are defaults or simple
                     studentsList.value.forEach(s => {
                         const defaultPwd = uniquePasswordsMap[s.login];
-                        if (defaultPwd && (s.password === '123' || s.password === '12345' || s.password.includes('_avto#2026'))) {
+                        if (defaultPwd && (s.password === '123' || s.password === '12345' || s.password.includes('_avto#2026') || s.password.includes('Safe#') || s.password.includes('Road$') || s.password.includes('Rules@') || s.password.includes('Class!') || s.password.includes('Sign#'))) {
                             s.password = defaultPwd;
                         }
                     });
@@ -4369,7 +4369,7 @@
                     // Migrate staff/teacher passwords to unique format if they are defaults or simple
                     staffList.value.forEach(t => {
                         const defaultPwd = uniquePasswordsMap[t.login];
-                        if (defaultPwd && (t.password === '123' || t.password === '12345' || t.password.includes('_avto#2026'))) {
+                        if (defaultPwd && (t.password === '123' || t.password === '12345' || t.password.includes('_avto#2026') || t.password.includes('Avto#') || t.password.includes('Test$') || t.password.includes('Drive@') || t.password.includes('Kassa!'))) {
                             t.password = defaultPwd;
                         }
                     });

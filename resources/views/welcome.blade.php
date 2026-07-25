@@ -793,6 +793,7 @@
                                         <th class="p-3 text-gray-400 font-bold">O'QUVCHI ISMI</th>
                                         <th class="p-3 text-gray-400 font-bold">GURUH (SINFI)</th>
                                         <th class="p-3 text-gray-400 font-bold">TO'LOV STATUSI</th>
+                                        <th class="p-3 text-gray-400 font-bold">TIZIMGA KIRISH (LOGIN/PAROL)</th>
                                         <th class="p-3 text-gray-400 font-bold">O'RTACHA BAHOSI</th>
                                     </tr>
                                 </thead>
@@ -804,6 +805,22 @@
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="s.tuition_status === 'To\'lagan' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'">
                                                 [[ s.tuition_status ]]
                                             </span>
+                                        </td>
+                                        <td class="p-3">
+                                            <div class="flex items-center gap-1.5">
+                                                <input 
+                                                    v-model="s.login" 
+                                                    type="text" 
+                                                    placeholder="Login" 
+                                                    class="w-20 p-1 border rounded text-xs bg-white text-slate-700 font-semibold" 
+                                                />
+                                                <input 
+                                                    v-model="s.password" 
+                                                    type="text" 
+                                                    placeholder="Parol" 
+                                                    class="w-24 p-1 border rounded text-xs bg-white text-slate-700 font-mono" 
+                                                />
+                                            </div>
                                         </td>
                                         <td class="p-3 font-mono font-bold text-slate-800">
                                             [[ calculateAverageGrade(s.grades) ]]

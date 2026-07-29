@@ -486,7 +486,7 @@
                 </div>
                 
                 <!-- Unified Login Form -->
-                <form @submit.prevent="handleLogin" class="flex flex-col gap-4 text-left">
+                <form @submit.prevent="handleLogin" class="flex flex-col gap-4 text-left" autocomplete="off">
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Foydalanuvchi nomi (Login)</label>
                         <input 
@@ -495,6 +495,7 @@
                             placeholder="Loginni kiriting" 
                             class="neumorphic-input p-3.5 rounded-xl text-xs text-slate-800 dark:text-slate-100 font-semibold focus:outline-none w-full border-none"
                             required
+                            autocomplete="off"
                         />
                     </div>
                     <div class="flex flex-col gap-1.5">
@@ -505,6 +506,7 @@
                             placeholder="Parolingizni kiriting" 
                             class="neumorphic-input p-3.5 rounded-xl text-xs text-slate-800 dark:text-slate-100 font-semibold focus:outline-none w-full border-none"
                             required
+                            autocomplete="new-password"
                         />
                     </div>
                     
@@ -4399,6 +4401,8 @@
                     });
                     localStorage.setItem('staff_list', JSON.stringify(staffList.value));
 
+                    authUsername.value = '';
+                    authPassword.value = '';
                     await loadQuestions();
                 });
 

@@ -2974,11 +2974,18 @@
                 ]);
 
                 const studentsList = ref(JSON.parse(localStorage.getItem('students_list')) || [
-                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'alijon', password: 'Alj58' },
-                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'madina', password: 'Mdn73' },
-                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'sardor', password: 'Srd84' },
-                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'durdona', password: 'Drd16' },
-                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'Kutilmoqda', subscription_end_date: '2026-07-01', login: 'javohir', password: 'Jvh30' }
+                    { id: 1, name: 'Alijon Karimov', class_name: 'A-10', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'alijon', password: 'Alj58' },
+                    { id: 2, name: 'Madina Rustamova', class_name: 'A-10', today_status: 'keldi', grades: [4, 4, 3], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'madina', password: 'Mdn73' },
+                    { id: 3, name: 'Sardorbek Olimov', class_name: 'B-12', today_status: 'kelmadi', grades: [5, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'sardor', password: 'Srd84' },
+                    { id: 4, name: 'Durdona Hakimova', class_name: 'B-12', today_status: 'keldi', grades: [3, 4, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'durdona', password: 'Drd16' },
+                    { id: 5, name: 'Javohir Toshpulatov', class_name: 'C-05', today_status: 'keldi', grades: [2, 3, 3], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'javohir', password: 'Jvh30' },
+                    { id: 6, name: 'Shahzoda Yusupova', class_name: 'A-10', today_status: 'keldi', grades: [5, 5, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'shahzoda', password: 'Shz51' },
+                    { id: 7, name: 'Bekzod Nematov', class_name: 'B-12', today_status: 'keldi', grades: [4, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'bekzod', password: 'Bkz43' },
+                    { id: 8, name: 'Nigora Salaydinova', class_name: 'C-05', today_status: 'keldi', grades: [3, 3, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'nigora', password: 'Ngr92' },
+                    { id: 9, name: 'Otabek Sobirov', class_name: 'A-10', today_status: 'kelmadi', grades: [4, 4, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'otabek', password: 'Otb74' },
+                    { id: 10, name: 'Kamola Tursunova', class_name: 'B-12', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'kamola', password: 'Kml36' },
+                    { id: 11, name: 'Jasur Alimov', class_name: 'C-05', today_status: 'keldi', grades: [4, 3, 3], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'jasur', password: 'Jsr88' },
+                    { id: 12, name: 'Nilufar Qodirova', class_name: 'A-10', today_status: 'keldi', grades: [5, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'nilufar', password: 'Nlf27' }
                 ]);
 
                 // Test attempts tracking state
@@ -4380,8 +4387,34 @@
                         'madina': 'Mdn73',
                         'sardor': 'Srd84',
                         'durdona': 'Drd16',
-                        'javohir': 'Jvh30'
+                        'javohir': 'Jvh30',
+                        'shahzoda': 'Shz51',
+                        'bekzod': 'Bkz43',
+                        'nigora': 'Ngr92',
+                        'otabek': 'Otb74',
+                        'kamola': 'Kml36',
+                        'jasur': 'Jsr88',
+                        'nilufar': 'Nlf27'
                     };
+
+                    // Auto expand default list to 12 mock students if local storage has old 5 student count
+                    if (studentsList.value.length < 12) {
+                        const newMockStudents = [
+                            { id: 6, name: 'Shahzoda Yusupova', class_name: 'A-10', today_status: 'keldi', grades: [5, 5, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'shahzoda', password: 'Shz51' },
+                            { id: 7, name: 'Bekzod Nematov', class_name: 'B-12', today_status: 'keldi', grades: [4, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'bekzod', password: 'Bkz43' },
+                            { id: 8, name: 'Nigora Salaydinova', class_name: 'C-05', today_status: 'keldi', grades: [3, 3, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'nigora', password: 'Ngr92' },
+                            { id: 9, name: 'Otabek Sobirov', class_name: 'A-10', today_status: 'kelmadi', grades: [4, 4, 4], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'otabek', password: 'Otb74' },
+                            { id: 10, name: 'Kamola Tursunova', class_name: 'B-12', today_status: 'keldi', grades: [5, 4, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'kamola', password: 'Kml36' },
+                            { id: 11, name: 'Jasur Alimov', class_name: 'C-05', today_status: 'keldi', grades: [4, 3, 3], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'jasur', password: 'Jsr88' },
+                            { id: 12, name: 'Nilufar Qodirova', class_name: 'A-10', today_status: 'keldi', grades: [5, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'nilufar', password: 'Nlf27' }
+                        ];
+                        
+                        newMockStudents.forEach(newS => {
+                            if (!studentsList.value.some(existingS => existingS.id === newS.id)) {
+                                studentsList.value.push(newS);
+                            }
+                        });
+                    }
 
                     // Migrate student passwords to unique format if they are defaults or simple
                     studentsList.value.forEach(s => {

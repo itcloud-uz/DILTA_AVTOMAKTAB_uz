@@ -1712,11 +1712,11 @@
                     <div class="grid grid-cols-2 gap-4 border-b pb-3 text-xs">
                         <div class="flex flex-col gap-0.5">
                             <span class="text-[10px] font-bold text-gray-400 uppercase">[[ t('start_date') ]]</span>
-                            <span class="font-bold text-slate-700">21.07.2026</span>
+                            <span class="font-bold text-slate-700">[[ studentStartDate(currentStudent) ]]</span>
                         </div>
                         <div class="flex flex-col gap-0.5">
                             <span class="text-[10px] font-bold text-gray-400 uppercase">[[ t('end_date') ]]</span>
-                            <span class="font-bold text-slate-700">08.10.2026</span>
+                            <span class="font-bold text-slate-700">[[ studentEndDate(currentStudent) ]]</span>
                         </div>
                     </div>
  
@@ -3505,6 +3505,24 @@
                     } else {
                         return currentLang.value === 'uz_lat' ? 'Kelmadi' : currentLang.value === 'en' ? 'Absent' : currentLang.value === 'ru' ? 'Отсутствовал' : 'Qaldırdı';
                     }
+                };
+
+                const studentStartDate = (student) => {
+                    if (!student) return '21.07.2026';
+                    if (student.login === 'alijon') return '21.07.2026';
+                    if (student.login === 'madina') return '20.07.2026';
+                    const day = (student.id * 3) % 28 + 1;
+                    const dayStr = day < 10 ? '0' + day : day;
+                    return `${dayStr}.07.2026`;
+                };
+
+                const studentEndDate = (student) => {
+                    if (!student) return '08.10.2026';
+                    if (student.login === 'alijon') return '08.10.2026';
+                    if (student.login === 'madina') return '07.10.2026';
+                    const day = (student.id * 4) % 28 + 1;
+                    const dayStr = day < 10 ? '0' + day : day;
+                    return `${dayStr}.10.2026`;
                 };
 
                 const isDarkMode = ref(localStorage.getItem('theme-dark') === 'true');
@@ -5412,6 +5430,8 @@
                     setLanguage,
                     t,
                     tStatus,
+                    studentStartDate,
+                    studentEndDate,
                     selectOption,
                     readQuestionAloud,
                     gotoQuestion,

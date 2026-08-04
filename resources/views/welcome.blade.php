@@ -2159,13 +2159,22 @@
                     </div>
 
                     <!-- Exam Start Button (Only visible if active) -->
-                    <button 
-                        v-if="selectedStudentId !== null && getStudentSubscriptionStatusById(selectedStudentId) === 'Faol'"
-                        @click="startActualTest" 
-                        class="btn-3d w-full py-4 bg-[#0066cc] text-white rounded-2xl text-base font-extrabold shadow-lg shadow-blue-500/20 transition-all border-b-[5px] border-b-[#004fad] hover:bg-blue-600"
-                    >
-                        [[ t('start_btn') ]]
-                    </button>
+                    <div v-if="selectedStudentId !== null && getStudentSubscriptionStatusById(selectedStudentId) === 'Faol'" class="w-full flex flex-col gap-2">
+                        <button 
+                            @click="startActualTest" 
+                            class="btn-3d w-full py-4 bg-[#0066cc] text-white rounded-2xl text-base font-extrabold shadow-lg shadow-blue-500/20 transition-all border-b-[5px] border-b-[#004fad] hover:bg-blue-600 animate-pulse"
+                        >
+                            [[ t('start_btn') ]]
+                        </button>
+                        
+                        <button 
+                            v-if="loggedInUserType === 'student'"
+                            @click="activeStudentTab = 'dashboard'"
+                            class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition-all border border-slate-200 uppercase tracking-wider flex items-center justify-center gap-1.5"
+                        >
+                            ⬅️ Bosh sahifaga qaytish (Orqaga)
+                        </button>
+                    </div>
                     <div v-else-if="selectedStudentId === null" class="w-full py-4 bg-gray-100 text-gray-400 rounded-2xl text-xs font-bold text-center border border-dashed">
                         Test topshirish uchun yuqoridan profilingizni tanlang
                     </div>
@@ -2208,12 +2217,21 @@
                         </div>
 
                         <!-- Terminate Button -->
-                        <button 
-                            @click="finishTest"
-                            class="px-5 py-3.5 bg-slate-800/80 hover:bg-rose-900/60 hover:text-rose-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-rose-700/60"
-                        >
-                            TESTNI YAKUNLASH
-                        </button>
+                        <div class="flex flex-col gap-2">
+                            <button 
+                                @click="finishTest"
+                                class="px-5 py-3.5 bg-slate-800/80 hover:bg-rose-900/60 hover:text-rose-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-rose-700/60"
+                            >
+                                TESTNI YAKUNLASH
+                            </button>
+                            <button 
+                                v-if="loggedInUserType === 'student'"
+                                @click="if(confirm('Testni to\'xtatib, bosh sahifaga qaytmoqchimisiz?')) resetTest();"
+                                class="px-5 py-2.5 bg-slate-800 text-slate-400 hover:text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border border-slate-700 text-center"
+                            >
+                                ⬅️ CHIQUVCHI (ORQAGA)
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Navigation Pagination Grid -->
@@ -2435,6 +2453,14 @@
                             </button>
                         </div>
                     </template>
+
+                    <button 
+                        v-if="loggedInUserType === 'student'"
+                        @click="resetTest"
+                        class="w-full px-6 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-slate-200 uppercase tracking-wider"
+                    >
+                        ⬅️ Bosh sahifaga qaytish (Orqaga)
+                    </button>
                 </div>
 
                 <!-- Question review list -->

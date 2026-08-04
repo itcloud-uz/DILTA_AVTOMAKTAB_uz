@@ -1833,7 +1833,7 @@
 
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
-                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     ➔ Bosh sahifaga qaytish
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
@@ -1868,7 +1868,7 @@
 
             <!-- STUDENT CLASS SCHEDULE -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'schedule'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
-                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     ➔ Bosh sahifaga qaytish
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
@@ -1901,7 +1901,7 @@
 
             <!-- STUDENT ATTENDANCE HISTORY -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'attendance'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
-                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     ➔ Bosh sahifaga qaytish
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
@@ -1939,7 +1939,7 @@
 
             <!-- STUDENT PENALTIES -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'penalties'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
-                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     ➔ Bosh sahifaga qaytish
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
@@ -2070,6 +2070,13 @@
 
             <!-- Test Welcome Start Screen -->
             <div v-if="!loading && !isTestStarted && (loggedInUserType !== 'student' || activeStudentTab === 'tests')" class="flex-grow flex flex-col items-center justify-center py-12 max-w-xl mx-auto w-full">
+                <button 
+                    v-if="loggedInUserType === 'student'"
+                    @click="activeStudentTab = 'dashboard'" 
+                    class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline animate-fadeIn"
+                >
+                    ➔ Bosh sahifaga qaytish
+                </button>
                 <div class="card-3d p-8 rounded-3xl w-full text-center flex flex-col items-center gap-6">
                     <div class="w-20 h-20 bg-blue-50 text-[#0066cc] rounded-2xl flex items-center justify-center text-4xl shadow-sm border border-blue-100">
                         🏁
@@ -2159,22 +2166,13 @@
                     </div>
 
                     <!-- Exam Start Button (Only visible if active) -->
-                    <div v-if="selectedStudentId !== null && getStudentSubscriptionStatusById(selectedStudentId) === 'Faol'" class="w-full flex flex-col gap-2">
-                        <button 
-                            @click="startActualTest" 
-                            class="btn-3d w-full py-4 bg-[#0066cc] text-white rounded-2xl text-base font-extrabold shadow-lg shadow-blue-500/20 transition-all border-b-[5px] border-b-[#004fad] hover:bg-blue-600 animate-pulse"
-                        >
-                            [[ t('start_btn') ]]
-                        </button>
-                        
-                        <button 
-                            v-if="loggedInUserType === 'student'"
-                            @click="activeStudentTab = 'dashboard'"
-                            class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition-all border border-slate-200 uppercase tracking-wider flex items-center justify-center gap-1.5"
-                        >
-                            ⬅️ Bosh sahifaga qaytish (Orqaga)
-                        </button>
-                    </div>
+                    <button 
+                        v-if="selectedStudentId !== null && getStudentSubscriptionStatusById(selectedStudentId) === 'Faol'"
+                        @click="startActualTest" 
+                        class="btn-3d w-full py-4 bg-[#0066cc] text-white rounded-2xl text-base font-extrabold shadow-lg shadow-blue-500/20 transition-all border-b-[5px] border-b-[#004fad] hover:bg-blue-600 animate-pulse"
+                    >
+                        [[ t('start_btn') ]]
+                    </button>
                     <div v-else-if="selectedStudentId === null" class="w-full py-4 bg-gray-100 text-gray-400 rounded-2xl text-xs font-bold text-center border border-dashed">
                         Test topshirish uchun yuqoridan profilingizni tanlang
                     </div>
@@ -2190,6 +2188,14 @@
 
             <!-- Test Interface -->
             <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-8">
+                <!-- Back Link -->
+                <button 
+                    v-if="loggedInUserType === 'student'"
+                    @click="if(confirm('Testni to\'xtatib, bosh sahifaga qaytmoqchimisiz?')) resetTest();" 
+                    class="self-start text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline"
+                >
+                    ➔ Bosh sahifaga qaytish
+                </button>
                 
                 <!-- Controls and Navigation Row -->
                 <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-[#1a2332] p-6 rounded-2xl border border-slate-700/60 shadow-lg">
@@ -2217,21 +2223,12 @@
                         </div>
 
                         <!-- Terminate Button -->
-                        <div class="flex flex-col gap-2">
-                            <button 
-                                @click="finishTest"
-                                class="px-5 py-3.5 bg-slate-800/80 hover:bg-rose-900/60 hover:text-rose-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-rose-700/60"
-                            >
-                                TESTNI YAKUNLASH
-                            </button>
-                            <button 
-                                v-if="loggedInUserType === 'student'"
-                                @click="if(confirm('Testni to\'xtatib, bosh sahifaga qaytmoqchimisiz?')) resetTest();"
-                                class="px-5 py-2.5 bg-slate-800 text-slate-400 hover:text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border border-slate-700 text-center"
-                            >
-                                ⬅️ CHIQUVCHI (ORQAGA)
-                            </button>
-                        </div>
+                        <button 
+                            @click="finishTest"
+                            class="px-5 py-3.5 bg-slate-800/80 hover:bg-rose-900/60 hover:text-rose-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-rose-700/60"
+                        >
+                            TESTNI YAKUNLASH
+                        </button>
                     </div>
 
                     <!-- Navigation Pagination Grid -->
@@ -2373,6 +2370,14 @@
 
             <!-- Result Summary Screen -->
             <div v-if="!loading && isTestStarted && testFinished" class="w-full max-w-3xl bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center">
+                <!-- Back Link -->
+                <button 
+                    v-if="loggedInUserType === 'student'"
+                    @click="resetTest" 
+                    class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline"
+                >
+                    ➔ Bosh sahifaga qaytish
+                </button>
                 
                 <!-- Pass/Fail Badge -->
                 <div 
@@ -2454,13 +2459,6 @@
                         </div>
                     </template>
 
-                    <button 
-                        v-if="loggedInUserType === 'student'"
-                        @click="resetTest"
-                        class="w-full px-6 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 border border-slate-200 uppercase tracking-wider"
-                    >
-                        ⬅️ Bosh sahifaga qaytish (Orqaga)
-                    </button>
                 </div>
 
                 <!-- Question review list -->

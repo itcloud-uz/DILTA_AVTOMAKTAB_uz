@@ -2670,7 +2670,7 @@
                 
                 <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-inner mx-auto flex items-center justify-center">
                     <img 
-                        :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + currentStudent?.login)" 
+                        :src="qrCodeUrl" 
                         alt="QR Code" 
                         class="w-48 h-48 rounded-xl shadow-sm border border-slate-100"
                     />
@@ -5112,6 +5112,12 @@
                     return { total, present, absent, percent };
                 });
 
+                const qrCodeUrl = computed(() => {
+                    const student = currentStudent.value;
+                    if (!student) return '';
+                    return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + student.login);
+                });
+
                 const studentActivityLogs = ref(JSON.parse(localStorage.getItem('student_activity_logs')) || [
                     { id: 1, student_id: 1, login_time: "2026-07-31 09:12", logout_time: "2026-07-31 11:30" },
                     { id: 2, student_id: 1, login_time: "2026-07-30 14:05", logout_time: "2026-07-30 16:00" },
@@ -5239,6 +5245,7 @@
                     activeStudentTab,
                     selectedLessonId,
                     showQrModal,
+                    qrCodeUrl,
                     currentStudent,
                     triggerPhotoUpload,
                     uploadStudentPhoto,

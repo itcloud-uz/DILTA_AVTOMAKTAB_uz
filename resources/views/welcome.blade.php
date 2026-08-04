@@ -1916,20 +1916,55 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="border-b">
-                                    <td class="py-3 font-mono font-bold text-slate-700">2026-07-28</td>
-                                    <td class="py-3 text-gray-500 font-semibold">Nazariya (Yo'l belgilari)</td>
-                                    <td class="py-3 text-right"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[9px]">Keldi</span></td>
+                                <tr v-for="a in getStudentAttendance(currentStudent?.id)" :key="a.id" class="border-b">
+                                    <td class="py-3 font-mono font-bold text-slate-700">[[ a.date ]]</td>
+                                    <td class="py-3 text-gray-500 font-semibold">[[ a.topic ]]</td>
+                                    <td class="py-3 text-right">
+                                        <span 
+                                            class="px-2 py-0.5 rounded font-bold text-[9px]"
+                                            :class="a.status === 'Keldi' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'"
+                                        >
+                                            [[ a.status ]]
+                                        </span>
+                                    </td>
                                 </tr>
-                                <tr class="border-b">
-                                    <td class="py-3 font-mono font-bold text-slate-700">2026-07-26</td>
-                                    <td class="py-3 text-gray-500 font-semibold">Nazariya (Umumiy qoidalar)</td>
-                                    <td class="py-3 text-right"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[9px]">Keldi</span></td>
+                                <tr v-if="getStudentAttendance(currentStudent?.id).length === 0">
+                                    <td colspan="3" class="py-4 text-center text-gray-400 font-medium">Hozircha davomat tarixi mavjud emas</td>
                                 </tr>
-                                <tr class="border-b">
-                                    <td class="py-3 font-mono font-bold text-slate-700">2026-07-24</td>
-                                    <td class="py-3 text-gray-500 font-semibold">Amaliy mashg'ulot (Avtodrom)</td>
-                                    <td class="py-3 text-right"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-bold text-[9px]">Kelmadi</span></td>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TIZIMGA KIRISH/CHIQISH TARIXI (Activity Logs) -->
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// TIZIMGA KIRISH/CHIQISH TARIXI</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b text-gray-400 font-mono text-[9px] uppercase tracking-wider">
+                                    <th class="pb-2 font-bold">Kirgan vaqti</th>
+                                    <th class="pb-2 font-bold text-right">Chiqib ketgan vaqti</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr 
+                                    v-for="log in studentActivityLogs.filter(l => l.student_id === currentStudent?.id)" 
+                                    :key="log.id" 
+                                    class="border-b"
+                                >
+                                    <td class="py-3 font-mono font-bold text-slate-700">[[ log.login_time ]]</td>
+                                    <td class="py-3 text-right">
+                                        <span 
+                                            class="px-2 py-0.5 rounded font-bold text-[9px]"
+                                            :class="log.logout_time === 'Ayni vaqtda faol' ? 'bg-emerald-100 text-emerald-800 animate-pulse' : 'bg-slate-100 text-slate-500'"
+                                        >
+                                            [[ log.logout_time ]]
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr v-if="studentActivityLogs.filter(l => l.student_id === currentStudent?.id).length === 0">
+                                    <td colspan="2" class="py-4 text-center text-gray-400 font-medium">Hozircha kirish/chiqish tarixi mavjud emas</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -4456,6 +4491,25 @@
                         isTestStarted.value = false;
                         activeStudentTab.value = 'dashboard';
 
+                        // Record login activity log
+                        const now = new Date();
+                        const timeStr = now.toISOString().replace('T', ' ').substring(0, 16);
+                        
+                        studentActivityLogs.value.forEach(log => {
+                            if (log.student_id === student.id && log.logout_time === "Ayni vaqtda faol") {
+                                log.logout_time = timeStr;
+                            }
+                        });
+
+                        const newLog = {
+                            id: studentActivityLogs.value.length + 1,
+                            student_id: student.id,
+                            login_time: timeStr,
+                            logout_time: "Ayni vaqtda faol"
+                        };
+                        studentActivityLogs.value.unshift(newLog);
+                        localStorage.setItem('student_activity_logs', JSON.stringify(studentActivityLogs.value));
+
                         // Check subscription status - if not active, pop up payment assistant!
                         if (getStudentSubscriptionStatus(student) !== 'Faol') {
                             openPaymentChatForCurrentStudent(student.id);
@@ -4489,6 +4543,18 @@
                 };
 
                 const handleLogout = () => {
+                    const studentId = loggedInStudentId.value || selectedStudentId.value;
+                    if (studentId && loggedInUserType.value === 'student') {
+                        const now = new Date();
+                        const timeStr = now.toISOString().replace('T', ' ').substring(0, 16);
+                        
+                        const activeLog = studentActivityLogs.value.find(log => log.student_id === studentId && log.logout_time === "Ayni vaqtda faol");
+                        if (activeLog) {
+                            activeLog.logout_time = timeStr;
+                            localStorage.setItem('student_activity_logs', JSON.stringify(studentActivityLogs.value));
+                        }
+                    }
+
                     try {
                         if (window.speechSynthesis) {
                             window.speechSynthesis.cancel();
@@ -4985,6 +5051,40 @@
                     }
                 };
 
+                const studentAttendanceList = ref(JSON.parse(localStorage.getItem('student_attendance_list')) || [
+                    { id: 1, student_id: 1, date: "2026-07-28", topic: "Nazariya (Yo'l belgilari)", status: "Keldi" },
+                    { id: 2, student_id: 1, date: "2026-07-26", topic: "Nazariya (Umumiy qoidalar)", status: "Keldi" },
+                    { id: 3, student_id: 1, date: "2026-07-24", topic: "Amaliyot (Avtodrom)", status: "Kelmadi" },
+                    { id: 4, student_id: 2, date: "2026-07-28", topic: "Nazariya (Yo'l belgilari)", status: "Keldi" },
+                    { id: 5, student_id: 2, date: "2026-07-26", topic: "Nazariya (Umumiy qoidalar)", status: "Keldi" },
+                    { id: 6, student_id: 3, date: "2026-07-28", topic: "Nazariya (Yo'l belgilari)", status: "Kelmadi" },
+                    { id: 7, student_id: 3, date: "2026-07-26", topic: "Nazariya (Umumiy qoidalar)", status: "Keldi" }
+                ]);
+
+                watch(studentAttendanceList, (newVal) => {
+                    localStorage.setItem('student_attendance_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                const getStudentAttendance = (studentId) => {
+                    const logs = studentAttendanceList.value.filter(a => a.student_id === studentId);
+                    if (logs.length > 0) return logs;
+                    return [
+                        { id: 100 + studentId, student_id: studentId, date: "2026-08-02", topic: "Nazariya (Harakatlanish tartibi)", status: "Keldi" },
+                        { id: 200 + studentId, student_id: studentId, date: "2026-07-31", topic: "Nazariya (Yo'l belgilari)", status: "Keldi" },
+                        { id: 300 + studentId, student_id: studentId, date: "2026-07-29", topic: "Amaliyot (Pedal boshqaruvi)", status: "Keldi" }
+                    ];
+                };
+
+                const studentActivityLogs = ref(JSON.parse(localStorage.getItem('student_activity_logs')) || [
+                    { id: 1, student_id: 1, login_time: "2026-07-31 09:12", logout_time: "2026-07-31 11:30" },
+                    { id: 2, student_id: 1, login_time: "2026-07-30 14:05", logout_time: "2026-07-30 16:00" },
+                    { id: 3, student_id: 2, login_time: "2026-07-31 10:00", logout_time: "2026-07-31 12:15" }
+                ]);
+
+                watch(studentActivityLogs, (newVal) => {
+                    localStorage.setItem('student_activity_logs', JSON.stringify(newVal));
+                }, { deep: true });
+
                 onMounted(async () => {
                     const uniquePasswordsMap = {
                         // Teachers
@@ -5054,6 +5154,9 @@
                 });
 
                 return {
+                    studentAttendanceList,
+                    getStudentAttendance,
+                    studentActivityLogs,
                     studentPenaltiesList,
                     payPenalty,
                     triggerNativeCamera,

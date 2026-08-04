@@ -1944,10 +1944,54 @@
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
                     <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// JARIMALAR STATUSTI</h2>
-                    <div class="p-6 bg-slate-50 border border-slate-100 rounded-3xl text-center flex flex-col items-center gap-3">
+                    
+                    <!-- If no penalties -->
+                    <div 
+                        v-if="studentPenaltiesList.filter(p => p.student_id === currentStudent?.id).length === 0"
+                        class="p-6 bg-slate-50 border border-slate-100 rounded-3xl text-center flex flex-col items-center gap-3"
+                    >
                         <span class="text-4xl">🛡️</span>
                         <h3 class="text-xs font-black text-slate-800">Sizda joriy jarimalar mavjud emas!</h3>
                         <p class="text-[11px] text-gray-500 leading-relaxed font-semibold">Delta Avtomaktabi qoidalariga rioya qiling hamda xavfsiz haydash ko'nikmalarini egallang.</p>
+                    </div>
+
+                    <!-- If has penalties -->
+                    <div v-else class="flex flex-col gap-3">
+                        <div 
+                            v-for="p in studentPenaltiesList.filter(p => p.student_id === currentStudent?.id)" 
+                            :key="p.id"
+                            class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-2 transition-all"
+                        >
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="text-xs font-black text-slate-800 leading-snug">[[ p.title ]]</span>
+                                <span 
+                                    class="px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase"
+                                    :class="p.status === 'To\'langan' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'"
+                                >
+                                    [[ p.status ]]
+                                </span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-mono border-t pt-2 mt-1">
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] uppercase font-bold text-gray-400">Sana</span>
+                                    <span class="font-bold text-slate-600">[[ p.date ]]</span>
+                                </div>
+                                <div class="flex flex-col text-right">
+                                    <span class="text-[9px] uppercase font-bold text-gray-400">Miqdori</span>
+                                    <span class="font-bold text-[#0066cc] text-xs">[[ p.amount.toLocaleString() ]] so'm</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Pay fine button if unpaid -->
+                            <button 
+                                v-if="p.status === 'To\'lanmagan'"
+                                @click="payPenalty(p.id)"
+                                class="w-full py-2.5 bg-[#0066cc] hover:bg-blue-700 active:scale-95 text-white rounded-xl font-bold text-[10px] uppercase transition-all shadow-sm mt-1 text-center"
+                            >
+                                💳 Jarimani to'lash
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4920,6 +4964,27 @@
                     { id: 5, title: "5-dars. Birinchi yordam", desc: "Yo'l-transport hodisasi sodir bo'lganda jabrlanuvchilarga birinchi tibbiy yordam ko'rsatish qoidalari va dori-darmonlarni qo'llash." }
                 ];
 
+                const studentPenaltiesList = ref(JSON.parse(localStorage.getItem('student_penalties_list')) || [
+                    { id: 1, student_id: 1, title: "Nazariy darsga kechikish", amount: 25000, date: "2026-07-25", status: "To'lanmagan" },
+                    { id: 2, student_id: 1, title: "Amaliyotda xavfsizlik kamarini taqmaslik", amount: 35000, date: "2026-07-28", status: "To'langan" },
+                    { id: 3, student_id: 2, title: "Svetoforning taqiqlovchi ishorasida harakatlanish", amount: 50000, date: "2026-07-22", status: "To'lanmagan" },
+                    { id: 4, student_id: 3, title: "Mashg'ulot qoidalarini buzish", amount: 20000, date: "2026-07-29", status: "To'langan" },
+                    { id: 5, student_id: 6, title: "Mashq maydonida tezlikni oshirish", amount: 45000, date: "2026-07-30", status: "To'lanmagan" },
+                    { id: 6, student_id: 7, title: "Nazariy topshiriq topshirmaslik", amount: 15000, date: "2026-07-31", status: "To'lanmagan" }
+                ]);
+
+                watch(studentPenaltiesList, (newVal) => {
+                    localStorage.setItem('student_penalties_list', JSON.stringify(newVal));
+                }, { deep: true });
+
+                const payPenalty = (penaltyId) => {
+                    const penalty = studentPenaltiesList.value.find(p => p.id === penaltyId);
+                    if (penalty) {
+                        penalty.status = "To'langan";
+                        alert("Jarima muvaffaqiyatli to'landi!");
+                    }
+                };
+
                 onMounted(async () => {
                     const uniquePasswordsMap = {
                         // Teachers
@@ -4989,6 +5054,8 @@
                 });
 
                 return {
+                    studentPenaltiesList,
+                    payPenalty,
                     triggerNativeCamera,
                     showPhotoSourceModal,
                     isCameraActive,

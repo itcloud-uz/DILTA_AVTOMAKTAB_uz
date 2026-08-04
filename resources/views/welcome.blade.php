@@ -1670,8 +1670,332 @@
                 <span class="text-sm font-semibold text-gray-500">Test yuklanmoqda...</span>
             </div>
 
+            <!-- STUDENT MOBILE-STYLE DASHBOARD -->
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'dashboard'" class="w-full max-w-md mx-auto flex flex-col gap-6 animate-fadeIn text-left">
+                
+                <!-- Profile Header -->
+                <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-100/80">
+                    <div @click="triggerPhotoUpload" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50">
+                        <img 
+                            v-if="currentStudent?.profile_image" 
+                            :src="currentStudent.profile_image" 
+                            class="w-full h-full object-cover" 
+                        />
+                        <span v-else class="text-3xl">👤</span>
+                        
+                        <!-- Hover Change Photo Overlay -->
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-1">
+                            O'zgartirish
+                        </div>
+                    </div>
+                    <!-- Hidden photo input -->
+                    <input 
+                        type="file" 
+                        id="student-photo-input" 
+                        accept="image/*" 
+                        class="hidden" 
+                        @change="uploadStudentPhoto" 
+                    />
+                    
+                    <div class="flex flex-col">
+                        <h2 class="text-base font-black text-slate-800 tracking-tight leading-tight">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">O'quvchi</span>
+                    </div>
+                </div>
+
+                <!-- Davomat statistikasi card -->
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-4">
+                    <div class="flex flex-col gap-0.5">
+                        <h3 class="text-sm font-black text-slate-800">Davomat statistikasi</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 border-b pb-3 text-xs">
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">Boshlanish sanasi</span>
+                            <span class="font-bold text-slate-700">21.07.2026</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">Tugash sanasi</span>
+                            <span class="font-bold text-slate-700">08.10.2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-center text-xs font-bold text-slate-700">
+                            <span class="text-gray-400 text-[10px] uppercase font-mono">0 dars • 0 chess • 0 qoldirilgan</span>
+                            <span class="text-slate-800">0.0%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- QR Davomat button -->
+                    <button 
+                        @click="showQrModal = true"
+                        class="w-full py-3.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
+                    >
+                        <span>📷</span> QR DAVOMAT
+                    </button>
+                </div>
+
+                <!-- Bo'limlar list -->
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-3">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// Bo'limlar</h3>
+                    
+                    <div class="flex flex-col gap-2">
+                        <!-- Darslar -->
+                        <div 
+                            @click="activeStudentTab = 'lessons'"
+                            class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-base">📖</span>
+                                <span class="text-xs font-bold text-slate-700">Darslar</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                        </div>
+
+                        <!-- Testlar -->
+                        <div 
+                            @click="activeStudentTab = 'tests'"
+                            class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">📝</span>
+                                <span class="text-xs font-bold text-slate-700">Testlar</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                        </div>
+
+                        <!-- Dars jadvali -->
+                        <div 
+                            @click="activeStudentTab = 'schedule'"
+                            class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">📅</span>
+                                <span class="text-xs font-bold text-slate-700">Dars jadvali</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                        </div>
+
+                        <!-- Davomatlar -->
+                        <div 
+                            @click="activeStudentTab = 'attendance'"
+                            class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-base">🕒</span>
+                                <span class="text-xs font-bold text-slate-700">Davomatlar</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                        </div>
+
+                        <!-- Jarimalar -->
+                        <div 
+                            @click="activeStudentTab = 'penalties'"
+                            class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-base">ℹ️</span>
+                                <span class="text-xs font-bold text-slate-700">Jarimalar</span>
+                            </div>
+                            <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- O'qituvchi Tavsiyalari va Tushunchalari -->
+                <div 
+                    v-if="studentFeedbackList.filter(f => f.student_id === currentStudent?.id).length > 0"
+                    class="p-5 bg-blue-50/80 border border-blue-100 rounded-3xl flex flex-col gap-3 text-left shadow-sm"
+                >
+                    <div class="flex items-center gap-2 text-blue-800 font-extrabold text-[10px] uppercase tracking-wider font-mono">
+                        <span>🧑‍🏫 TAVSIYA VA TUSHUNCHALAR</span>
+                    </div>
+                    <div class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
+                        <div 
+                            v-for="f in studentFeedbackList.filter(f => f.student_id === currentStudent?.id)"
+                            :key="f.id"
+                            class="p-3.5 bg-white border border-blue-50 rounded-2xl flex flex-col gap-1.5 shadow-sm"
+                        >
+                            <div class="flex justify-between items-center text-[9px] font-mono text-gray-400">
+                                <span class="font-bold text-[#0066cc]">[[ f.teacher_name ]]</span>
+                                <span>[[ f.date ]]</span>
+                            </div>
+                            <p class="text-xs text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT LESSONS LIST -->
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                    ➔ Bosh sahifaga qaytish
+                </button>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// DARSLAR RO'YXATI</h2>
+                    <div class="flex flex-col gap-3">
+                        <div 
+                            v-for="lesson in lessonsListMock" 
+                            :key="lesson.id"
+                            @click="selectedLessonId = lesson.id"
+                            class="p-4 bg-slate-50 hover:bg-slate-100/70 rounded-2xl border border-slate-100 flex flex-col gap-1 cursor-pointer transition-all"
+                        >
+                            <span class="text-xs font-extrabold text-blue-600 uppercase tracking-wide">[[ lesson.title ]]</span>
+                            <p class="text-[11px] text-gray-500 font-medium line-clamp-2">[[ lesson.desc ]]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lesson Detail Modal -->
+                <div v-if="selectedLessonId !== null" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col gap-4 shadow-2xl text-left border border-slate-100 animate-scaleUp">
+                        <h3 class="text-sm font-black text-[#0066cc] uppercase tracking-wide leading-tight">[[ lessonsListMock.find(l => l.id === selectedLessonId)?.title ]]</h3>
+                        <p class="text-xs text-slate-700 leading-relaxed font-semibold">[[ lessonsListMock.find(l => l.id === selectedLessonId)?.desc ]]</p>
+                        <button 
+                            @click="selectedLessonId = null"
+                            class="w-full py-3 bg-[#0066cc] text-white rounded-2xl text-xs font-bold uppercase tracking-wider mt-2 border-b-4 border-b-blue-800"
+                        >
+                            Yopish
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT CLASS SCHEDULE -->
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'schedule'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                    ➔ Bosh sahifaga qaytish
+                </button>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// DARS JADVALI</h2>
+                    <div class="flex flex-col gap-3 text-xs">
+                        <div class="p-4 bg-blue-50/60 border border-blue-100 rounded-2xl flex flex-col gap-2">
+                            <span class="text-[10px] font-bold text-blue-800 uppercase font-mono">📅 NAZARIY MASHG'ULOTLAR</span>
+                            <div class="flex justify-between items-center text-slate-700 font-bold">
+                                <span>Dushanba, Chorshanba, Juma</span>
+                                <span class="font-mono text-xs">18:00 - 20:00</span>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col gap-2">
+                            <span class="text-[10px] font-bold text-emerald-800 uppercase font-mono">🚗 AMALIY MASHG'ULOTLAR</span>
+                            <div class="flex justify-between items-center text-slate-700 font-bold">
+                                <span>Seshanba, Payshanba</span>
+                                <span class="font-mono text-xs">09:00 - 12:00</span>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 border rounded-2xl flex items-center justify-between">
+                            <div class="flex flex-col gap-0.5">
+                                <span class="text-[9px] text-gray-400 font-bold uppercase">Amaliy yo'riqchi</span>
+                                <span class="font-bold text-slate-700">Jamshid Tojiyev</span>
+                            </div>
+                            <span class="text-xs bg-slate-200 px-2.5 py-1 rounded-full font-bold text-slate-600">B toifa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT ATTENDANCE HISTORY -->
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'attendance'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                    ➔ Bosh sahifaga qaytish
+                </button>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// DAVOMOT TARIXI</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b text-gray-400 font-mono text-[9px] uppercase tracking-wider">
+                                    <th class="pb-2 font-bold">Sana</th>
+                                    <th class="pb-2 font-bold">Dars turi</th>
+                                    <th class="pb-2 font-bold text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="py-3 font-mono font-bold text-slate-700">2026-07-28</td>
+                                    <td class="py-3 text-gray-500 font-semibold">Nazariya (Yo'l belgilari)</td>
+                                    <td class="py-3 text-right"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[9px]">Keldi</span></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-3 font-mono font-bold text-slate-700">2026-07-26</td>
+                                    <td class="py-3 text-gray-500 font-semibold">Nazariya (Umumiy qoidalar)</td>
+                                    <td class="py-3 text-right"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold text-[9px]">Keldi</span></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-3 font-mono font-bold text-slate-700">2026-07-24</td>
+                                    <td class="py-3 text-gray-500 font-semibold">Amaliy mashg'ulot (Avtodrom)</td>
+                                    <td class="py-3 text-right"><span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded font-bold text-[9px]">Kelmadi</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT PENALTIES -->
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'penalties'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-xs font-bold text-[#0066cc] flex items-center gap-1 hover:underline">
+                    ➔ Bosh sahifaga qaytish
+                </button>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// JARIMALAR STATUSTI</h2>
+                    <div class="p-6 bg-slate-50 border border-slate-100 rounded-3xl text-center flex flex-col items-center gap-3">
+                        <span class="text-4xl">🛡️</span>
+                        <h3 class="text-xs font-black text-slate-800">Sizda joriy jarimalar mavjud emas!</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed font-semibold">Delta Avtomaktabi qoidalariga rioya qiling hamda xavfsiz haydash ko'nikmalarini egallang.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR CODE CHECK-IN MODAL -->
+            <div v-if="showQrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col items-center gap-4 shadow-2xl border border-slate-100 animate-scaleUp text-left">
+                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider text-center">QR Davomat Check-In</h3>
+                    
+                    <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-inner mx-auto">
+                        <svg width="180" height="180" viewBox="0 0 100 100">
+                            <rect x="0" y="0" width="30" height="30" fill="#000000" />
+                            <rect x="5" y="5" width="20" height="20" fill="#ffffff" />
+                            <rect x="10" y="10" width="10" height="10" fill="#000000" />
+                            
+                            <rect x="70" y="0" width="30" height="30" fill="#000000" />
+                            <rect x="75" y="5" width="20" height="20" fill="#ffffff" />
+                            <rect x="80" y="10" width="10" height="10" fill="#000000" />
+                            
+                            <rect x="0" y="70" width="30" height="30" fill="#000000" />
+                            <rect x="5" y="75" width="20" height="20" fill="#ffffff" />
+                            <rect x="10" y="80" width="10" height="10" fill="#000000" />
+
+                            <rect x="40" y="40" width="20" height="20" fill="#000000" />
+                            <rect x="45" y="45" width="10" height="10" fill="#ffffff" />
+                            
+                            <rect x="40" y="15" width="10" height="10" fill="#000000" />
+                            <rect x="15" y="40" width="10" height="10" fill="#000000" />
+                            <rect x="75" y="40" width="15" height="15" fill="#000000" />
+                            <rect x="40" y="75" width="15" height="15" fill="#000000" />
+                            <rect x="60" y="60" width="10" height="10" fill="#000000" />
+                            <rect x="10" y="55" width="15" height="10" fill="#000000" />
+                        </svg>
+                    </div>
+                    
+                    <span class="text-[10px] text-gray-400 font-mono font-bold text-center block w-full">STUDENT-ID: [[ currentStudent?.login ]]</span>
+                    
+                    <button 
+                        @click="showQrModal = false"
+                        class="w-full py-3 bg-[#0066cc] text-white rounded-2xl text-xs font-bold uppercase tracking-wider border-b-4 border-b-blue-800"
+                    >
+                        Yopish
+                    </button>
+                </div>
+            </div>
+
             <!-- Test Welcome Start Screen -->
-            <div v-if="!loading && !isTestStarted" class="flex-grow flex flex-col items-center justify-center py-12 max-w-xl mx-auto w-full">
+            <div v-if="!loading && !isTestStarted && (loggedInUserType !== 'student' || activeStudentTab === 'tests')" class="flex-grow flex flex-col items-center justify-center py-12 max-w-xl mx-auto w-full">
                 <div class="card-3d p-8 rounded-3xl w-full text-center flex flex-col items-center gap-6">
                     <div class="w-20 h-20 bg-blue-50 text-[#0066cc] rounded-2xl flex items-center justify-center text-4xl shadow-sm border border-blue-100">
                         🏁
@@ -2909,6 +3233,7 @@
                 });
 
                 const loginTab = ref('student');
+                const activeStudentTab = ref('dashboard');
                 const studentPanelUnlockPassword = ref('');
                 const studentSelectPassword = ref('');
                 const studentSelectError = ref('');
@@ -3453,6 +3778,9 @@
                     testFinished.value = false;
                     reviewFilter.value = 'all';
                     isTestStarted.value = false;
+                    if (loggedInUserType.value === 'student') {
+                        activeStudentTab.value = 'dashboard';
+                    }
                     // Load fresh questions for current level from backend
                     await loadQuestions();
                 };
@@ -3984,6 +4312,7 @@
                         selectedStudentId.value = student.id;
                         isAdminMode.value = false;
                         isTestStarted.value = false;
+                        activeStudentTab.value = 'dashboard';
 
                         // Check subscription status - if not active, pop up payment assistant!
                         if (getStudentSubscriptionStatus(student) !== 'Faol') {
@@ -4375,6 +4704,46 @@
                     }
                 };
 
+                const selectedLessonId = ref(null);
+                const showQrModal = ref(false);
+
+                const currentStudent = computed(() => {
+                    const id = loggedInStudentId.value || selectedStudentId.value;
+                    return studentsList.value.find(s => s.id === id) || null;
+                });
+
+                const triggerPhotoUpload = () => {
+                    const input = document.getElementById('student-photo-input');
+                    if (input) input.click();
+                };
+
+                const uploadStudentPhoto = (event) => {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert("Rasm hajmi juda katta! Iltimos, 2MB dan kichik rasm yuklang.");
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const student = currentStudent.value;
+                        if (student) {
+                            student.profile_image = e.target.result;
+                            localStorage.setItem('students_list', JSON.stringify(studentsList.value));
+                            alert("Rasm muvaffaqiyatli yuklandi!");
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                const lessonsListMock = [
+                    { id: 1, title: "1-dars. Umumiy qoidalar", desc: "Haydovchilar, piyodalar va yo'lovchilarning umumiy majburiyatlari, asosiy tushunchalar hamda atamalar bo'yicha nazariy qo'llanma." },
+                    { id: 2, title: "2-dars. Yo'l belgilari", desc: "Ogohlantiruvchi, imtiyozli, taqiqlovchi, buyuruvchi hamda axborot-ko'rsatkich yo'l belgilarining to'liq tahlili va talablari." },
+                    { id: 3, title: "3-dars. Harakatlanish tartibi", desc: "Chorrahalardan o'tish tartibi, quvib o'tish qoidalari, to'xtash va to'xtab turish qoidalari hamda svetofor ishoralari." },
+                    { id: 4, title: "4-dars. Dars jadvali va amaliyot", desc: "Avtomobilni boshqarish bo'yicha amaliy yo'riqnoma: pedal boshqaruvi, rulni to'g'ri ushlash va manevr qilish." },
+                    { id: 5, title: "5-dars. Birinchi yordam", desc: "Yo'l-transport hodisasi sodir bo'lganda jabrlanuvchilarga birinchi tibbiy yordam ko'rsatish qoidalari va dori-darmonlarni qo'llash." }
+                ];
+
                 onMounted(async () => {
                     const uniquePasswordsMap = {
                         // Teachers
@@ -4444,6 +4813,13 @@
                 });
 
                 return {
+                    activeStudentTab,
+                    selectedLessonId,
+                    showQrModal,
+                    currentStudent,
+                    triggerPhotoUpload,
+                    uploadStudentPhoto,
+                    lessonsListMock,
                     studentFeedbackList,
                     loggedInTeacherId,
                     activeTeacherTab,

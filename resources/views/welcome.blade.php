@@ -2067,8 +2067,15 @@
                     <span class="text-[10px] text-gray-400 font-mono font-bold text-center block w-full">STUDENT-ID: [[ currentStudent?.login ]]</span>
                     
                     <button 
+                        @click="confirmQrAttendanceSim"
+                        class="w-full py-3.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl text-xs font-black uppercase tracking-wider border-b-4 border-b-emerald-800 text-center"
+                    >
+                        📲 Davomatni tasdiqlash
+                    </button>
+                    
+                    <button 
                         @click="showQrModal = false"
-                        class="w-full py-3 bg-[#0066cc] text-white rounded-2xl text-xs font-bold uppercase tracking-wider border-b-4 border-b-blue-800"
+                        class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold uppercase tracking-wider text-center"
                     >
                         Yopish
                     </button>
@@ -5077,6 +5084,37 @@
                     ];
                 };
 
+                const confirmQrAttendanceSim = () => {
+                    const student = currentStudent.value;
+                    if (!student) return;
+                    
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    
+                    const hasToday = studentAttendanceList.value.some(
+                        a => a.student_id === student.id && a.date === todayStr
+                    );
+                    
+                    if (hasToday) {
+                        alert("Siz bugungi dars uchun allaqachon davomatdan o'tgansiz! (Keldi)");
+                        showQrModal.value = false;
+                        return;
+                    }
+                    
+                    const newAttendance = {
+                        id: studentAttendanceList.value.length ? Math.max(...studentAttendanceList.value.map(a => a.id)) + 1 : 1,
+                        student_id: student.id,
+                        date: todayStr,
+                        topic: "Nazariya (Yo'l harakati xavfsizligi)",
+                        status: "Keldi"
+                    };
+                    
+                    studentAttendanceList.value.unshift(newAttendance);
+                    localStorage.setItem('student_attendance_list', JSON.stringify(studentAttendanceList.value));
+                    
+                    alert("🎉 QR-kod muvaffaqiyatli skanerlandi! Bugungi davomatingiz tasdiqlandi ('Keldi' deb yozildi).");
+                    showQrModal.value = false;
+                };
+
                 const currentStudentAttendanceStats = computed(() => {
                     const student = currentStudent.value;
                     if (!student) return { total: 0, present: 0, absent: 0, percent: 0 };
@@ -5169,6 +5207,7 @@
                 });
 
                 return {
+                    confirmQrAttendanceSim,
                     currentStudentAttendanceStats,
                     studentAttendanceList,
                     getStudentAttendance,

@@ -2033,110 +2033,7 @@
                 </div>
             </div>
 
-            <!-- QR CODE CHECK-IN MODAL -->
-            <div v-if="showQrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col items-center gap-4 shadow-2xl border border-slate-100 animate-scaleUp text-left">
-                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider text-center">QR Davomat Check-In</h3>
-                    
-                    <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-inner mx-auto flex items-center justify-center">
-                        <img 
-                            :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + currentStudent?.login)" 
-                            alt="QR Code" 
-                            class="w-48 h-48 rounded-xl shadow-sm border border-slate-100"
-                        />
-                    </div>
-                    
-                    <span class="text-[10px] text-gray-400 font-mono font-bold text-center block w-full">STUDENT-ID: [[ currentStudent?.login ]]</span>
-                    
-                    <button 
-                        @click="confirmQrAttendanceSim"
-                        class="w-full py-3.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl text-xs font-black uppercase tracking-wider border-b-4 border-b-emerald-800 text-center"
-                    >
-                        📲 Davomatni tasdiqlash
-                    </button>
-                    
-                    <button 
-                        @click="showQrModal = false"
-                        class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold uppercase tracking-wider text-center"
-                    >
-                        Yopish
-                    </button>
-                </div>
-            </div>
 
-            <!-- PHOTO SOURCE SELECTION & WEBCAM CAPTURE MODAL -->
-            <div v-if="showPhotoSourceModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col gap-4 shadow-2xl border border-slate-100/80 animate-scaleUp text-left">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider">Profil rasmini o'rnatish</h3>
-                        <button @click="closePhotoSourceModal" class="text-gray-400 hover:text-slate-600 font-bold">✕</button>
-                    </div>
-
-                    <!-- Option 1: Live camera capture panel -->
-                    <div v-if="isCameraActive" class="flex flex-col gap-3">
-                        <div class="relative w-full aspect-square bg-black rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
-                            <!-- added muted to prevent browser autoplay block -->
-                            <video id="webcam-preview" autoplay playsinline muted class="w-full h-full object-cover"></video>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <button 
-                                @click="capturePhoto"
-                                class="w-full py-3 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 border-b-4 border-b-emerald-800 text-center"
-                            >
-                                📸 Suratga tushish
-                            </button>
-                            <div class="flex gap-2">
-                                <button 
-                                    @click="triggerNativeCamera"
-                                    class="flex-1 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl font-bold text-[10px] uppercase transition-all text-center border"
-                                >
-                                    📱 Mobil kamerani ochish
-                                </button>
-                                <button 
-                                    @click="stopWebcam"
-                                    class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-[10px] uppercase transition-all text-center"
-                                >
-                                    Orqaga
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Option 2: Choice Buttons -->
-                    <div v-else class="flex flex-col gap-2 py-2">
-                        <!-- Desktop/Browser Webcam stream -->
-                        <button 
-                            @click="startWebcam"
-                            class="w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-blue-800"
-                        >
-                            📷 Brauzer kamerasidan olish
-                        </button>
-                        <!-- Mobile system native camera fallback -->
-                        <button 
-                            @click="triggerNativeCamera"
-                            class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
-                        >
-                            📱 Telefon kamerasini ochish
-                        </button>
-                        <button 
-                            @click="triggerPhotoUpload"
-                            class="w-full py-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 rounded-2xl font-black text-xs uppercase transition-all flex items-center justify-center gap-2 border-b-4 border-b-slate-300"
-                        >
-                            📁 Qurilmadan rasm yuklash
-                        </button>
-                    </div>
-
-                    <!-- Hidden native camera input utilizing capture attribute -->
-                    <input 
-                        type="file" 
-                        accept="image/*" 
-                        capture="user" 
-                        id="student-native-camera-input" 
-                        class="hidden" 
-                        @change="uploadStudentPhoto" 
-                    />
-                </div>
-            </div>
 
             <!-- Test Welcome Start Screen -->
             <div v-if="!loading && !isTestStarted && (loggedInUserType !== 'student' || activeStudentTab === 'tests')" class="flex-grow flex flex-col items-center justify-center py-12 max-w-xl mx-auto w-full">
@@ -2763,6 +2660,111 @@
                         <span v-else>SAQLANMOQDA...</span>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- ==================== QR CODE CHECK-IN MODAL ==================== -->
+        <div v-if="showQrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+            <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col items-center gap-4 shadow-2xl border border-slate-100 animate-scaleUp text-left">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider text-center">QR Davomat Check-In</h3>
+                
+                <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-inner mx-auto flex items-center justify-center">
+                    <img 
+                        :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + currentStudent?.login)" 
+                        alt="QR Code" 
+                        class="w-48 h-48 rounded-xl shadow-sm border border-slate-100"
+                    />
+                </div>
+                
+                <span class="text-[10px] text-gray-400 font-mono font-bold text-center block w-full">STUDENT-ID: [[ currentStudent?.login ]]</span>
+                
+                <button 
+                    @click="confirmQrAttendanceSim"
+                    class="w-full py-3.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl text-xs font-black uppercase tracking-wider border-b-4 border-b-emerald-800 text-center"
+                >
+                    📲 Davomatni tasdiqlash
+                </button>
+                
+                <button 
+                    @click="showQrModal = false"
+                    class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold uppercase tracking-wider text-center"
+                >
+                    Yopish
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== PHOTO SOURCE SELECTION & WEBCAM CAPTURE MODAL ==================== -->
+        <div v-if="showPhotoSourceModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+            <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col gap-4 shadow-2xl border border-slate-100/80 animate-scaleUp text-left">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider">Profil rasmini o'rnatish</h3>
+                    <button @click="closePhotoSourceModal" class="text-gray-400 hover:text-slate-600 font-bold">✕</button>
+                </div>
+
+                <!-- Option 1: Live camera capture panel -->
+                <div v-if="isCameraActive" class="flex flex-col gap-3">
+                    <div class="relative w-full aspect-square bg-black rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
+                        <!-- added muted to prevent browser autoplay block -->
+                        <video id="webcam-preview" autoplay playsinline muted class="w-full h-full object-cover"></video>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button 
+                            @click="capturePhoto"
+                            class="w-full py-3 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 border-b-4 border-b-emerald-800 text-center"
+                        >
+                            📸 Suratga tushish
+                        </button>
+                        <div class="flex gap-2">
+                            <button 
+                                @click="triggerNativeCamera"
+                                class="flex-1 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl font-bold text-[10px] uppercase transition-all text-center border"
+                            >
+                                📱 Mobil kamerani ochish
+                            </button>
+                            <button 
+                                @click="stopWebcam"
+                                class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-[10px] uppercase transition-all text-center"
+                            >
+                                Orqaga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 2: Choice Buttons -->
+                <div v-else class="flex flex-col gap-2 py-2">
+                    <!-- Desktop/Browser Webcam stream -->
+                    <button 
+                        @click="startWebcam"
+                        class="w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-blue-800"
+                    >
+                        📷 Brauzer kamerasidan olish
+                    </button>
+                    <!-- Mobile system native camera fallback -->
+                    <button 
+                        @click="triggerNativeCamera"
+                        class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
+                    >
+                        📱 Telefon kamerasini ochish
+                    </button>
+                    <button 
+                        @click="triggerPhotoUpload"
+                        class="w-full py-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 rounded-2xl font-black text-xs uppercase transition-all flex items-center justify-center gap-2 border-b-4 border-b-slate-300"
+                    >
+                        📁 Qurilmadan rasm yuklash
+                    </button>
+                </div>
+
+                <!-- Hidden native camera input utilizing capture attribute -->
+                <input 
+                    type="file" 
+                    accept="image/*" 
+                    capture="user" 
+                    id="student-native-camera-input" 
+                    class="hidden" 
+                    @change="uploadStudentPhoto" 
+                />
             </div>
         </div>
 

@@ -2038,30 +2038,12 @@
                 <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col items-center gap-4 shadow-2xl border border-slate-100 animate-scaleUp text-left">
                     <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider text-center">QR Davomat Check-In</h3>
                     
-                    <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-inner mx-auto">
-                        <svg width="180" height="180" viewBox="0 0 100 100">
-                            <rect x="0" y="0" width="30" height="30" fill="#000000" />
-                            <rect x="5" y="5" width="20" height="20" fill="#ffffff" />
-                            <rect x="10" y="10" width="10" height="10" fill="#000000" />
-                            
-                            <rect x="70" y="0" width="30" height="30" fill="#000000" />
-                            <rect x="75" y="5" width="20" height="20" fill="#ffffff" />
-                            <rect x="80" y="10" width="10" height="10" fill="#000000" />
-                            
-                            <rect x="0" y="70" width="30" height="30" fill="#000000" />
-                            <rect x="5" y="75" width="20" height="20" fill="#ffffff" />
-                            <rect x="10" y="80" width="10" height="10" fill="#000000" />
-
-                            <rect x="40" y="40" width="20" height="20" fill="#000000" />
-                            <rect x="45" y="45" width="10" height="10" fill="#ffffff" />
-                            
-                            <rect x="40" y="15" width="10" height="10" fill="#000000" />
-                            <rect x="15" y="40" width="10" height="10" fill="#000000" />
-                            <rect x="75" y="40" width="15" height="15" fill="#000000" />
-                            <rect x="40" y="75" width="15" height="15" fill="#000000" />
-                            <rect x="60" y="60" width="10" height="10" fill="#000000" />
-                            <rect x="10" y="55" width="15" height="10" fill="#000000" />
-                        </svg>
+                    <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-inner mx-auto flex items-center justify-center">
+                        <img 
+                            :src="'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + currentStudent?.login)" 
+                            alt="QR Code" 
+                            class="w-48 h-48 rounded-xl shadow-sm border border-slate-100"
+                        />
                     </div>
                     
                     <span class="text-[10px] text-gray-400 font-mono font-bold text-center block w-full">STUDENT-ID: [[ currentStudent?.login ]]</span>
@@ -5204,6 +5186,36 @@
                     authUsername.value = '';
                     authPassword.value = '';
                     await loadQuestions();
+
+                    // Check for URL check-in parameter from scanned QR code
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const checkinLogin = urlParams.get('checkin');
+                    if (checkinLogin) {
+                        const student = studentsList.value.find(s => s.login === checkinLogin.toLowerCase().trim());
+                        if (student) {
+                            const todayStr = new Date().toISOString().split('T')[0];
+                            const hasToday = studentAttendanceList.value.some(
+                                a => a.student_id === student.id && a.date === todayStr
+                            );
+                            if (!hasToday) {
+                                const newAttendance = {
+                                    id: studentAttendanceList.value.length ? Math.max(...studentAttendanceList.value.map(a => a.id)) + 1 : 1,
+                                    student_id: student.id,
+                                    date: todayStr,
+                                    topic: "Nazariya (Yo'l harakati xavfsizligi)",
+                                    status: "Keldi"
+                                };
+                                studentAttendanceList.value.unshift(newAttendance);
+                                localStorage.setItem('student_attendance_list', JSON.stringify(studentAttendanceList.value));
+                                alert(`🎉 QR skanerlandi! ${student.name} uchun bugungi davomat muvaffaqiyatli tasdiqlandi ('Keldi' deb yozildi).`);
+                            } else {
+                                alert(`${student.name} bugungi darsga allaqachon davomatdan o'tgan.`);
+                            }
+                            // Clean parameters
+                            const cleanUrl = window.location.origin + window.location.pathname;
+                            window.history.replaceState({}, document.title, cleanUrl);
+                        }
+                    }
                 });
 
                 return {

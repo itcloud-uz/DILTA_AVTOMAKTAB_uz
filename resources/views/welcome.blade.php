@@ -1675,7 +1675,7 @@
                 
                 <!-- Profile Header -->
                 <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-100/80">
-                    <div @click="triggerPhotoUpload" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50">
+                    <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50">
                         <img 
                             v-if="currentStudent?.profile_image" 
                             :src="currentStudent.profile_image" 
@@ -1991,6 +1991,53 @@
                     >
                         Yopish
                     </button>
+                </div>
+            </div>
+
+            <!-- PHOTO SOURCE SELECTION & WEBCAM CAPTURE MODAL -->
+            <div v-if="showPhotoSourceModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div class="bg-white p-6 rounded-3xl max-w-sm w-full flex flex-col gap-4 shadow-2xl border border-slate-100/80 animate-scaleUp text-left">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider">Profil rasmini o'rnatish</h3>
+                        <button @click="closePhotoSourceModal" class="text-gray-400 hover:text-slate-600 font-bold">✕</button>
+                    </div>
+
+                    <!-- Option 1: Live camera capture panel -->
+                    <div v-if="isCameraActive" class="flex flex-col gap-3">
+                        <div class="relative w-full aspect-square bg-black rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
+                            <video id="webcam-preview" autoplay playsinline class="w-full h-full object-cover"></video>
+                        </div>
+                        <div class="flex gap-2">
+                            <button 
+                                @click="capturePhoto"
+                                class="flex-1 py-3 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 border-b-4 border-b-emerald-800 text-center"
+                            >
+                                📸 Suratga tushish
+                            </button>
+                            <button 
+                                @click="stopWebcam"
+                                class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs uppercase transition-all"
+                            >
+                                Bekor qilish
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Option 2: Choice Buttons -->
+                    <div v-else class="flex flex-col gap-2 py-2">
+                        <button 
+                            @click="startWebcam"
+                            class="w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-blue-800"
+                        >
+                            📷 Kameradan suratga olish
+                        </button>
+                        <button 
+                            @click="triggerPhotoUpload"
+                            class="w-full py-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 rounded-2xl font-black text-xs uppercase transition-all flex items-center justify-center gap-2 border-b-4 border-b-slate-300"
+                        >
+                            📁 Qurilmadan rasm tanlash
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -4712,6 +4759,70 @@
                     return studentsList.value.find(s => s.id === id) || null;
                 });
 
+                const showPhotoSourceModal = ref(false);
+                const isCameraActive = ref(false);
+                let cameraStream = null;
+
+                const openPhotoSourceModal = () => {
+                    showPhotoSourceModal.value = true;
+                };
+
+                const closePhotoSourceModal = () => {
+                    showPhotoSourceModal.value = false;
+                    stopWebcam();
+                };
+
+                const startWebcam = async () => {
+                    try {
+                        isCameraActive.value = true;
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: 'user', width: 480, height: 480 }
+                        });
+                        cameraStream = stream;
+                        nextTick(() => {
+                            const video = document.getElementById('webcam-preview');
+                            if (video) {
+                                video.srcObject = stream;
+                            }
+                        });
+                    } catch (err) {
+                        console.error("Kameraga ulanishda xatolik:", err);
+                        alert("Kamerani faollashtirib bo'lmadi. Iltimos, kamera ruxsatini tekshiring.");
+                        isCameraActive.value = false;
+                    }
+                };
+
+                const stopWebcam = () => {
+                    if (cameraStream) {
+                        cameraStream.getTracks().forEach(track => track.stop());
+                        cameraStream = null;
+                    }
+                    isCameraActive.value = false;
+                };
+
+                const capturePhoto = () => {
+                    const video = document.getElementById('webcam-preview');
+                    if (!video) return;
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth || 480;
+                    canvas.height = video.videoHeight || 480;
+                    const ctx = canvas.getContext('2d');
+                    
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    
+                    const student = currentStudent.value;
+                    if (student) {
+                        student.profile_image = dataUrl;
+                        localStorage.setItem('students_list', JSON.stringify(studentsList.value));
+                        alert("Surat kamera orqali muvaffaqiyatli tushirildi!");
+                    }
+                    
+                    closePhotoSourceModal();
+                };
+
                 const triggerPhotoUpload = () => {
                     const input = document.getElementById('student-photo-input');
                     if (input) input.click();
@@ -4734,6 +4845,7 @@
                         }
                     };
                     reader.readAsDataURL(file);
+                    closePhotoSourceModal();
                 };
 
                 const lessonsListMock = [
@@ -4813,6 +4925,13 @@
                 });
 
                 return {
+                    showPhotoSourceModal,
+                    isCameraActive,
+                    openPhotoSourceModal,
+                    closePhotoSourceModal,
+                    startWebcam,
+                    stopWebcam,
+                    capturePhoto,
                     activeStudentTab,
                     selectedLessonId,
                     showQrModal,

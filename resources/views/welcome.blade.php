@@ -2005,39 +2005,66 @@
                     <!-- Option 1: Live camera capture panel -->
                     <div v-if="isCameraActive" class="flex flex-col gap-3">
                         <div class="relative w-full aspect-square bg-black rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
-                            <video id="webcam-preview" autoplay playsinline class="w-full h-full object-cover"></video>
+                            <!-- added muted to prevent browser autoplay block -->
+                            <video id="webcam-preview" autoplay playsinline muted class="w-full h-full object-cover"></video>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-col gap-2">
                             <button 
                                 @click="capturePhoto"
-                                class="flex-1 py-3 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 border-b-4 border-b-emerald-800 text-center"
+                                class="w-full py-3 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 border-b-4 border-b-emerald-800 text-center"
                             >
                                 📸 Suratga tushish
                             </button>
-                            <button 
-                                @click="stopWebcam"
-                                class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs uppercase transition-all"
-                            >
-                                Bekor qilish
-                            </button>
+                            <div class="flex gap-2">
+                                <button 
+                                    @click="triggerNativeCamera"
+                                    class="flex-1 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl font-bold text-[10px] uppercase transition-all text-center border"
+                                >
+                                    📱 Mobil kamerani ochish
+                                </button>
+                                <button 
+                                    @click="stopWebcam"
+                                    class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-[10px] uppercase transition-all text-center"
+                                >
+                                    Orqaga
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Option 2: Choice Buttons -->
                     <div v-else class="flex flex-col gap-2 py-2">
+                        <!-- Desktop/Browser Webcam stream -->
                         <button 
                             @click="startWebcam"
                             class="w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-blue-800"
                         >
-                            📷 Kameradan suratga olish
+                            📷 Brauzer kamerasidan olish
+                        </button>
+                        <!-- Mobile system native camera fallback -->
+                        <button 
+                            @click="triggerNativeCamera"
+                            class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
+                        >
+                            📱 Telefon kamerasini ochish
                         </button>
                         <button 
                             @click="triggerPhotoUpload"
                             class="w-full py-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 rounded-2xl font-black text-xs uppercase transition-all flex items-center justify-center gap-2 border-b-4 border-b-slate-300"
                         >
-                            📁 Qurilmadan rasm tanlash
+                            📁 Qurilmadan rasm yuklash
                         </button>
                     </div>
+
+                    <!-- Hidden native camera input utilizing capture attribute -->
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        capture="user" 
+                        id="student-native-camera-input" 
+                        class="hidden" 
+                        @change="uploadStudentPhoto" 
+                    />
                 </div>
             </div>
 
@@ -4776,18 +4803,21 @@
                     try {
                         isCameraActive.value = true;
                         const stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: 'user', width: 480, height: 480 }
+                            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
                         });
                         cameraStream = stream;
-                        nextTick(() => {
+                        setTimeout(() => {
                             const video = document.getElementById('webcam-preview');
                             if (video) {
                                 video.srcObject = stream;
+                                video.onloadedmetadata = () => {
+                                    video.play().catch(e => console.log("Webcam play block:", e));
+                                };
                             }
-                        });
+                        }, 250);
                     } catch (err) {
                         console.error("Kameraga ulanishda xatolik:", err);
-                        alert("Kamerani faollashtirib bo'lmadi. Iltimos, kamera ruxsatini tekshiring.");
+                        alert("Kamerani faollashtirib bo'lmadi. Kamera ruxsati berilganini yoki boshqa dastur band qilmaganini tekshiring.");
                         isCameraActive.value = false;
                     }
                 };
@@ -4804,8 +4834,13 @@
                     const video = document.getElementById('webcam-preview');
                     if (!video) return;
 
+                    if (video.readyState < 2) {
+                        alert("Kamera tasviri hali tayyor emas! Tasvir paydo bo'lguncha 1-2 soniya kuting.");
+                        return;
+                    }
+
                     const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth || 480;
+                    canvas.width = video.videoWidth || 640;
                     canvas.height = video.videoHeight || 480;
                     const ctx = canvas.getContext('2d');
                     
@@ -4821,6 +4856,11 @@
                     }
                     
                     closePhotoSourceModal();
+                };
+
+                const triggerNativeCamera = () => {
+                    const input = document.getElementById('student-native-camera-input');
+                    if (input) input.click();
                 };
 
                 const triggerPhotoUpload = () => {
@@ -4925,6 +4965,7 @@
                 });
 
                 return {
+                    triggerNativeCamera,
                     showPhotoSourceModal,
                     isCameraActive,
                     openPhotoSourceModal,

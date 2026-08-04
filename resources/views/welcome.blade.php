@@ -1685,7 +1685,7 @@
                         
                         <!-- Hover Change Photo Overlay -->
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-1">
-                            O'zgartirish
+                            [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
                         </div>
                     </div>
                     <!-- Hidden photo input -->
@@ -1699,32 +1699,32 @@
                     
                     <div class="flex flex-col">
                         <h2 class="text-base font-black text-slate-800 tracking-tight leading-tight">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">O'quvchi</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ t('student_title') ]]</span>
                     </div>
                 </div>
-
+ 
                 <!-- Davomat statistikasi card -->
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-4">
                     <div class="flex flex-col gap-0.5">
-                        <h3 class="text-sm font-black text-slate-800">Davomat statistikasi</h3>
+                        <h3 class="text-sm font-black text-slate-800">[[ t('attendance_stats') ]]</h3>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4 border-b pb-3 text-xs">
                         <div class="flex flex-col gap-0.5">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Boshlanish sanasi</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">[[ t('start_date') ]]</span>
                             <span class="font-bold text-slate-700">21.07.2026</span>
                         </div>
                         <div class="flex flex-col gap-0.5">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Tugash sanasi</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase">[[ t('end_date') ]]</span>
                             <span class="font-bold text-slate-700">08.10.2026</span>
                         </div>
                     </div>
-
+ 
                     <!-- Progress Bar -->
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-center text-xs font-bold text-slate-700">
                             <span class="text-gray-400 text-[10px] uppercase font-mono">
-                                [[ currentStudentAttendanceStats.total ]] dars • [[ currentStudentAttendanceStats.present ]] ishtirok • [[ currentStudentAttendanceStats.absent ]] qoldirilgan
+                                [[ currentStudentAttendanceStats.total ]] [[ t('dars') ]] • [[ currentStudentAttendanceStats.present ]] [[ t('ishtirok') ]] • [[ currentStudentAttendanceStats.absent ]] [[ t('qoldirilgan') ]]
                             </span>
                             <span class="text-slate-800">[[ currentStudentAttendanceStats.percent ]]%</span>
                         </div>
@@ -1732,19 +1732,19 @@
                             <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" :style="{ width: currentStudentAttendanceStats.percent + '%' }"></div>
                         </div>
                     </div>
-
+ 
                     <!-- QR Davomat button -->
                     <button 
                         @click="showQrModal = true"
                         class="w-full py-3.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
                     >
-                        <span>📷</span> QR DAVOMAT
+                        <span>📷</span> [[ t('qr_attendance') ]]
                     </button>
                 </div>
-
+ 
                 <!-- Bo'limlar list -->
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-3">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// Bo'limlar</h3>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
                     
                     <div class="flex flex-col gap-2">
                         <!-- Darslar -->
@@ -1754,11 +1754,11 @@
                         >
                             <div class="flex items-center gap-3">
                                 <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-base">📖</span>
-                                <span class="text-xs font-bold text-slate-700">Darslar</span>
+                                <span class="text-xs font-bold text-slate-700">[[ t('lessons') ]]</span>
                             </div>
                             <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
                         </div>
-
+ 
                         <!-- Testlar -->
                         <div 
                             @click="activeStudentTab = 'tests'"
@@ -1766,11 +1766,11 @@
                         >
                             <div class="flex items-center gap-3">
                                 <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">📝</span>
-                                <span class="text-xs font-bold text-slate-700">Testlar</span>
+                                <span class="text-xs font-bold text-slate-700">[[ t('tests') ]]</span>
                             </div>
                             <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
                         </div>
-
+ 
                         <!-- Dars jadvali -->
                         <div 
                             @click="activeStudentTab = 'schedule'"
@@ -1778,11 +1778,11 @@
                         >
                             <div class="flex items-center gap-3">
                                 <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">📅</span>
-                                <span class="text-xs font-bold text-slate-700">Dars jadvali</span>
+                                <span class="text-xs font-bold text-slate-700">[[ t('schedule') ]]</span>
                             </div>
                             <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
                         </div>
-
+ 
                         <!-- Davomatlar -->
                         <div 
                             @click="activeStudentTab = 'attendance'"
@@ -1790,11 +1790,11 @@
                         >
                             <div class="flex items-center gap-3">
                                 <span class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-base">🕒</span>
-                                <span class="text-xs font-bold text-slate-700">Davomatlar</span>
+                                <span class="text-xs font-bold text-slate-700">[[ t('attendance') ]]</span>
                             </div>
                             <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
                         </div>
-
+ 
                         <!-- Jarimalar -->
                         <div 
                             @click="activeStudentTab = 'penalties'"
@@ -1802,7 +1802,7 @@
                         >
                             <div class="flex items-center gap-3">
                                 <span class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-base">ℹ️</span>
-                                <span class="text-xs font-bold text-slate-700">Jarimalar</span>
+                                <span class="text-xs font-bold text-slate-700">[[ t('penalties') ]]</span>
                             </div>
                             <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
                         </div>
@@ -1836,10 +1836,10 @@
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
-                    ➔ Bosh sahifaga qaytish
+                    [[ t('back_to_dashboard') ]]
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// DARSLAR RO'YXATI</h2>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// [[ t('lessons').toUpperCase() ]]</h2>
                     <div class="flex flex-col gap-3">
                         <div 
                             v-for="lesson in lessonsListMock" 
@@ -1862,7 +1862,7 @@
                             @click="selectedLessonId = null"
                             class="w-full py-3 bg-[#0066cc] text-white rounded-2xl text-xs font-bold uppercase tracking-wider mt-2 border-b-4 border-b-blue-800"
                         >
-                            Yopish
+                            [[ t('close') ]]
                         </button>
                     </div>
                 </div>
@@ -1871,31 +1871,31 @@
             <!-- STUDENT CLASS SCHEDULE -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'schedule'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
-                    ➔ Bosh sahifaga qaytish
+                    [[ t('back_to_dashboard') ]]
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// DARS JADVALI</h2>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// [[ t('schedule').toUpperCase() ]]</h2>
                     <div class="flex flex-col gap-3 text-xs">
                         <div class="p-4 bg-blue-50/60 border border-blue-100 rounded-2xl flex flex-col gap-2">
-                            <span class="text-[10px] font-bold text-blue-800 uppercase font-mono">📅 NAZARIY MASHG'ULOTLAR</span>
+                            <span class="text-[10px] font-bold text-blue-800 uppercase font-mono">📅 [[ currentLang === 'uz_lat' ? 'NAZARIY MASHG\'ULOTLAR' : currentLang === 'en' ? 'THEORY CLASSES' : currentLang === 'ru' ? 'ТЕОРЕТИЧЕСКИЕ ЗАНЯТИЯ' : 'NAZARIY MASHǴULOTLAR' ]]</span>
                             <div class="flex justify-between items-center text-slate-700 font-bold">
-                                <span>Dushanba, Chorshanba, Juma</span>
+                                <span>[[ currentLang === 'uz_lat' ? 'Dushanba, Chorshanba, Juma' : currentLang === 'en' ? 'Monday, Wednesday, Friday' : currentLang === 'ru' ? 'Понедельник, Среда, Пятница' : 'Dúyshembi, Sárshembi, Juma' ]]</span>
                                 <span class="font-mono text-xs">18:00 - 20:00</span>
                             </div>
                         </div>
                         <div class="p-4 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col gap-2">
-                            <span class="text-[10px] font-bold text-emerald-800 uppercase font-mono">🚗 AMALIY MASHG'ULOTLAR</span>
+                            <span class="text-[10px] font-bold text-emerald-800 uppercase font-mono">🚗 [[ currentLang === 'uz_lat' ? 'AMALIY MASHG\'ULOTLAR' : currentLang === 'en' ? 'PRACTICAL CLASSES' : currentLang === 'ru' ? 'ПРАКТИЧЕСКИЕ ЗАНЯТИЯ' : 'AMALIY MASHǴULOTLAR' ]]</span>
                             <div class="flex justify-between items-center text-slate-700 font-bold">
-                                <span>Seshanba, Payshanba</span>
+                                <span>[[ currentLang === 'uz_lat' ? 'Seshanba, Payshanba' : currentLang === 'en' ? 'Tuesday, Thursday' : currentLang === 'ru' ? 'Вторник, Четверг' : 'Sheshembi, Páshembi' ]]</span>
                                 <span class="font-mono text-xs">09:00 - 12:00</span>
                             </div>
                         </div>
                         <div class="p-4 bg-slate-50 border rounded-2xl flex items-center justify-between">
                             <div class="flex flex-col gap-0.5">
-                                <span class="text-[9px] text-gray-400 font-bold uppercase">Amaliy yo'riqchi</span>
+                                <span class="text-[9px] text-gray-400 font-bold uppercase">[[ currentLang === 'uz_lat' ? 'Amaliy yo\'riqchi' : currentLang === 'en' ? 'Driving Instructor' : currentLang === 'ru' ? 'Практический инструктор' : 'Kómekshi aydawshı' ]]</span>
                                 <span class="font-bold text-slate-700">Jamshid Tojiyev</span>
                             </div>
-                            <span class="text-xs bg-slate-200 px-2.5 py-1 rounded-full font-bold text-slate-600">B toifa</span>
+                            <span class="text-xs bg-slate-200 px-2.5 py-1 rounded-full font-bold text-slate-600">[[ currentLang === 'uz_lat' ? 'B toifa' : currentLang === 'en' ? 'Category B' : currentLang === 'ru' ? 'Категория B' : 'B toifası' ]]</span>
                         </div>
                     </div>
                 </div>
@@ -1904,17 +1904,17 @@
             <!-- STUDENT ATTENDANCE HISTORY -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'attendance'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
-                    ➔ Bosh sahifaga qaytish
+                    [[ t('back_to_dashboard') ]]
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// DAVOMOT TARIXI</h2>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// [[ t('attendance_history') ]]</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="border-b text-gray-400 font-mono text-[9px] uppercase tracking-wider">
-                                    <th class="pb-2 font-bold">Sana</th>
-                                    <th class="pb-2 font-bold">Dars turi</th>
-                                    <th class="pb-2 font-bold text-right">Status</th>
+                                    <th class="pb-2 font-bold">[[ t('date') ]]</th>
+                                    <th class="pb-2 font-bold">[[ t('topic') ]]</th>
+                                    <th class="pb-2 font-bold text-right">[[ t('status') ]]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1926,12 +1926,12 @@
                                             class="px-2 py-0.5 rounded font-bold text-[9px]"
                                             :class="a.status === 'Keldi' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'"
                                         >
-                                            [[ a.status ]]
+                                            [[ tStatus(a.status) ]]
                                         </span>
                                     </td>
                                 </tr>
                                 <tr v-if="getStudentAttendance(currentStudent?.id).length === 0">
-                                    <td colspan="3" class="py-4 text-center text-gray-400 font-medium">Hozircha davomat tarixi mavjud emas</td>
+                                    <td colspan="3" class="py-4 text-center text-gray-400 font-medium">[[ t('no_attendance_history') ]]</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1940,13 +1940,13 @@
 
                 <!-- TIZIMGA KIRISH/CHIQISH TARIXI (Activity Logs) -->
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// TIZIMGA KIRISH/CHIQISH TARIXI</h2>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// [[ t('activity_history') ]]</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="border-b text-gray-400 font-mono text-[9px] uppercase tracking-wider">
-                                    <th class="pb-2 font-bold">Kirgan vaqti</th>
-                                    <th class="pb-2 font-bold text-right">Chiqib ketgan vaqti</th>
+                                    <th class="pb-2 font-bold">[[ t('login_time') ]]</th>
+                                    <th class="pb-2 font-bold text-right">[[ t('logout_time') ]]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1961,12 +1961,12 @@
                                             class="px-2 py-0.5 rounded font-bold text-[9px]"
                                             :class="log.logout_time === 'Ayni vaqtda faol' ? 'bg-emerald-100 text-emerald-800 animate-pulse' : 'bg-slate-100 text-slate-500'"
                                         >
-                                            [[ log.logout_time ]]
+                                            [[ log.logout_time === 'Ayni vaqtda faol' ? t('currently_active') : log.logout_time ]]
                                         </span>
                                     </td>
                                 </tr>
                                 <tr v-if="studentActivityLogs.filter(l => l.student_id === currentStudent?.id).length === 0">
-                                    <td colspan="2" class="py-4 text-center text-gray-400 font-medium">Hozircha kirish/chiqish tarixi mavjud emas</td>
+                                    <td colspan="2" class="py-4 text-center text-gray-400 font-medium">[[ t('no_activity_history') ]]</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1977,10 +1977,10 @@
             <!-- STUDENT PENALTIES -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'penalties'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
-                    ➔ Bosh sahifaga qaytish
+                    [[ t('back_to_dashboard') ]]
                 </button>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col gap-4">
-                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// JARIMALAR STATUSTI</h2>
+                    <h2 class="text-base font-black text-slate-800 uppercase tracking-wider">// [[ t('penalties_status') ]]</h2>
                     
                     <!-- If no penalties -->
                     <div 
@@ -1988,8 +1988,8 @@
                         class="p-6 bg-slate-50 border border-slate-100 rounded-3xl text-center flex flex-col items-center gap-3"
                     >
                         <span class="text-4xl">🛡️</span>
-                        <h3 class="text-xs font-black text-slate-800">Sizda joriy jarimalar mavjud emas!</h3>
-                        <p class="text-[11px] text-gray-500 leading-relaxed font-semibold">Delta Avtomaktabi qoidalariga rioya qiling hamda xavfsiz haydash ko'nikmalarini egallang.</p>
+                        <h3 class="text-xs font-black text-slate-800">[[ t('no_penalties') ]]</h3>
+                        <p class="text-[11px] text-gray-500 leading-relaxed font-semibold">[[ t('no_penalties_desc') ]]</p>
                     </div>
 
                     <!-- If has penalties -->
@@ -2005,18 +2005,18 @@
                                     class="px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase"
                                     :class="p.status === 'To\'langan' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'"
                                 >
-                                    [[ p.status ]]
+                                    [[ p.status === 'To\'langan' ? (currentLang === 'uz_lat' ? 'To\'langan' : currentLang === 'en' ? 'Paid' : currentLang === 'ru' ? 'Оплачено' : 'Tólengen') : (currentLang === 'uz_lat' ? 'To\'lanmagan' : currentLang === 'en' ? 'Unpaid' : currentLang === 'ru' ? 'Не оплачено' : 'Tólenbegen') ]]
                                 </span>
                             </div>
                             
                             <div class="flex justify-between items-center text-[10px] text-gray-400 font-mono border-t pt-2 mt-1">
                                 <div class="flex flex-col">
-                                    <span class="text-[9px] uppercase font-bold text-gray-400">Sana</span>
+                                    <span class="text-[9px] uppercase font-bold text-gray-400">[[ t('date') ]]</span>
                                     <span class="font-bold text-slate-600">[[ p.date ]]</span>
                                 </div>
                                 <div class="flex flex-col text-right">
-                                    <span class="text-[9px] uppercase font-bold text-gray-400">Miqdori</span>
-                                    <span class="font-bold text-[#0066cc] text-xs">[[ p.amount.toLocaleString() ]] so'm</span>
+                                    <span class="text-[9px] uppercase font-bold text-gray-400">[[ t('amount') ]]</span>
+                                    <span class="font-bold text-[#0066cc] text-xs">[[ p.amount.toLocaleString() ]] [[ currentLang === 'uz_lat' ? 'so\'m' : currentLang === 'en' ? 'so\'m' : currentLang === 'ru' ? 'сум' : 'so\'m' ]]</span>
                                 </div>
                             </div>
                             
@@ -2026,7 +2026,7 @@
                                 @click="payPenalty(p.id)"
                                 class="w-full py-2.5 bg-[#0066cc] hover:bg-blue-700 active:scale-95 text-white rounded-xl font-bold text-[10px] uppercase transition-all shadow-sm mt-1 text-center"
                             >
-                                💳 Jarimani to'lash
+                                [[ t('pay_penalty') ]]
                             </button>
                         </div>
                     </div>
@@ -3311,7 +3311,40 @@
                         tts_prohibited_reason: "Bu amaliyot xavfsizlik nuqtai nazaridan taqiqlanadi.",
                         tts_prohibited_explanation: "Yo'l harakati xavfsizligini saqlash, avtohalokat oldini olish va boshqa haydovchilarni himoya qilish uchun bu harakat taqiqlanadi.",
                         panel_correct: "✅ To'g'ri javob!",
-                        panel_wrong: "✅ To'g'ri javob:"
+                        panel_wrong: "✅ To'g'ri javob:",
+                        // Student Dashboard translations
+                        student_title: "O'QUVCHI",
+                        attendance_stats: "Davomat statistikasi",
+                        start_date: "BOSHLANISH SANASI",
+                        end_date: "TUGASH SANASI",
+                        qr_attendance: "QR DAVOMAT",
+                        sections: "BO'LIMLAR",
+                        lessons: "Darslar",
+                        tests: "Testlar",
+                        schedule: "Dars jadvali",
+                        attendance: "Davomatlar",
+                        penalties: "Jarimalar",
+                        dars: "dars",
+                        ishtirok: "ishtirok",
+                        qoldirilgan: "qoldirilgan",
+                        back_to_dashboard: "➔ Bosh sahifaga qaytish",
+                        attendance_history: "DAVOMAT TARIXI",
+                        activity_history: "TIZIMGA KIRISH/CHIQISH TARIXI",
+                        login_time: "Kirgan vaqti",
+                        logout_time: "Chiqib ketgan vaqti",
+                        currently_active: "Ayni vaqtda faol",
+                        no_activity_history: "Hozircha kirish/chiqish tarixi mavjud emas",
+                        no_attendance_history: "Hozircha davomat tarixi mavjud emas",
+                        penalties_status: "JARIMALAR STATUSI",
+                        no_penalties: "Sizda joriy jarimalar mavjud emas!",
+                        no_penalties_desc: "Delta Avtomaktabi qoidalariga rioya qiling hamda xavfsiz haydash ko'nikmalarini egallang.",
+                        pay_penalty: "💳 Jarimani to'lash",
+                        confirm_attendance: "📲 Davomatni tasdiqlash",
+                        close: "Yopish",
+                        date: "Sana",
+                        amount: "Miqdori",
+                        topic: "Mavzu",
+                        status: "Status"
                     },
                     en: {
                         exam_title: "DELTA_AVTOMAKTAB_UZ EXAM",
@@ -3329,7 +3362,40 @@
                         tts_prohibited_reason: "This action is prohibited for safety reasons.",
                         tts_prohibited_explanation: "It is prohibited to maintain road safety, prevent accidents, and protect other drivers.",
                         panel_correct: "✅ Correct answer!",
-                        panel_wrong: "✅ Correct answer:"
+                        panel_wrong: "✅ Correct answer:",
+                        // Student Dashboard translations
+                        student_title: "STUDENT",
+                        attendance_stats: "Attendance statistics",
+                        start_date: "START DATE",
+                        end_date: "END DATE",
+                        qr_attendance: "QR ATTENDANCE",
+                        sections: "SECTIONS",
+                        lessons: "Lessons",
+                        tests: "Tests",
+                        schedule: "Schedule",
+                        attendance: "Attendance",
+                        penalties: "Penalties",
+                        dars: "lessons",
+                        ishtirok: "present",
+                        qoldirilgan: "absent",
+                        back_to_dashboard: "➔ Back to Dashboard",
+                        attendance_history: "ATTENDANCE HISTORY",
+                        activity_history: "SYSTEM LOGIN/LOGOUT HISTORY",
+                        login_time: "Login time",
+                        logout_time: "Logout time",
+                        currently_active: "Currently active",
+                        no_activity_history: "No login/logout history yet",
+                        no_attendance_history: "No attendance history yet",
+                        penalties_status: "PENALTIES STATUS",
+                        no_penalties: "You have no active penalties!",
+                        no_penalties_desc: "Follow the rules of Delta Driving School and acquire safe driving skills.",
+                        pay_penalty: "💳 Pay Penalty",
+                        confirm_attendance: "📲 Confirm Attendance",
+                        close: "Close",
+                        date: "Date",
+                        amount: "Amount",
+                        topic: "Topic",
+                        status: "Status"
                     },
                     ru: {
                         exam_title: "ЭКЗАМЕН DELTA_AVTOMAKTAB_UZ",
@@ -3345,7 +3411,40 @@
                         tts_wrong_mid: "правильный ответ на вопрос",
                         tts_wrong_end: "должен быть таким.",
                         panel_correct: "✅ Правильный ответ!",
-                        panel_wrong: "✅ Правильный ответ:"
+                        panel_wrong: "✅ Правильный ответ:",
+                        // Student Dashboard translations
+                        student_title: "УЧЕНИК",
+                        attendance_stats: "Статистика посещаемости",
+                        start_date: "ДАТА НАЧАЛА",
+                        end_date: "ДАТА ОКОНЧАНИЯ",
+                        qr_attendance: "QR ПОСЕЩАЕМОСТЬ",
+                        sections: "РАЗДЕЛЫ",
+                        lessons: "Занятия",
+                        tests: "Тесты",
+                        schedule: "Расписание",
+                        attendance: "Посещаемость",
+                        penalties: "Штрафы",
+                        dars: "занятий",
+                        ishtirok: "посетил",
+                        qoldirilgan: "пропустил",
+                        back_to_dashboard: "➔ Вернуться на главную",
+                        attendance_history: "ИСТОРИЯ ПОСЕЩАЕМОСТИ",
+                        activity_history: "ИСТОРИЯ ВХОДОВ И ВЫХОДОВ",
+                        login_time: "Время входа",
+                        logout_time: "Время выхода",
+                        currently_active: "Активен сейчас",
+                        no_activity_history: "История входов/выходов отсутствует",
+                        no_attendance_history: "История посещаемости отсутствует",
+                        penalties_status: "СТАТУС ШТРАФОВ",
+                        no_penalties: "У вас нет активных штрафов!",
+                        no_penalties_desc: "Соблюдайте правила автошколы Delta и приобретайте навыки безопасного вождения.",
+                        pay_penalty: "💳 Оплатить штраф",
+                        confirm_attendance: "📲 Подтвердить присутствие",
+                        close: "Закрыть",
+                        date: "Дата",
+                        amount: "Сумма",
+                        topic: "Тема",
+                        status: "Статус"
                     },
                     qr: {
                         exam_title: "DELTA_AVTOMAKTAB_UZ IMTIXANÍ",
@@ -3361,11 +3460,51 @@
                         tts_wrong_mid: "degen sorawǵa aslı durıs juwap",
                         tts_wrong_end: "bolıwı kerek edi.",
                         panel_correct: "✅ Durıs juwap!",
-                        panel_wrong: "✅ Durıs juwap:"
+                        panel_wrong: "✅ Durıs juwap:",
+                        // Student Dashboard translations
+                        student_title: "OQÚWShÍ",
+                        attendance_stats: "Davomat statistikası",
+                        start_date: "BASLANǴÍSh SANASÍ",
+                        end_date: "TAÚSÍLÍW SANASÍ",
+                        qr_attendance: "QR DAVOMAT",
+                        sections: "BÓLİMLER",
+                        lessons: "Sabaqlar",
+                        tests: "Testler",
+                        schedule: "Sabaq kestesi",
+                        attendance: "Davomatlar",
+                        penalties: "Jarimalar",
+                        dars: "sabaq",
+                        ishtirok: "qatnastı",
+                        qoldirilgan: "qaldırdı",
+                        back_to_dashboard: "➔ Bas betke qaytıw",
+                        attendance_history: "DAVOMAT TARIXI",
+                        activity_history: "SİSTEMAǴA KİRİW/ShÍǴÍW TARIXI",
+                        login_time: "Kiriw waqtı",
+                        logout_time: "Shıǵıw waqtı",
+                        currently_active: "Házirgi waqıtta belsendi",
+                        no_activity_history: "Házirshe kiriw/shıǵıw tariyxı joq",
+                        no_attendance_history: "Házirshe davomat tariyxı joq",
+                        penalties_status: "JARIMALAR STATUSI",
+                        no_penalties: "Sizde jazalar joq!",
+                        no_penalties_desc: "Delta Avtomaktabı qádelerine boysınıń hám qáwipsiz aydaw kónlikpelerin iyeleń.",
+                        pay_penalty: "💳 Jazanı tólew",
+                        confirm_attendance: "📲 Davomattı tastıyıqlaw",
+                        close: "Jabıw",
+                        date: "Sana",
+                        amount: "Muǵdarı",
+                        topic: "Tema",
+                        status: "Status"
                     }
                 };
                     const t = (key) => {
                     return uiDict[currentLang.value] && uiDict[currentLang.value][key] ? uiDict[currentLang.value][key] : key;
+                };
+                const tStatus = (status) => {
+                    if (status === 'Keldi') {
+                        return currentLang.value === 'uz_lat' ? 'Keldi' : currentLang.value === 'en' ? 'Present' : currentLang.value === 'ru' ? 'Присутствовал' : 'Qatnastı';
+                    } else {
+                        return currentLang.value === 'uz_lat' ? 'Kelmadi' : currentLang.value === 'en' ? 'Absent' : currentLang.value === 'ru' ? 'Отсутствовал' : 'Qaldırdı';
+                    }
                 };
 
                 const isDarkMode = ref(localStorage.getItem('theme-dark') === 'true');
@@ -5271,6 +5410,8 @@
                     formattedTime,
                     dashOffset,
                     setLanguage,
+                    t,
+                    tStatus,
                     selectOption,
                     readQuestionAloud,
                     gotoQuestion,

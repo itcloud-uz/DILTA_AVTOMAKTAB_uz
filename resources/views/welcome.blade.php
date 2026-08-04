@@ -1723,11 +1723,13 @@
                     <!-- Progress Bar -->
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-center text-xs font-bold text-slate-700">
-                            <span class="text-gray-400 text-[10px] uppercase font-mono">0 dars • 0 chess • 0 qoldirilgan</span>
-                            <span class="text-slate-800">0.0%</span>
+                            <span class="text-gray-400 text-[10px] uppercase font-mono">
+                                [[ currentStudentAttendanceStats.total ]] dars • [[ currentStudentAttendanceStats.present ]] ishtirok • [[ currentStudentAttendanceStats.absent ]] qoldirilgan
+                            </span>
+                            <span class="text-slate-800">[[ currentStudentAttendanceStats.percent ]]%</span>
                         </div>
                         <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" style="width: 0%"></div>
+                            <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" :style="{ width: currentStudentAttendanceStats.percent + '%' }"></div>
                         </div>
                     </div>
 
@@ -5075,6 +5077,19 @@
                     ];
                 };
 
+                const currentStudentAttendanceStats = computed(() => {
+                    const student = currentStudent.value;
+                    if (!student) return { total: 0, present: 0, absent: 0, percent: 0 };
+                    
+                    const logs = getStudentAttendance(student.id);
+                    const total = logs.length;
+                    const present = logs.filter(a => a.status === 'Keldi').length;
+                    const absent = logs.filter(a => a.status === 'Kelmadi').length;
+                    const percent = total > 0 ? Math.round((present / total) * 100) : 0;
+                    
+                    return { total, present, absent, percent };
+                });
+
                 const studentActivityLogs = ref(JSON.parse(localStorage.getItem('student_activity_logs')) || [
                     { id: 1, student_id: 1, login_time: "2026-07-31 09:12", logout_time: "2026-07-31 11:30" },
                     { id: 2, student_id: 1, login_time: "2026-07-30 14:05", logout_time: "2026-07-30 16:00" },
@@ -5154,6 +5169,7 @@
                 });
 
                 return {
+                    currentStudentAttendanceStats,
                     studentAttendanceList,
                     getStudentAttendance,
                     studentActivityLogs,

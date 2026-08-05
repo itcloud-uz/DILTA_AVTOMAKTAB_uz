@@ -1849,16 +1849,7 @@
                     <span class="text-sm font-semibold text-gray-500">Test yuklanmoqda...</span>
                 </div>
 
-                <!-- STUDENT DASHBOARD CONTENT -->
-                <div v-if="!loading && activeStudentTab === 'dashboard'" class="w-full flex flex-col gap-6 animate-fadeIn text-left">
-                    
-                    <!-- Welcome Card -->
-                    <div class="p-8 bg-white border border-slate-100/80 rounded-3xl text-center flex flex-col items-center gap-4 shadow-sm animate-fadeIn">
-                        <span class="text-5xl">👋</span>
-                        <h3 class="text-lg font-black text-slate-800">Xush kelibsiz, [[ currentStudent?.name ]]!</h3>
-                        <p class="text-sm text-gray-500 max-w-md leading-relaxed font-semibold">Barcha darslar, dars jadvali, davomat tarixi va test natijalarini chap tomondagi menyu orqali boshqarishingiz mumkin.</p>
-                    </div>
-                </div>
+
             </div>
 
             <!-- STUDENT LESSONS LIST -->

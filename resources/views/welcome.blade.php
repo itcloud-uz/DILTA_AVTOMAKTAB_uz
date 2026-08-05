@@ -1635,20 +1635,20 @@
             <!-- Left Sidebar Navigation -->
             <div 
                 v-if="!isTestStarted"
-                class="w-full md:w-64 lg:w-72 flex flex-col gap-5 bg-white p-5 rounded-r-3xl rounded-l-none shadow-sm border-r border-y border-slate-100/80 shrink-0 self-start md:sticky md:top-6 md:max-h-[calc(100vh-3rem)] overflow-y-auto"
+                class="w-full md:w-[340px] lg:w-[370px] flex flex-col gap-5 bg-white p-5 rounded-r-3xl rounded-l-none shadow-sm border-r border-y border-slate-100/80 shrink-0 self-start md:sticky md:top-6 md:max-h-[calc(100vh-3rem)] overflow-y-auto"
             >
                 <!-- Profile Header (Moved to Sidebar) -->
-                <div class="flex items-center gap-3 border-b pb-4">
-                    <div @click="openPhotoSourceModal" class="relative group w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
+                <div class="flex items-center gap-3.5 border-b pb-4">
+                    <div @click="openPhotoSourceModal" class="relative group w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
                         <img 
                             v-if="currentStudent?.profile_image" 
                             :src="currentStudent.profile_image" 
                             class="w-full h-full object-cover" 
                         />
-                        <span v-else class="text-2xl">👤</span>
+                        <span v-else class="text-3xl">👤</span>
                         
                         <!-- Hover Change Photo Overlay -->
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[7px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
                             [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
                         </div>
                     </div>
@@ -1662,8 +1662,8 @@
                     />
                     
                     <div class="flex flex-col min-w-0">
-                        <h2 class="text-xs font-black text-slate-800 tracking-tight leading-tight truncate">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
-                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">[[ t('student_title') ]]</span>
+                        <h2 class="text-sm font-black text-slate-800 tracking-tight leading-tight truncate">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ t('student_title') ]]</span>
                     </div>
                 </div>
 
@@ -1671,7 +1671,7 @@
                 <div class="flex flex-col gap-3 border-b pb-4">
                     <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">// [[ t('attendance_stats') ]]</span>
                     
-                    <div class="flex flex-col gap-2 text-xs">
+                    <div class="grid grid-cols-2 gap-3 text-xs">
                         <div class="flex flex-col gap-0.5">
                             <span class="text-[9px] font-bold text-gray-400 uppercase">[[ t('start_date') ]]</span>
                             <span class="font-bold text-slate-700 text-[10.5px]">[[ studentStartDate(currentStudent) ]]</span>
@@ -1685,8 +1685,8 @@
                     <!-- Progress Bar -->
                     <div class="flex flex-col gap-1.5 mt-1">
                         <div class="flex justify-between items-center text-[10px] font-bold text-slate-700">
-                            <span class="text-gray-400 text-[9px] uppercase font-mono truncate max-w-[80%]">
-                                [[ currentStudentAttendanceStats.total ]] [[ t('dars') ]] • [[ currentStudentAttendanceStats.present ]] [[ t('ishtirok') ]]
+                            <span class="text-gray-400 text-[9px] uppercase font-mono truncate max-w-[85%]">
+                                [[ currentStudentAttendanceStats.total ]] [[ t('dars') ]] • [[ currentStudentAttendanceStats.present ]] [[ t('ishtirok') ]] • [[ currentStudentAttendanceStats.absent ]] [[ t('qoldirilgan') ]]
                             </span>
                             <span class="text-slate-800">[[ currentStudentAttendanceStats.percent ]]%</span>
                         </div>

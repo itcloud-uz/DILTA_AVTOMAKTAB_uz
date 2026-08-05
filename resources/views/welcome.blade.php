@@ -1787,6 +1787,41 @@
                     </div>
                 </div>
 
+                <!-- Tillar (Language selector in Sidebar) -->
+                <div class="flex flex-col gap-2 border-t pt-4">
+                    <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider font-mono">// TILNI TANLANG / SELECT LANG</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button 
+                            @click="setLanguage('uz_lat')"
+                            class="py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200"
+                            :class="currentLang === 'uz_lat' ? 'bg-[#0066cc] text-white shadow-md shadow-blue-500/10' : 'bg-slate-50 border border-slate-100/80 text-slate-700 hover:bg-slate-100'"
+                        >
+                            O'zbek
+                        </button>
+                        <button 
+                            @click="setLanguage('en')"
+                            class="py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200"
+                            :class="currentLang === 'en' ? 'bg-[#0066cc] text-white shadow-md shadow-blue-500/10' : 'bg-slate-50 border border-slate-100/80 text-slate-700 hover:bg-slate-100'"
+                        >
+                            English
+                        </button>
+                        <button 
+                            @click="setLanguage('ru')"
+                            class="py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200"
+                            :class="currentLang === 'ru' ? 'bg-[#0066cc] text-white shadow-md shadow-blue-500/10' : 'bg-slate-50 border border-slate-100/80 text-slate-700 hover:bg-slate-100'"
+                        >
+                            Русский
+                        </button>
+                        <button 
+                            @click="setLanguage('qr')"
+                            class="py-2 px-3 rounded-xl text-xs font-bold transition-all duration-200"
+                            :class="currentLang === 'qr' ? 'bg-[#0066cc] text-white shadow-md shadow-blue-500/10' : 'bg-slate-50 border border-slate-100/80 text-slate-700 hover:bg-slate-100'"
+                        >
+                            Qaraqalpaq
+                        </button>
+                    </div>
+                </div>
+
                 <!-- O'qituvchi Tavsiyalari (Moved to bottom of sidebar) -->
                 <div 
                     v-if="studentFeedbackList.filter(f => f.student_id === currentStudent?.id).length > 0"
@@ -1811,37 +1846,6 @@
 
             <!-- Right Main Content Area -->
             <div class="flex-grow flex flex-col gap-6 w-full min-w-0">
-                <!-- 1. Language selector -->
-                <div class="flex justify-center md:justify-end gap-3 mb-4">
-                    <button 
-                        @click="setLanguage('uz_lat')"
-                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                        :class="currentLang === 'uz_lat' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
-                    >
-                        O'zbek
-                    </button>
-                    <button 
-                        @click="setLanguage('en')"
-                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                        :class="currentLang === 'en' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
-                    >
-                        English
-                    </button>
-                    <button 
-                        @click="setLanguage('ru')"
-                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                        :class="currentLang === 'ru' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
-                    >
-                        Русский
-                    </button>
-                    <button 
-                        @click="setLanguage('qr')"
-                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                        :class="currentLang === 'qr' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
-                    >
-                        Qaraqalpaq
-                    </button>
-                </div>
 
                 <!-- Loading State -->
                 <div v-if="loading" class="flex-grow flex flex-col items-center justify-center py-20">

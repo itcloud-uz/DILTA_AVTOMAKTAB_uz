@@ -1635,11 +1635,79 @@
             <!-- Left Sidebar Navigation -->
             <div 
                 v-if="!isTestStarted"
-                class="w-full md:w-64 lg:w-72 flex flex-col gap-3 bg-white p-5 rounded-r-3xl rounded-l-none shadow-sm border-r border-y border-slate-100/80 shrink-0 self-start md:sticky md:top-6"
+                class="w-full md:w-64 lg:w-72 flex flex-col gap-5 bg-white p-5 rounded-r-3xl rounded-l-none shadow-sm border-r border-y border-slate-100/80 shrink-0 self-start md:sticky md:top-6 md:max-h-[calc(100vh-3rem)] overflow-y-auto"
             >
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
+                <!-- Profile Header (Moved to Sidebar) -->
+                <div class="flex items-center gap-3 border-b pb-4">
+                    <div @click="openPhotoSourceModal" class="relative group w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
+                        <img 
+                            v-if="currentStudent?.profile_image" 
+                            :src="currentStudent.profile_image" 
+                            class="w-full h-full object-cover" 
+                        />
+                        <span v-else class="text-2xl">👤</span>
+                        
+                        <!-- Hover Change Photo Overlay -->
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[7px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
+                            [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
+                        </div>
+                    </div>
+                    <!-- Hidden photo input -->
+                    <input 
+                        type="file" 
+                        id="student-photo-input" 
+                        accept="image/*" 
+                        class="hidden" 
+                        @change="uploadStudentPhoto" 
+                    />
+                    
+                    <div class="flex flex-col min-w-0">
+                        <h2 class="text-xs font-black text-slate-800 tracking-tight leading-tight truncate">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
+                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">[[ t('student_title') ]]</span>
+                    </div>
+                </div>
+
+                <!-- Davomat statistikasi card (Moved to Sidebar) -->
+                <div class="flex flex-col gap-3 border-b pb-4">
+                    <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">// [[ t('attendance_stats') ]]</span>
+                    
+                    <div class="flex flex-col gap-2 text-xs">
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-[9px] font-bold text-gray-400 uppercase">[[ t('start_date') ]]</span>
+                            <span class="font-bold text-slate-700 text-[10.5px]">[[ studentStartDate(currentStudent) ]]</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-[9px] font-bold text-gray-400 uppercase">[[ t('end_date') ]]</span>
+                            <span class="font-bold text-slate-700 text-[10.5px]">[[ studentEndDate(currentStudent) ]]</span>
+                        </div>
+                    </div>
+ 
+                    <!-- Progress Bar -->
+                    <div class="flex flex-col gap-1.5 mt-1">
+                        <div class="flex justify-between items-center text-[10px] font-bold text-slate-700">
+                            <span class="text-gray-400 text-[9px] uppercase font-mono truncate max-w-[80%]">
+                                [[ currentStudentAttendanceStats.total ]] [[ t('dars') ]] • [[ currentStudentAttendanceStats.present ]] [[ t('ishtirok') ]]
+                            </span>
+                            <span class="text-slate-800">[[ currentStudentAttendanceStats.percent ]]%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" :style="{ width: currentStudentAttendanceStats.percent + '%' }"></div>
+                        </div>
+                    </div>
+ 
+                    <!-- QR Davomat button -->
+                    <button 
+                        @click="showQrModal = true"
+                        class="w-full py-2.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-xl font-black text-[10px] uppercase transition-all shadow-md shadow-emerald-500/10 flex items-center justify-center gap-1.5 border-b-2 border-b-emerald-800 mt-1"
+                    >
+                        <span>📷</span> [[ t('qr_attendance') ]]
+                    </button>
+                </div>
                 
+                <!-- Bo'limlar List -->
                 <div class="flex flex-col gap-2">
+                    <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider">// [[ t('sections') ]]</span>
+                    
                     <!-- Bosh sahifa (Dashboard) -->
                     <div 
                         @click="activeStudentTab = 'dashboard'"
@@ -1763,98 +1831,37 @@
                 <!-- STUDENT DASHBOARD CONTENT -->
                 <div v-if="!loading && activeStudentTab === 'dashboard'" class="w-full flex flex-col gap-6 animate-fadeIn text-left">
                     
-                    <!-- Profile Header -->
-                    <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-100/80">
-                        <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50">
-                            <img 
-                                v-if="currentStudent?.profile_image" 
-                                :src="currentStudent.profile_image" 
-                                class="w-full h-full object-cover" 
-                            />
-                            <span v-else class="text-3xl">👤</span>
-                            
-                            <!-- Hover Change Photo Overlay -->
-                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-1">
-                                [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
-                            </div>
-                        </div>
-                        <!-- Hidden photo input -->
-                        <input 
-                            type="file" 
-                            id="student-photo-input" 
-                            accept="image/*" 
-                            class="hidden" 
-                            @change="uploadStudentPhoto" 
-                        />
-                        
-                        <div class="flex flex-col">
-                            <h2 class="text-base font-black text-slate-800 tracking-tight leading-tight">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ t('student_title') ]]</span>
-                        </div>
-                    </div>
-     
-                    <!-- Davomat statistikasi card -->
-                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-4">
-                        <div class="flex flex-col gap-0.5">
-                            <h3 class="text-sm font-black text-slate-800">[[ t('attendance_stats') ]]</h3>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4 border-b pb-3 text-xs">
-                            <div class="flex flex-col gap-0.5">
-                                <span class="text-[10px] font-bold text-gray-400 uppercase">[[ t('start_date') ]]</span>
-                                <span class="font-bold text-slate-700">[[ studentStartDate(currentStudent) ]]</span>
-                            </div>
-                            <div class="flex flex-col gap-0.5">
-                                <span class="text-[10px] font-bold text-gray-400 uppercase">[[ t('end_date') ]]</span>
-                                <span class="font-bold text-slate-700">[[ studentEndDate(currentStudent) ]]</span>
-                            </div>
-                        </div>
-     
-                        <!-- Progress Bar -->
-                        <div class="flex flex-col gap-2">
-                            <div class="flex justify-between items-center text-xs font-bold text-slate-700">
-                                <span class="text-gray-400 text-[10px] uppercase font-mono">
-                                    [[ currentStudentAttendanceStats.total ]] [[ t('dars') ]] • [[ currentStudentAttendanceStats.present ]] [[ t('ishtirok') ]] • [[ currentStudentAttendanceStats.absent ]] [[ t('qoldirilgan') ]]
-                                </span>
-                                <span class="text-slate-800">[[ currentStudentAttendanceStats.percent ]]%</span>
-                            </div>
-                            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" :style="{ width: currentStudentAttendanceStats.percent + '%' }"></div>
-                            </div>
-                        </div>
-     
-                        <!-- QR Davomat button -->
-                        <button 
-                            @click="showQrModal = true"
-                            class="w-full py-3.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-2xl font-black text-xs uppercase transition-all shadow-md shadow-emerald-500/10 flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
-                        >
-                            <span>📷</span> [[ t('qr_attendance') ]]
-                        </button>
-                    </div>
-     
                     <!-- O'qituvchi Tavsiyalari va Tushunchalari -->
                     <div 
                         v-if="studentFeedbackList.filter(f => f.student_id === currentStudent?.id).length > 0"
-                        class="p-5 bg-blue-50/80 border border-blue-100 rounded-3xl flex flex-col gap-3 text-left shadow-sm w-full"
+                        class="p-6 bg-blue-50/80 border border-blue-100 rounded-3xl flex flex-col gap-4 text-left shadow-sm w-full"
                     >
-                        <div class="flex items-center gap-2 text-blue-800 font-extrabold text-[10px] uppercase tracking-wider font-mono">
+                        <div class="flex items-center gap-2 text-blue-800 font-extrabold text-xs uppercase tracking-wider font-mono">
                             <span>🧑‍🏫 TAVSIYA VA TUSHUNCHALAR</span>
                         </div>
-                        <div class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
+                        <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                             <div 
                                 v-for="f in studentFeedbackList.filter(f => f.student_id === currentStudent?.id)"
                                 :key="f.id"
-                                class="p-3.5 bg-white border border-blue-50 rounded-2xl flex flex-col gap-1.5 shadow-sm"
+                                class="p-4 bg-white border border-blue-50 rounded-2xl flex flex-col gap-2 shadow-sm"
                             >
-                                <div class="flex justify-between items-center text-[9px] font-mono text-gray-400">
+                                <div class="flex justify-between items-center text-xs font-mono text-gray-400">
                                     <span class="font-bold text-[#0066cc]">[[ f.teacher_name ]]</span>
                                     <span>[[ f.date ]]</span>
                                 </div>
-                                <p class="text-xs text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
+                                <p class="text-sm text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Welcome Card (If no feedback exists) -->
+                    <div v-else class="p-8 bg-white border border-slate-100/80 rounded-3xl text-center flex flex-col items-center gap-4 shadow-sm">
+                        <span class="text-5xl">👋</span>
+                        <h3 class="text-lg font-black text-slate-800">Xush kelibsiz, [[ currentStudent?.name ]]!</h3>
+                        <p class="text-sm text-gray-500 max-w-md leading-relaxed font-semibold">Barcha darslar, dars jadvali, davomat tarixi va test natijalarini chap tomondagi menyu orqali boshqarishingiz mumkin.</p>
+                    </div>
                 </div>
+            </div>
 
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl mx-auto flex flex-col gap-4 animate-fadeIn text-left">

@@ -1671,10 +1671,80 @@
             </div>
 
             <!-- STUDENT RESPONSIVE GRID DASHBOARD -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'dashboard'" class="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-start animate-fadeIn text-left">
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'dashboard'" class="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-start animate-fadeIn text-left">
                 
-                <!-- Left Column: Profile & Stats -->
-                <div class="flex flex-col gap-6 w-full">
+                <!-- Left Sidebar Column: Bo'limlar (Navigation) -->
+                <div class="md:col-span-1 flex flex-col gap-6 w-full order-2 md:order-1">
+                    <!-- Bo'limlar list -->
+                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-3">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
+                        
+                        <div class="flex flex-col gap-2">
+                            <!-- Darslar -->
+                            <div 
+                                @click="activeStudentTab = 'lessons'"
+                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-base">📖</span>
+                                    <span class="text-xs font-bold text-slate-700">[[ t('lessons') ]]</span>
+                                </div>
+                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                            </div>
+     
+                            <!-- Testlar -->
+                            <div 
+                                @click="activeStudentTab = 'tests'"
+                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">📝</span>
+                                    <span class="text-xs font-bold text-slate-700">[[ t('tests') ]]</span>
+                                </div>
+                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                            </div>
+     
+                            <!-- Dars jadvali -->
+                            <div 
+                                @click="activeStudentTab = 'schedule'"
+                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">📅</span>
+                                    <span class="text-xs font-bold text-slate-700">[[ t('schedule') ]]</span>
+                                </div>
+                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                            </div>
+     
+                            <!-- Davomatlar -->
+                            <div 
+                                @click="activeStudentTab = 'attendance'"
+                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-base">🕒</span>
+                                    <span class="text-xs font-bold text-slate-700">[[ t('attendance') ]]</span>
+                                </div>
+                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                            </div>
+     
+                            <!-- Jarimalar -->
+                            <div 
+                                @click="activeStudentTab = 'penalties'"
+                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-base">ℹ️</span>
+                                    <span class="text-xs font-bold text-slate-700">[[ t('penalties') ]]</span>
+                                </div>
+                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content Column: Profile, Stats, Feedback -->
+                <div class="md:col-span-2 flex flex-col gap-6 w-full order-1 md:order-2">
                     <!-- Profile Header -->
                     <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-100/80">
                         <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50">
@@ -1742,76 +1812,6 @@
                         >
                             <span>📷</span> [[ t('qr_attendance') ]]
                         </button>
-                    </div>
-                </div>
-
-                <!-- Right Column: Sections & Feedback -->
-                <div class="flex flex-col gap-6 w-full">
-                    <!-- Bo'limlar list -->
-                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-3">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
-                        
-                        <div class="flex flex-col gap-2">
-                            <!-- Darslar -->
-                            <div 
-                                @click="activeStudentTab = 'lessons'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-base">📖</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('lessons') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Testlar -->
-                            <div 
-                                @click="activeStudentTab = 'tests'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">📝</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('tests') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Dars jadvali -->
-                            <div 
-                                @click="activeStudentTab = 'schedule'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">📅</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('schedule') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Davomatlar -->
-                            <div 
-                                @click="activeStudentTab = 'attendance'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-base">🕒</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('attendance') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Jarimalar -->
-                            <div 
-                                @click="activeStudentTab = 'penalties'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-base">ℹ️</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('penalties') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-                        </div>
                     </div>
      
                     <!-- O'qituvchi Tavsiyalari va Tushunchalari -->

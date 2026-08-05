@@ -1630,121 +1630,140 @@
         </div>
 
         <!-- ==================== STUDENT WORKSPACE ==================== -->
-        <main v-else class="max-w-full mx-auto px-4 md:px-8 py-8 flex-grow w-full flex flex-col items-center">
+        <!-- ==================== STUDENT WORKSPACE ==================== -->
+        <main v-else class="w-full max-w-[1600px] mx-auto px-4 md:px-8 py-8 flex-grow flex flex-col md:flex-row gap-6">
             
-            <!-- 1. Language selector -->
-            <div class="flex justify-center gap-3 mb-8">
-                <button 
-                    @click="setLanguage('uz_lat')"
-                    class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                    :class="currentLang === 'uz_lat' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200/70'"
-                >
-                    O'zbek
-                </button>
-                <button 
-                    @click="setLanguage('en')"
-                    class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                    :class="currentLang === 'en' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200/70'"
-                >
-                    English
-                </button>
-                <button 
-                    @click="setLanguage('ru')"
-                    class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                    :class="currentLang === 'ru' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200/70'"
-                >
-                    Русский
-                </button>
-                <button 
-                    @click="setLanguage('qr')"
-                    class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                    :class="currentLang === 'qr' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200/70'"
-                >
-                    Qaraqalpaq
-                </button>
-            </div>
-
-            <!-- Loading State -->
-            <div v-if="loading" class="flex-grow flex flex-col items-center justify-center py-20">
-                <div class="w-12 h-12 border-4 border-[#0066cc]/20 border-t-[#0066cc] rounded-full animate-spin mb-4"></div>
-                <span class="text-sm font-semibold text-gray-500">Test yuklanmoqda...</span>
-            </div>
-
-            <!-- STUDENT RESPONSIVE GRID DASHBOARD -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'dashboard'" class="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-start animate-fadeIn text-left">
+            <!-- Left Sidebar Navigation -->
+            <div 
+                v-if="!isTestStarted"
+                class="w-full md:w-64 lg:w-72 flex flex-col gap-3 bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 shrink-0 self-start md:sticky md:top-8"
+            >
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
                 
-                <!-- Left Sidebar Column: Bo'limlar (Navigation) -->
-                <div class="md:col-span-1 flex flex-col gap-6 w-full order-2 md:order-1">
-                    <!-- Bo'limlar list -->
-                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 flex flex-col gap-3">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
-                        
-                        <div class="flex flex-col gap-2">
-                            <!-- Darslar -->
-                            <div 
-                                @click="activeStudentTab = 'lessons'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-base">📖</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('lessons') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Testlar -->
-                            <div 
-                                @click="activeStudentTab = 'tests'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">📝</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('tests') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Dars jadvali -->
-                            <div 
-                                @click="activeStudentTab = 'schedule'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">📅</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('schedule') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Davomatlar -->
-                            <div 
-                                @click="activeStudentTab = 'attendance'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-base">🕒</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('attendance') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
-     
-                            <!-- Jarimalar -->
-                            <div 
-                                @click="activeStudentTab = 'penalties'"
-                                class="p-4 bg-slate-50 hover:bg-slate-100/70 active:scale-[0.99] rounded-2xl flex items-center justify-between cursor-pointer border border-slate-100/80 transition-all"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <span class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-base">ℹ️</span>
-                                    <span class="text-xs font-bold text-slate-700">[[ t('penalties') ]]</span>
-                                </div>
-                                <span class="text-gray-400 text-xs font-bold font-mono">➔</span>
-                            </div>
+                <div class="flex flex-col gap-2">
+                    <!-- Bosh sahifa (Dashboard) -->
+                    <div 
+                        @click="activeStudentTab = 'dashboard'"
+                        class="p-4 rounded-2xl flex items-center justify-between cursor-pointer border transition-all"
+                        :class="activeStudentTab === 'dashboard' ? 'bg-[#0066cc] text-white border-[#0066cc] shadow-md shadow-blue-500/10' : 'bg-slate-50 hover:bg-slate-100/70 border-slate-100/80 text-slate-700'"
+                    >
+                        <div class="flex items-center gap-3">
+                            <span class="text-base">🏠</span>
+                            <span class="text-xs font-bold">[[ currentLang === 'uz_lat' ? 'Bosh sahifa' : currentLang === 'en' ? 'Dashboard' : currentLang === 'ru' ? 'Главная' : 'Bas bet' ]]</span>
                         </div>
+                        <span class="text-xs font-bold font-mono">➔</span>
+                    </div>
+
+                    <!-- Darslar -->
+                    <div 
+                        @click="activeStudentTab = 'lessons'"
+                        class="p-4 rounded-2xl flex items-center justify-between cursor-pointer border transition-all"
+                        :class="activeStudentTab === 'lessons' ? 'bg-[#0066cc] text-white border-[#0066cc] shadow-md shadow-blue-500/10' : 'bg-slate-50 hover:bg-slate-100/70 border-slate-100/80 text-slate-700'"
+                    >
+                        <div class="flex items-center gap-3">
+                            <span class="text-base">📖</span>
+                            <span class="text-xs font-bold">[[ t('lessons') ]]</span>
+                        </div>
+                        <span class="text-xs font-bold font-mono">➔</span>
+                    </div>
+
+                    <!-- Testlar -->
+                    <div 
+                        @click="activeStudentTab = 'tests'"
+                        class="p-4 rounded-2xl flex items-center justify-between cursor-pointer border transition-all"
+                        :class="activeStudentTab === 'tests' ? 'bg-[#0066cc] text-white border-[#0066cc] shadow-md shadow-blue-500/10' : 'bg-slate-50 hover:bg-slate-100/70 border-slate-100/80 text-slate-700'"
+                    >
+                        <div class="flex items-center gap-3">
+                            <span class="text-base">📝</span>
+                            <span class="text-xs font-bold">[[ t('tests') ]]</span>
+                        </div>
+                        <span class="text-xs font-bold font-mono">➔</span>
+                    </div>
+
+                    <!-- Dars jadvali -->
+                    <div 
+                        @click="activeStudentTab = 'schedule'"
+                        class="p-4 rounded-2xl flex items-center justify-between cursor-pointer border transition-all"
+                        :class="activeStudentTab === 'schedule' ? 'bg-[#0066cc] text-white border-[#0066cc] shadow-md shadow-blue-500/10' : 'bg-slate-50 hover:bg-slate-100/70 border-slate-100/80 text-slate-700'"
+                    >
+                        <div class="flex items-center gap-3">
+                            <span class="text-base">📅</span>
+                            <span class="text-xs font-bold">[[ t('schedule') ]]</span>
+                        </div>
+                        <span class="text-xs font-bold font-mono">➔</span>
+                    </div>
+
+                    <!-- Davomatlar -->
+                    <div 
+                        @click="activeStudentTab = 'attendance'"
+                        class="p-4 rounded-2xl flex items-center justify-between cursor-pointer border transition-all"
+                        :class="activeStudentTab === 'attendance' ? 'bg-[#0066cc] text-white border-[#0066cc] shadow-md shadow-blue-500/10' : 'bg-slate-50 hover:bg-slate-100/70 border-slate-100/80 text-slate-700'"
+                    >
+                        <div class="flex items-center gap-3">
+                            <span class="text-base">🕒</span>
+                            <span class="text-xs font-bold">[[ t('attendance') ]]</span>
+                        </div>
+                        <span class="text-xs font-bold font-mono">➔</span>
+                    </div>
+
+                    <!-- Jarimalar -->
+                    <div 
+                        @click="activeStudentTab = 'penalties'"
+                        class="p-4 rounded-2xl flex items-center justify-between cursor-pointer border transition-all"
+                        :class="activeStudentTab === 'penalties' ? 'bg-[#0066cc] text-white border-[#0066cc] shadow-md shadow-blue-500/10' : 'bg-slate-50 hover:bg-slate-100/70 border-slate-100/80 text-slate-700'"
+                    >
+                        <div class="flex items-center gap-3">
+                            <span class="text-base">ℹ️</span>
+                            <span class="text-xs font-bold">[[ t('penalties') ]]</span>
+                        </div>
+                        <span class="text-xs font-bold font-mono">➔</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Right Content Column: Profile, Stats, Feedback -->
-                <div class="md:col-span-2 flex flex-col gap-6 w-full order-1 md:order-2">
+            <!-- Right Main Content Area -->
+            <div class="flex-grow flex flex-col gap-6 w-full min-w-0">
+                <!-- 1. Language selector -->
+                <div class="flex justify-center md:justify-end gap-3 mb-4">
+                    <button 
+                        @click="setLanguage('uz_lat')"
+                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
+                        :class="currentLang === 'uz_lat' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
+                    >
+                        O'zbek
+                    </button>
+                    <button 
+                        @click="setLanguage('en')"
+                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
+                        :class="currentLang === 'en' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
+                    >
+                        English
+                    </button>
+                    <button 
+                        @click="setLanguage('ru')"
+                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
+                        :class="currentLang === 'ru' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
+                    >
+                        Русский
+                    </button>
+                    <button 
+                        @click="setLanguage('qr')"
+                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
+                        :class="currentLang === 'qr' ? 'bg-[#0066cc] text-white shadow-md' : 'bg-white border border-slate-100 text-gray-700 hover:bg-gray-200/70'"
+                    >
+                        Qaraqalpaq
+                    </button>
+                </div>
+
+                <!-- Loading State -->
+                <div v-if="loading" class="flex-grow flex flex-col items-center justify-center py-20">
+                    <div class="w-12 h-12 border-4 border-[#0066cc]/20 border-t-[#0066cc] rounded-full animate-spin mb-4"></div>
+                    <span class="text-sm font-semibold text-gray-500">Test yuklanmoqda...</span>
+                </div>
+
+                <!-- STUDENT DASHBOARD CONTENT -->
+                <div v-if="!loading && activeStudentTab === 'dashboard'" class="w-full flex flex-col gap-6 animate-fadeIn text-left">
+                    
                     <!-- Profile Header -->
                     <div class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-slate-100/80">
                         <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50">
@@ -1837,7 +1856,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl mx-auto flex flex-col gap-4 animate-fadeIn text-left">
@@ -2520,6 +2538,7 @@
 
             </div>
 
+            </div> <!-- Right Main Content Area Close -->
         </main>
         </template>
 

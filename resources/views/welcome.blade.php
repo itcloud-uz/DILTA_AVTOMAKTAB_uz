@@ -1630,13 +1630,12 @@
         </div>
 
         <!-- ==================== STUDENT WORKSPACE ==================== -->
-        <!-- ==================== STUDENT WORKSPACE ==================== -->
-        <main v-else class="w-full max-w-[1600px] mx-auto px-4 md:px-8 py-8 flex-grow flex flex-col md:flex-row gap-6">
+        <main v-else class="w-full py-6 pr-4 md:pr-8 pl-0 flex-grow flex flex-col md:flex-row gap-6">
             
             <!-- Left Sidebar Navigation -->
             <div 
                 v-if="!isTestStarted"
-                class="w-full md:w-64 lg:w-72 flex flex-col gap-3 bg-white p-5 rounded-3xl shadow-sm border border-slate-100/80 shrink-0 self-start md:sticky md:top-8"
+                class="w-full md:w-64 lg:w-72 flex flex-col gap-3 bg-white p-5 rounded-r-3xl rounded-l-none shadow-sm border-r border-y border-slate-100/80 shrink-0 self-start md:sticky md:top-6"
             >
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">// [[ t('sections') ]]</h3>
                 

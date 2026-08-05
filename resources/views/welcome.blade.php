@@ -1786,6 +1786,27 @@
                         <span class="text-xs font-bold font-mono">➔</span>
                     </div>
                 </div>
+
+                <!-- O'qituvchi Tavsiyalari (Moved to bottom of sidebar) -->
+                <div 
+                    v-if="studentFeedbackList.filter(f => f.student_id === currentStudent?.id).length > 0"
+                    class="p-4 bg-blue-50/80 border border-blue-100 rounded-2xl flex flex-col gap-2.5 text-left shadow-sm w-full mt-2"
+                >
+                    <span class="text-[9px] font-extrabold text-[#0066cc] uppercase tracking-wider font-mono">🧑‍🏫 Tavsiya va tushunchalar</span>
+                    <div class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                        <div 
+                            v-for="f in studentFeedbackList.filter(f => f.student_id === currentStudent?.id)"
+                            :key="f.id"
+                            class="p-3 bg-white border border-blue-50 rounded-xl flex flex-col gap-1 shadow-sm"
+                        >
+                            <div class="flex justify-between items-center text-[8px] font-mono text-gray-400">
+                                <span class="font-bold text-[#0066cc]">[[ f.teacher_name ]]</span>
+                                <span>[[ f.date ]]</span>
+                            </div>
+                            <p class="text-[11px] text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Main Content Area -->
@@ -1831,31 +1852,8 @@
                 <!-- STUDENT DASHBOARD CONTENT -->
                 <div v-if="!loading && activeStudentTab === 'dashboard'" class="w-full flex flex-col gap-6 animate-fadeIn text-left">
                     
-                    <!-- O'qituvchi Tavsiyalari va Tushunchalari -->
-                    <div 
-                        v-if="studentFeedbackList.filter(f => f.student_id === currentStudent?.id).length > 0"
-                        class="p-6 bg-blue-50/80 border border-blue-100 rounded-3xl flex flex-col gap-4 text-left shadow-sm w-full"
-                    >
-                        <div class="flex items-center gap-2 text-blue-800 font-extrabold text-xs uppercase tracking-wider font-mono">
-                            <span>🧑‍🏫 TAVSIYA VA TUSHUNCHALAR</span>
-                        </div>
-                        <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                            <div 
-                                v-for="f in studentFeedbackList.filter(f => f.student_id === currentStudent?.id)"
-                                :key="f.id"
-                                class="p-4 bg-white border border-blue-50 rounded-2xl flex flex-col gap-2 shadow-sm"
-                            >
-                                <div class="flex justify-between items-center text-xs font-mono text-gray-400">
-                                    <span class="font-bold text-[#0066cc]">[[ f.teacher_name ]]</span>
-                                    <span>[[ f.date ]]</span>
-                                </div>
-                                <p class="text-sm text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Welcome Card (If no feedback exists) -->
-                    <div v-else class="p-8 bg-white border border-slate-100/80 rounded-3xl text-center flex flex-col items-center gap-4 shadow-sm">
+                    <!-- Welcome Card -->
+                    <div class="p-8 bg-white border border-slate-100/80 rounded-3xl text-center flex flex-col items-center gap-4 shadow-sm animate-fadeIn">
                         <span class="text-5xl">👋</span>
                         <h3 class="text-lg font-black text-slate-800">Xush kelibsiz, [[ currentStudent?.name ]]!</h3>
                         <p class="text-sm text-gray-500 max-w-md leading-relaxed font-semibold">Barcha darslar, dars jadvali, davomat tarixi va test natijalarini chap tomondagi menyu orqali boshqarishingiz mumkin.</p>

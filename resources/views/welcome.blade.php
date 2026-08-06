@@ -4137,9 +4137,7 @@
                 };
 
                 const confirmAndResetTest = () => {
-                    if (window.confirm("Testni to'xtatib, bosh sahifaga qaytmoqchimisiz?")) {
-                        resetTest();
-                    }
+                    resetTest();
                 };
 
                 const startActualTest = () => {

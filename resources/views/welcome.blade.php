@@ -1630,7 +1630,7 @@
         </div>
 
         <!-- ==================== STUDENT WORKSPACE ==================== -->
-        <main v-else class="w-full py-6 pr-4 md:pr-8 pl-0 flex-grow flex flex-col md:flex-row gap-6">
+        <main v-else class="w-full py-6 flex-grow flex flex-col md:flex-row gap-6" :class="isTestStarted ? 'px-4 md:px-8' : 'pr-4 md:pr-8 pl-0'">
             
             <!-- Left Sidebar Navigation -->
             <div 
@@ -2177,7 +2177,7 @@
             </div>
 
             <!-- Test Interface -->
-            <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full max-w-5xl mx-auto flex flex-col gap-8">
+            <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-8 animate-fadeIn">
                 <!-- Back Link -->
                 <button 
                     v-if="loggedInUserType === 'student'"
@@ -2277,7 +2277,7 @@
                     </div>
 
                     <!-- Question Text and Action Buttons -->
-                    <div class="flex flex-col items-center gap-4 mb-8 w-full max-w-3xl">
+                    <div class="flex flex-col items-center gap-4 mb-8 w-full max-w-5xl">
                         <h2 class="text-xl font-bold text-white text-center leading-relaxed">
                             [[ currentQuestionData.question ]]
                         </h2>
@@ -2292,7 +2292,7 @@
                     </div>
 
                     <!-- Answer Options Stack -->
-                    <div class="w-full max-w-2xl flex flex-col gap-4">
+                    <div class="w-full max-w-4xl flex flex-col gap-4">
                         <button 
                             v-for="opt in currentQuestionData.options"
                             :key="opt.id"

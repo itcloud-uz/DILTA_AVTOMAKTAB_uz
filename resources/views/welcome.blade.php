@@ -1854,7 +1854,7 @@
                 </div>
 
 
-            </div>
+
 
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">

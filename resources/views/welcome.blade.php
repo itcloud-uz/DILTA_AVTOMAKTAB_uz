@@ -2181,7 +2181,7 @@
                 <!-- Back Link -->
                 <button 
                     v-if="loggedInUserType === 'student'"
-                    @click="if(confirm('Testni to\'xtatib, bosh sahifaga qaytmoqchimisiz?')) resetTest();" 
+                    @click="confirmAndResetTest" 
                     class="self-start text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline"
                 >
                     ➔ Bosh sahifaga qaytish
@@ -4136,6 +4136,12 @@
                     await loadQuestions();
                 };
 
+                const confirmAndResetTest = () => {
+                    if (window.confirm("Testni to'xtatib, bosh sahifaga qaytmoqchimisiz?")) {
+                        resetTest();
+                    }
+                };
+
                 const startActualTest = () => {
                     studentSelectError.value = '';
                     
@@ -5465,6 +5471,7 @@
                     testFinished,
                     score,
                     resetTest,
+                    confirmAndResetTest,
                     getQuestionIllustration,
                     reviewFilter,
                     filteredReviewQuestions,

@@ -2177,7 +2177,7 @@
             </div>
 
             <!-- Test Interface -->
-            <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-8">
+            <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full max-w-5xl mx-auto flex flex-col gap-8">
                 <!-- Back Link -->
                 <button 
                     v-if="loggedInUserType === 'student'"
@@ -2359,7 +2359,7 @@
             </div>
 
             <!-- Result Summary Screen -->
-            <div v-if="!loading && isTestStarted && testFinished" class="w-full max-w-3xl bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center">
+            <div v-if="!loading && isTestStarted && testFinished" class="w-full max-w-5xl mx-auto bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center">
                 <!-- Back Link -->
                 <button 
                     v-if="loggedInUserType === 'student'"

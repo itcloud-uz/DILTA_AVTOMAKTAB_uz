@@ -1857,7 +1857,7 @@
             </div>
 
             <!-- STUDENT LESSONS LIST -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
                 </button>
@@ -1892,7 +1892,7 @@
             </div>
 
             <!-- STUDENT CLASS SCHEDULE -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'schedule'" class="w-full max-w-2xl mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'schedule'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
                 </button>
@@ -1925,7 +1925,7 @@
             </div>
 
             <!-- STUDENT ATTENDANCE HISTORY -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'attendance'" class="w-full max-w-3xl mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'attendance'" class="w-full max-w-3xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
                 </button>
@@ -1998,7 +1998,7 @@
             </div>
 
             <!-- STUDENT PENALTIES -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'penalties'" class="w-full max-w-2xl mx-auto flex flex-col gap-4 animate-fadeIn text-left">
+            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'penalties'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
                 </button>
@@ -2059,7 +2059,7 @@
 
 
             <!-- Test Welcome Start Screen -->
-            <div v-if="!loading && !isTestStarted && (loggedInUserType !== 'student' || activeStudentTab === 'tests')" class="flex-grow flex flex-col items-center justify-center py-12 max-w-xl mx-auto w-full">
+            <div v-if="!loading && !isTestStarted && (loggedInUserType !== 'student' || activeStudentTab === 'tests')" class="flex-grow flex flex-col py-12 max-w-xl ml-0 w-full">
                 <button 
                     v-if="loggedInUserType === 'student'"
                     @click="activeStudentTab = 'dashboard'" 

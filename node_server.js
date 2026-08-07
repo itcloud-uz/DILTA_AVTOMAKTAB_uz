@@ -3,6 +3,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import initSqlJs from 'sql.js';
+import os from 'os';
 
 const app = express();
 app.use(cors());
@@ -544,6 +545,26 @@ app.post('/api/v1/questions', (req, res) => {
     } catch (e) {
         console.error("API Create Question Error:", e);
         res.status(500).json({ error: "Server failed to save question" });
+    }
+});
+
+// Get local IP of the server
+app.get('/api/v1/local-ip', (req, res) => {
+    try {
+        const networkInterfaces = os.networkInterfaces();
+        let localIp = '127.0.0.1';
+        for (const interfaceName in networkInterfaces) {
+            for (const iface of networkInterfaces[interfaceName]) {
+                if (iface.family === 'IPv4' && !iface.internal) {
+                    localIp = iface.address;
+                    break;
+                }
+            }
+        }
+        res.json({ ip: localIp });
+    } catch (err) {
+        console.error("Local IP Fetch Error:", err);
+        res.json({ ip: '127.0.0.1' });
     }
 });
 

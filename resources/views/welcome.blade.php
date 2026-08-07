@@ -521,6 +521,14 @@
                         TIZIMGA KIRISH
                     </button>
                 </form>
+                
+                <button 
+                    @click="showMobileAccessModal = true" 
+                    type="button"
+                    class="btn-neumorphic w-full py-3.5 text-xs font-extrabold transition-all border-none flex items-center justify-center gap-2 mt-2"
+                >
+                    📱 TELEFONDAN KIRISH (QR CODE)
+                </button>
             </div>
         </div>
 
@@ -1636,6 +1644,7 @@
             <div 
                 v-if="!isTestStarted"
                 class="w-full md:w-[340px] lg:w-[370px] flex flex-col gap-5 bg-white p-5 rounded-r-3xl rounded-l-none shadow-sm border-r border-y border-slate-100/80 shrink-0 self-start md:sticky md:top-6 md:max-h-[calc(100vh-3rem)] overflow-y-auto"
+                :class="{ 'hidden md:flex': activeStudentTab !== 'dashboard' }"
             >
                 <!-- Profile Header (Moved to Sidebar) -->
                 <div class="flex items-center gap-3.5 border-b pb-4">
@@ -2684,6 +2693,45 @@
                         <span v-else>SAQLANMOQDA...</span>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- ==================== MOBILE ACCESS QR CODE MODAL ==================== -->
+        <div v-if="showMobileAccessModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <div class="card-3d bg-white rounded-3xl w-full max-w-sm shadow-2xl flex flex-col p-6 border border-slate-200 text-center gap-4 animate-scaleUp">
+                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-sm border border-blue-100 mb-2">
+                    📱
+                </div>
+                <h3 class="text-base font-black text-slate-800 tracking-tight uppercase">TELEFONDAN KIRISH</h3>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider text-center">// QR-KODNI TELEFONINGIZ ORQALI SKANERLANG</p>
+                
+                <div class="flex justify-center p-4 bg-slate-50 border rounded-2xl shadow-inner">
+                    <img 
+                        v-if="mobileAccessQrCodeUrl" 
+                        :src="mobileAccessQrCodeUrl" 
+                        alt="Mobile QR Code" 
+                        class="w-48 h-48 rounded-xl shadow-md border"
+                    />
+                    <div v-else class="w-48 h-48 flex items-center justify-center text-xs text-gray-400 font-bold">
+                        IP yuklanmoqda...
+                    </div>
+                </div>
+
+                <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-left flex flex-col gap-1">
+                    <span class="text-[9px] font-mono text-gray-400 uppercase font-bold">// Ulanish manzili</span>
+                    <span class="font-mono text-xs font-bold text-slate-700 break-all">http://[[ serverLocalIp ]]:8000</span>
+                </div>
+
+                <p class="text-[10px] text-slate-500 font-bold leading-normal bg-slate-50 p-3.5 rounded-xl border">
+                    Eslatma: Telefon va kompyuter bitta Wi-Fi tarmog'iga (yoki bitta modem/routerga) ulangan bo'lishi shart.
+                </p>
+
+                <button 
+                    @click="showMobileAccessModal = false"
+                    class="w-full py-3 bg-[#0066cc] text-white rounded-xl text-xs font-bold uppercase tracking-wider mt-2 border-b-4 border-b-blue-800"
+                >
+                    Tushunarli (Yopish)
+                </button>
             </div>
         </div>
 
@@ -5092,6 +5140,8 @@
 
                 const selectedLessonId = ref(null);
                 const showQrModal = ref(false);
+                const showMobileAccessModal = ref(false);
+                const serverLocalIp = ref('');
 
                 const currentStudent = computed(() => {
                     const id = loggedInStudentId.value || selectedStudentId.value;
@@ -5303,6 +5353,11 @@
                     return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + student.login);
                 });
 
+                const mobileAccessQrCodeUrl = computed(() => {
+                    if (!serverLocalIp.value) return '';
+                    return 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('http://' + serverLocalIp.value + ':8000');
+                });
+
                 const studentActivityLogs = ref(JSON.parse(localStorage.getItem('student_activity_logs')) || [
                     { id: 1, student_id: 1, login_time: "2026-07-31 09:12", logout_time: "2026-07-31 11:30" },
                     { id: 2, student_id: 1, login_time: "2026-07-30 14:05", logout_time: "2026-07-30 16:00" },
@@ -5380,6 +5435,15 @@
                     authPassword.value = '';
                     await loadQuestions();
 
+                    try {
+                        const resIp = await fetch('/api/v1/local-ip');
+                        const dataIp = await resIp.json();
+                        serverLocalIp.value = dataIp.ip;
+                    } catch (err) {
+                        console.error("Local IP fetch failed:", err);
+                        serverLocalIp.value = window.location.hostname;
+                    }
+
                     // Check for URL check-in parameter from scanned QR code
                     const urlParams = new URLSearchParams(window.location.search);
                     const checkinLogin = urlParams.get('checkin');
@@ -5431,6 +5495,9 @@
                     selectedLessonId,
                     showQrModal,
                     qrCodeUrl,
+                    showMobileAccessModal,
+                    serverLocalIp,
+                    mobileAccessQrCodeUrl,
                     currentStudent,
                     triggerPhotoUpload,
                     uploadStudentPhoto,

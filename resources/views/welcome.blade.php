@@ -2215,6 +2215,14 @@
                         >
                             TESTNI YAKUNLASH
                         </button>
+
+                        <!-- Back Button -->
+                        <button 
+                            @click="confirmAndResetTest"
+                            class="px-5 py-3.5 bg-slate-800/80 hover:bg-[#0066cc]/20 hover:text-blue-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-blue-700/60"
+                        >
+                            ORTGA QAYTISH
+                        </button>
                     </div>
 
                     <!-- Navigation Pagination Grid -->

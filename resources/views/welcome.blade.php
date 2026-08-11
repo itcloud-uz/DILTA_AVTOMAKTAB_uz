@@ -5338,7 +5338,13 @@
                 const qrCodeUrl = computed(() => {
                     const student = currentStudent.value;
                     if (!student) return '';
-                    return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(window.location.origin + '/?checkin=' + student.login);
+                    let baseOrigin = window.location.origin;
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        if (serverLocalIp.value) {
+                            baseOrigin = 'http://' + serverLocalIp.value + ':8000';
+                        }
+                    }
+                    return 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(baseOrigin + '/?checkin=' + student.login);
                 });
 
                 const mobileAccessQrCodeUrl = computed(() => {

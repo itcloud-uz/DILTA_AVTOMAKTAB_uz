@@ -2069,13 +2069,7 @@
 
             <!-- Test Welcome Start Screen -->
             <div v-if="!loading && !isTestStarted && (loggedInUserType !== 'student' || activeStudentTab === 'tests')" class="flex-grow flex flex-col py-12 max-w-xl ml-0 w-full">
-                <button 
-                    v-if="loggedInUserType === 'student'"
-                    @click="activeStudentTab = 'dashboard'" 
-                    class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline animate-fadeIn"
-                >
-                    ➔ Bosh sahifaga qaytish
-                </button>
+
                 <div class="card-3d p-8 rounded-3xl w-full text-center flex flex-col items-center gap-6">
                     <div class="w-20 h-20 bg-blue-50 text-[#0066cc] rounded-2xl flex items-center justify-center text-4xl shadow-sm border border-blue-100">
                         🏁
@@ -2362,14 +2356,7 @@
 
             <!-- Result Summary Screen -->
             <div v-if="!loading && isTestStarted && testFinished" class="w-full max-w-5xl mx-auto bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center">
-                <!-- Back Link -->
-                <button 
-                    v-if="loggedInUserType === 'student'"
-                    @click="resetTest" 
-                    class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline"
-                >
-                    ➔ Bosh sahifaga qaytish
-                </button>
+
                 
                 <!-- Pass/Fail Badge -->
                 <div 

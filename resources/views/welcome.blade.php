@@ -4018,13 +4018,13 @@
                             }
                         }, 4000);
 
-                        // Chrome/browser bug prevention: biroz kechikish bilan gapirtiramiz
-                        setTimeout(() => {
-                            try {
-                                window.speechSynthesis.resume();
-                                window.speechSynthesis.speak(utter);
-                            } catch (err) {}
-                        }, 100);
+                        // Speak immediately (do not wrap in setTimeout, otherwise mobile browsers block it due to user gesture policy)
+                        try {
+                            window.speechSynthesis.resume();
+                            window.speechSynthesis.speak(utter);
+                        } catch (err) {
+                            console.error("Speech play failed:", err);
+                        }
                     } catch (e) {
                         console.error("speakExplanation dynamic error caught:", e);
                         if (onEndCallback) {

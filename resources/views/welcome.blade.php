@@ -3567,22 +3567,39 @@
                     }
                 };
 
-                const studentStartDate = (student) => {
-                    if (!student) return '21.07.2026';
-                    if (student.login === 'alijon') return '21.07.2026';
-                    if (student.login === 'madina') return '20.07.2026';
-                    const day = (student.id * 3) % 28 + 1;
-                    const dayStr = day < 10 ? '0' + day : day;
-                    return `${dayStr}.07.2026`;
+                const studentEndDate = (student) => {
+                    if (!student || !student.subscription_end_date) return '07.10.2026';
+                    try {
+                        const dateParts = student.subscription_end_date.split('-');
+                        if (dateParts.length === 3) {
+                            return `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}`;
+                        }
+                    } catch (e) {}
+                    return student.subscription_end_date;
                 };
 
-                const studentEndDate = (student) => {
-                    if (!student) return '08.10.2026';
-                    if (student.login === 'alijon') return '08.10.2026';
-                    if (student.login === 'madina') return '07.10.2026';
-                    const day = (student.id * 4) % 28 + 1;
-                    const dayStr = day < 10 ? '0' + day : day;
-                    return `${dayStr}.10.2026`;
+                const studentStartDate = (student) => {
+                    if (!student || !student.subscription_end_date) return '20.07.2026';
+                    try {
+                        const dateParts = student.subscription_end_date.split('-');
+                        if (dateParts.length === 3) {
+                            const year = parseInt(dateParts[0]);
+                            const month = parseInt(dateParts[1]);
+                            const day = parseInt(dateParts[2]);
+                            
+                            let startMonth = month - 3;
+                            let startYear = year;
+                            if (startMonth <= 0) {
+                                startMonth += 12;
+                                startYear -= 1;
+                            }
+                            
+                            const dayStr = day < 10 ? '0' + day : day;
+                            const monthStr = startMonth < 10 ? '0' + startMonth : startMonth;
+                            return `${dayStr}.${monthStr}.${startYear}`;
+                        }
+                    } catch (e) {}
+                    return '20.07.2026';
                 };
 
                 const isDarkMode = ref(localStorage.getItem('theme-dark') === 'true');

@@ -2187,14 +2187,7 @@
 
             <!-- Test Interface -->
             <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-8 animate-fadeIn">
-                <!-- Back Link -->
-                <button 
-                    v-if="loggedInUserType === 'student'"
-                    @click="confirmAndResetTest" 
-                    class="self-start text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline"
-                >
-                    ➔ Bosh sahifaga qaytish
-                </button>
+
                 
                 <!-- Controls and Navigation Row -->
                 <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-[#1a2332] p-6 rounded-2xl border border-slate-700/60 shadow-lg">

@@ -3568,21 +3568,21 @@
                 };
 
                 const studentStartDate = (student) => {
-                    if (!student) return '21.07.2026 09:00:00';
-                    if (student.login === 'alijon') return '21.07.2026 09:00:00';
-                    if (student.login === 'madina') return '20.07.2026 09:00:00';
+                    if (!student) return '21.07.2026';
+                    if (student.login === 'alijon') return '21.07.2026';
+                    if (student.login === 'madina') return '20.07.2026';
                     const day = (student.id * 3) % 28 + 1;
                     const dayStr = day < 10 ? '0' + day : day;
-                    return `${dayStr}.07.2026 09:00:00`;
+                    return `${dayStr}.07.2026`;
                 };
 
                 const studentEndDate = (student) => {
-                    if (!student) return '08.10.2026 18:00:00';
-                    if (student.login === 'alijon') return '08.10.2026 18:00:00';
-                    if (student.login === 'madina') return '07.10.2026 18:00:00';
+                    if (!student) return '08.10.2026';
+                    if (student.login === 'alijon') return '08.10.2026';
+                    if (student.login === 'madina') return '07.10.2026';
                     const day = (student.id * 4) % 28 + 1;
                     const dayStr = day < 10 ? '0' + day : day;
-                    return `${dayStr}.10.2026 18:00:00`;
+                    return `${dayStr}.10.2026`;
                 };
 
                 const isDarkMode = ref(localStorage.getItem('theme-dark') === 'true');

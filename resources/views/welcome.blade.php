@@ -1895,7 +1895,7 @@
                     </div>
 
                     <!-- Stats Overview Row -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <!-- O'rtacha Baho -->
                         <div class="bg-white p-5 rounded-2xl border border-slate-100/80 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
                             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold font-mono">⭐</div>
@@ -1913,15 +1913,6 @@
                                 <span class="text-xs font-black" :class="getStudentSubscriptionStatus(currentStudent) === 'Faol' ? 'text-emerald-600' : 'text-rose-600'">
                                     [[ getStudentSubscriptionStatus(currentStudent) === 'Faol' ? 'FAOL' : 'MUDDATI TUGAGAN' ]]
                                 </span>
-                            </div>
-                        </div>
-
-                        <!-- Davomat foizi -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-100/80 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold font-mono">📈</div>
-                            <div class="flex flex-col">
-                                <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">KURS SANALARI</span>
-                                <span class="text-[10px] font-black text-slate-700">[[ studentStartDate ]] / [[ studentEndDate ]]</span>
                             </div>
                         </div>
                     </div>

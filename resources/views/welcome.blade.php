@@ -1424,7 +1424,7 @@
 
                     <div class="border-t pt-6 flex flex-col gap-4">
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider">// PANEL PAROLLARINI O'ZGARTIRISH</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-gray-500">Admin Login (Foydalanuvchi nomi)</label>
                                 <input type="text" v-model="adminUsernameSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
@@ -1432,6 +1432,10 @@
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-gray-500">Admin Maxfiy Parol</label>
                                 <input type="text" v-model="adminPasswordSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-xs font-bold text-gray-500">O'quvchi Tizimi Logini</label>
+                                <input type="text" v-model="studentPanelUsernameSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
                             </div>
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-gray-500">O'quvchi Tizimi Paroli</label>
@@ -3631,6 +3635,11 @@
                     localStorage.setItem('admin_pass', newVal);
                 });
 
+                const studentPanelUsernameSetting = ref(localStorage.getItem('student_panel_user') || 'talaba');
+                watch(studentPanelUsernameSetting, (newVal) => {
+                    localStorage.setItem('student_panel_user', newVal);
+                });
+
                 const studentPanelPasswordSetting = ref(localStorage.getItem('student_panel_pass') || '12345');
                 watch(studentPanelPasswordSetting, (newVal) => {
                     localStorage.setItem('student_panel_pass', newVal);
@@ -4694,6 +4703,19 @@
                         return;
                     }
 
+                    // Check if it's general student panel login
+                    if (authUsername.value.toLowerCase().trim() === studentPanelUsernameSetting.value.toLowerCase().trim() && authPassword.value === studentPanelPasswordSetting.value) {
+                        isLoggedIn.value = true;
+                        loggedInUserType.value = 'student_panel';
+                        loggedInStudentId.value = null;
+                        selectedStudentId.value = null;
+                        studentSelectPassword.value = '';
+                        studentSelectError.value = '';
+                        isAdminMode.value = false;
+                        studentPanelUnlockPassword.value = '';
+                        return;
+                    }
+
                     // Check if it's a teacher login
                     const teacher = staffList.value.find(
                         t => t.login && t.login.toLowerCase().trim() === authUsername.value.toLowerCase().trim() && t.password === authPassword.value
@@ -5651,6 +5673,7 @@
                     studentPanelUnlockPassword,
                     studentSelectPassword,
                     studentSelectError,
+                    studentPanelUsernameSetting,
                     studentPanelPasswordSetting,
                     handleStudentPanelUnlock,
                     handleLogin,

@@ -4760,19 +4760,6 @@
                         return;
                     }
 
-                    // Check if it's general student panel login
-                    if (authUsername.value.toLowerCase().trim() === studentPanelUsernameSetting.value.toLowerCase().trim() && authPassword.value === studentPanelPasswordSetting.value) {
-                        isLoggedIn.value = true;
-                        loggedInUserType.value = 'student_panel';
-                        loggedInStudentId.value = null;
-                        selectedStudentId.value = null;
-                        studentSelectPassword.value = '';
-                        studentSelectError.value = '';
-                        isAdminMode.value = false;
-                        studentPanelUnlockPassword.value = '';
-                        return;
-                    }
-
                     // Check if it's a teacher login
                     const teacher = staffList.value.find(
                         t => t.login && t.login.toLowerCase().trim() === authUsername.value.toLowerCase().trim() && t.password === authPassword.value

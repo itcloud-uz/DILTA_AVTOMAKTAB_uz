@@ -3735,34 +3735,25 @@
                     
                     if (!nameVal || !loginVal || !passVal) return;
                     
-                    let sysStudent = studentsList.value.find(s => s.is_system_student);
+                    // Look up by login to prevent duplicates and keep all previously added students
+                    const sysStudent = studentsList.value.find(s => s.login === loginVal);
                     if (sysStudent) {
                         sysStudent.name = nameVal;
-                        sysStudent.login = loginVal;
                         sysStudent.password = passVal;
                     } else {
-                        // Look up by login to prevent duplicates
-                        sysStudent = studentsList.value.find(s => s.login === loginVal);
-                        if (sysStudent) {
-                            sysStudent.name = nameVal;
-                            sysStudent.password = passVal;
-                            sysStudent.is_system_student = true;
-                        } else {
-                            const nextId = studentsList.value.length ? Math.max(...studentsList.value.map(s => s.id)) + 1 : 1;
-                            const newSysStudent = {
-                                id: nextId,
-                                name: nameVal,
-                                class_name: 'A-10',
-                                today_status: 'keldi',
-                                grades: [5, 5, 5],
-                                tuition_status: 'To\'lagan',
-                                subscription_end_date: '2026-12-31',
-                                login: loginVal,
-                                password: passVal,
-                                is_system_student: true
-                            };
-                            studentsList.value.push(newSysStudent);
-                        }
+                        const nextId = studentsList.value.length ? Math.max(...studentsList.value.map(s => s.id)) + 1 : 1;
+                        const newSysStudent = {
+                            id: nextId,
+                            name: nameVal,
+                            class_name: 'A-10',
+                            today_status: 'keldi',
+                            grades: [5, 5, 5],
+                            tuition_status: 'To\'lagan',
+                            subscription_end_date: '2026-12-31',
+                            login: loginVal,
+                            password: passVal
+                        };
+                        studentsList.value.push(newSysStudent);
                     }
                 };
 

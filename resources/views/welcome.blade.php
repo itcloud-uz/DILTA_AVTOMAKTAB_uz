@@ -3640,19 +3640,8 @@
                 });
 
                 const studentPanelUsernameSetting = ref(localStorage.getItem('student_panel_user') || 'talaba');
-                watch(studentPanelUsernameSetting, (newVal) => {
-                    localStorage.setItem('student_panel_user', newVal);
-                });
-
                 const studentPanelNameSetting = ref(localStorage.getItem('student_panel_name') || "O'quvchi");
-                watch(studentPanelNameSetting, (newVal) => {
-                    localStorage.setItem('student_panel_name', newVal);
-                });
-
                 const studentPanelPasswordSetting = ref(localStorage.getItem('student_panel_pass') || '12345');
-                watch(studentPanelPasswordSetting, (newVal) => {
-                    localStorage.setItem('student_panel_pass', newVal);
-                });
 
                 const loginTab = ref('student');
                 const activeStudentTab = ref('dashboard');
@@ -3734,6 +3723,63 @@
                     { id: 11, name: 'Jasur Alimov', class_name: 'C-05', today_status: 'keldi', grades: [4, 3, 3], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'jasur', password: 'Jsr88' },
                     { id: 12, name: 'Nilufar Qodirova', class_name: 'A-10', today_status: 'keldi', grades: [5, 5, 5], tuition_status: 'To\'lagan', subscription_end_date: '2026-08-30', login: 'nilufar', password: 'Nlf27' }
                 ]);
+
+                // Sync settings student terminal changes directly to studentsList
+                const syncSystemStudentToList = () => {
+                    if (!studentsList.value) return;
+                    
+                    const nameVal = studentPanelNameSetting.value.trim();
+                    const loginVal = studentPanelUsernameSetting.value.toLowerCase().trim();
+                    const passVal = studentPanelPasswordSetting.value.trim();
+                    
+                    if (!nameVal || !loginVal || !passVal) return;
+                    
+                    let sysStudent = studentsList.value.find(s => s.is_system_student);
+                    if (sysStudent) {
+                        sysStudent.name = nameVal;
+                        sysStudent.login = loginVal;
+                        sysStudent.password = passVal;
+                    } else {
+                        // Look up by login to prevent duplicates
+                        sysStudent = studentsList.value.find(s => s.login === loginVal);
+                        if (sysStudent) {
+                            sysStudent.name = nameVal;
+                            sysStudent.password = passVal;
+                            sysStudent.is_system_student = true;
+                        } else {
+                            const nextId = studentsList.value.length ? Math.max(...studentsList.value.map(s => s.id)) + 1 : 1;
+                            const newSysStudent = {
+                                id: nextId,
+                                name: nameVal,
+                                class_name: 'A-10',
+                                today_status: 'keldi',
+                                grades: [5, 5, 5],
+                                tuition_status: 'To\'lagan',
+                                subscription_end_date: '2026-12-31',
+                                login: loginVal,
+                                password: passVal,
+                                is_system_student: true
+                            };
+                            studentsList.value.push(newSysStudent);
+                        }
+                    }
+                };
+
+                // Watch settings and sync to LocalStorage & studentsList
+                watch(studentPanelUsernameSetting, (newVal) => {
+                    localStorage.setItem('student_panel_user', newVal);
+                    syncSystemStudentToList();
+                });
+
+                watch(studentPanelNameSetting, (newVal) => {
+                    localStorage.setItem('student_panel_name', newVal);
+                    syncSystemStudentToList();
+                });
+
+                watch(studentPanelPasswordSetting, (newVal) => {
+                    localStorage.setItem('student_panel_pass', newVal);
+                    syncSystemStudentToList();
+                });
 
                 // Test attempts tracking state
                 const selectedReportStudentId = ref(null);
@@ -5411,6 +5457,7 @@
                 }, { deep: true });
 
                 onMounted(async () => {
+                    syncSystemStudentToList();
                     const uniquePasswordsMap = {
                         // Teachers
                         'shavkat': 'Shv98',

@@ -1873,6 +1873,123 @@
 
 
 
+                <!-- STUDENT DASHBOARD (BOSH SAHIFA) OVERVIEW -->
+                <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'dashboard'" class="w-full max-w-3xl ml-0 flex flex-col gap-6 animate-fadeIn text-left">
+                    <!-- Welcome Banner Card -->
+                    <div class="card-3d p-6 rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden shadow-xl border-none">
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+                        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+                        
+                        <div class="flex flex-col gap-1.5 relative z-10">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 font-mono">// TALABA KABINETI</span>
+                            <h2 class="text-xl md:text-2xl font-black tracking-tight">Xush kelibsiz, [[ currentStudent?.name ]]! 👋</h2>
+                            <p class="text-xs text-blue-100 font-medium">Haydovchilik o'quv dasturidagi faolligingiz va ko'rsatkichlaringizni kuzatib boring.</p>
+                        </div>
+                        <div class="flex items-center gap-2.5 bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 shrink-0 relative z-10">
+                            <span class="text-2xl">🎓</span>
+                            <div class="flex flex-col">
+                                <span class="text-[8px] font-bold text-blue-200 uppercase">GURUHINGIZ</span>
+                                <span class="font-black text-sm tracking-wide">[[ currentStudent?.class_name ]]</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overview Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- O'rtacha Baho -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100/80 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold font-mono">⭐</div>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">O'RTANCHA BAHO</span>
+                                <span class="text-base font-black text-slate-800">[[ getAverageScoreForStudent(currentStudent?.id) ]]</span>
+                            </div>
+                        </div>
+
+                        <!-- Obuna holati -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100/80 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold font-mono">💳</div>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">OBUNA STATUSI</span>
+                                <span class="text-xs font-black" :class="getStudentSubscriptionStatus(currentStudent) === 'Faol' ? 'text-emerald-600' : 'text-rose-600'">
+                                    [[ getStudentSubscriptionStatus(currentStudent) === 'Faol' ? 'FAOL' : 'MUDDATI TUGAGAN' ]]
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Davomat foizi -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100/80 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold font-mono">📈</div>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">KURS SANALARI</span>
+                                <span class="text-[10px] font-black text-slate-700">[[ studentStartDate ]] / [[ studentEndDate ]]</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation Sections -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100/80 shadow-sm flex flex-col gap-4">
+                        <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">// TEZKOR BO'LIMLAR</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Imtihon Topshirish -->
+                            <div @click="activeStudentTab = 'tests'" class="p-4 bg-slate-50 hover:bg-blue-50/50 hover:border-blue-200 rounded-2xl border border-slate-100 cursor-pointer transition-all flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">📝</div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-slate-800">Imtihon topshirish</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">Barcha bosqich testlarini boshlash</span>
+                                </div>
+                            </div>
+
+                            <!-- Darslarni ko'rish -->
+                            <div @click="activeStudentTab = 'lessons'" class="p-4 bg-slate-50 hover:bg-indigo-50/50 hover:border-indigo-200 rounded-2xl border border-slate-100 cursor-pointer transition-all flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">📖</div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-slate-800">Darslarni ko'rish</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">Nazariy o'quv darslari materiallari</span>
+                                </div>
+                            </div>
+
+                            <!-- Dars jadvali -->
+                            <div @click="activeStudentTab = 'schedule'" class="p-4 bg-slate-50 hover:bg-emerald-50/50 hover:border-emerald-200 rounded-2xl border border-slate-100 cursor-pointer transition-all flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">📅</div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-slate-800">Dars jadvali</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">Haftalik nazariy va amaliy dars vaqtlari</span>
+                                </div>
+                            </div>
+
+                            <!-- Davomat tarixi -->
+                            <div @click="activeStudentTab = 'attendance'" class="p-4 bg-slate-50 hover:bg-amber-50/50 hover:border-amber-200 rounded-2xl border border-slate-100 cursor-pointer transition-all flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">🕒</div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-black text-slate-800">Davomat va kirish tarixi</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">Keldi-ketdi kunlaringiz jurnali</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Feedback -->
+                    <div 
+                        v-if="studentFeedbackList.filter(f => f.student_id === currentStudent?.id).length > 0"
+                        class="bg-white p-6 rounded-3xl border border-slate-100/80 shadow-sm flex flex-col gap-4 text-left"
+                    >
+                        <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">// O'QITUVCHILARDAN SO'NGGI TAVSIYALAR</h3>
+                        <div class="space-y-3">
+                            <div 
+                                v-for="f in studentFeedbackList.filter(f => f.student_id === currentStudent?.id).slice(0, 2)"
+                                :key="f.id"
+                                class="p-4 bg-blue-50/40 border border-blue-100/50 rounded-2xl flex flex-col gap-1.5 shadow-sm"
+                            >
+                                <div class="flex justify-between items-center text-[9px] font-mono text-gray-400">
+                                    <span class="font-bold text-[#0066cc]">[[ f.teacher_name ]]</span>
+                                    <span>[[ f.date ]]</span>
+                                </div>
+                                <p class="text-xs text-slate-700 leading-relaxed font-semibold">[[ f.message ]]</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">

@@ -1411,7 +1411,7 @@
                 <!-- ==================== TAB: SOZLAMALAR ==================== -->
                 <div v-else-if="activeAdminTab === 'sozlamalar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left">
                     <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// TIZIM SOZLAMALARI</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="flex flex-col gap-2">
                             <label class="text-xs font-bold text-gray-500">Maktab Nomi (Tizimda)</label>
                             <input type="text" value="DELTA_AVTOMAKTAB_UZ Haydovchilik Maktabi" class="p-2.5 rounded-xl border text-xs bg-slate-50 text-slate-500 font-medium" disabled />
@@ -1419,6 +1419,10 @@
                         <div class="flex flex-col gap-2">
                             <label class="text-xs font-bold text-gray-500">Test o'tish balli</label>
                             <input type="number" value="20" class="p-2.5 rounded-xl border text-xs bg-slate-50 text-slate-500 font-medium" disabled />
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-bold text-gray-500">O'quvchi Tizimi Sarlavhasi (Ismi)</label>
+                            <input type="text" v-model="studentPanelNameSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
                         </div>
                     </div>
 
@@ -1675,8 +1679,8 @@
                     />
                     
                     <div class="flex flex-col min-w-0">
-                        <h2 class="text-sm font-black text-slate-800 tracking-tight leading-tight truncate">[[ currentStudent?.name || 'Foydalanuvchi' ]]</h2>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ t('student_title') ]]</span>
+                        <h2 class="text-sm font-black text-slate-800 tracking-tight leading-tight truncate">[[ currentStudent?.name || studentPanelNameSetting ]]</h2>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ studentPanelNameSetting ]]</span>
                     </div>
                 </div>
 
@@ -3638,6 +3642,11 @@
                 const studentPanelUsernameSetting = ref(localStorage.getItem('student_panel_user') || 'talaba');
                 watch(studentPanelUsernameSetting, (newVal) => {
                     localStorage.setItem('student_panel_user', newVal);
+                });
+
+                const studentPanelNameSetting = ref(localStorage.getItem('student_panel_name') || "O'quvchi");
+                watch(studentPanelNameSetting, (newVal) => {
+                    localStorage.setItem('student_panel_name', newVal);
                 });
 
                 const studentPanelPasswordSetting = ref(localStorage.getItem('student_panel_pass') || '12345');
@@ -5673,6 +5682,7 @@
                     studentPanelUnlockPassword,
                     studentSelectPassword,
                     studentSelectError,
+                    studentPanelNameSetting,
                     studentPanelUsernameSetting,
                     studentPanelPasswordSetting,
                     handleStudentPanelUnlock,

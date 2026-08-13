@@ -1447,8 +1447,14 @@
                             </div>
                         </div>
                         <p class="text-[10px] text-amber-600 font-bold uppercase tracking-wide bg-amber-50 p-3 rounded-xl border border-amber-200/50 mt-1">
-                            ⚠️ Diqqat: Yangi login va parollar darhol amal qiladi. Keyingi safar kirishda yangi parollarni ishlatasiz.
+                            ⚠️ Diqqat: Yangi login va parollar "Sozlamalarni saqlash" tugmasini bosganingizdan so'ng amal qiladi.
                         </p>
+                        <button 
+                            @click="saveSystemSettings"
+                            class="btn-3d self-start px-6 py-3 bg-[#0066cc] text-white rounded-xl text-xs font-bold uppercase tracking-wider border-b-4 border-b-blue-800 hover:bg-blue-600 transition-all flex items-center gap-2 cursor-pointer mt-2"
+                        >
+                            💾 Sozlamalarni saqlash
+                        </button>
                     </div>
                 </div>
 
@@ -3632,14 +3638,7 @@
                 const authError = ref('');
                 
                 const adminUsernameSetting = ref(localStorage.getItem('admin_user') || 'admin');
-                watch(adminUsernameSetting, (newVal) => {
-                    localStorage.setItem('admin_user', newVal);
-                });
-
                 const adminPasswordSetting = ref(localStorage.getItem('admin_pass') || 'admin777');
-                watch(adminPasswordSetting, (newVal) => {
-                    localStorage.setItem('admin_pass', newVal);
-                });
 
                 const studentPanelUsernameSetting = ref(localStorage.getItem('student_panel_user') || 'talaba');
                 const studentPanelNameSetting = ref(localStorage.getItem('student_panel_name') || "O'quvchi");
@@ -3767,21 +3766,31 @@
                     }
                 };
 
-                // Watch settings and sync to LocalStorage & studentsList
-                watch(studentPanelUsernameSetting, (newVal) => {
-                    localStorage.setItem('student_panel_user', newVal);
+                // Save settings function
+                const saveSystemSettings = () => {
+                    const adminUserVal = adminUsernameSetting.value.trim();
+                    const adminPassVal = adminPasswordSetting.value.trim();
+                    const studentNameVal = studentPanelNameSetting.value.trim();
+                    const studentUserVal = studentPanelUsernameSetting.value.toLowerCase().trim();
+                    const studentPassVal = studentPanelPasswordSetting.value.trim();
+                    
+                    if (!adminUserVal || !adminPassVal || !studentNameVal || !studentUserVal || !studentPassVal) {
+                        alert("Barcha maydonlarni to'ldiring!");
+                        return;
+                    }
+                    
+                    // Save to local storage
+                    localStorage.setItem('admin_user', adminUserVal);
+                    localStorage.setItem('admin_pass', adminPassVal);
+                    localStorage.setItem('student_panel_user', studentUserVal);
+                    localStorage.setItem('student_panel_name', studentNameVal);
+                    localStorage.setItem('student_panel_pass', studentPassVal);
+                    
+                    // Sync to studentsList
                     syncSystemStudentToList();
-                });
-
-                watch(studentPanelNameSetting, (newVal) => {
-                    localStorage.setItem('student_panel_name', newVal);
-                    syncSystemStudentToList();
-                });
-
-                watch(studentPanelPasswordSetting, (newVal) => {
-                    localStorage.setItem('student_panel_pass', newVal);
-                    syncSystemStudentToList();
-                });
+                    
+                    alert("Sozlamalar muvaffaqiyatli saqlandi!");
+                };
 
                 // Test attempts tracking state
                 const selectedReportStudentId = ref(null);
@@ -5721,6 +5730,7 @@
                     studentPanelNameSetting,
                     studentPanelUsernameSetting,
                     studentPanelPasswordSetting,
+                    saveSystemSettings,
                     handleStudentPanelUnlock,
                     handleLogin,
                     handleLogout,

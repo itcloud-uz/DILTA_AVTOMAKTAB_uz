@@ -1875,22 +1875,6 @@
 
 
 
-            <!-- STUDENT BOSH SAHIFA WELCOME CONTAINER -->
-            <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'dashboard'" class="w-full max-w-2xl ml-0 flex flex-col gap-5 animate-fadeIn text-left py-12">
-                <div class="card-3d p-8 rounded-3xl bg-white border border-slate-100 shadow-sm flex flex-col gap-4 text-center items-center justify-center">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl animate-bounce">
-                        🚗
-                    </div>
-                    <div class="space-y-1">
-                        <h2 class="text-xl font-black text-slate-800 tracking-tight">Xush kelibsiz, [[ currentStudent?.name ]]!</h2>
-                        <p class="text-xs font-semibold text-[#0066cc] uppercase tracking-wider">[[ currentStudent?.class_name ]] Guruhi O'quvchisi</p>
-                    </div>
-                    <p class="text-xs text-gray-500 max-w-sm leading-relaxed">
-                        Nazariy darslar, testlar, dars jadvallari va boshqa ma'lumotlarni ko'rish uchun chap tomondagi menyudan kerakli bo'limni tanlang.
-                    </p>
-                </div>
-            </div>
-
             <!-- STUDENT LESSONS LIST -->
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">

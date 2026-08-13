@@ -1680,7 +1680,7 @@
                     
                     <div class="flex flex-col min-w-0">
                         <h2 class="text-sm font-black text-slate-800 tracking-tight leading-tight truncate">[[ currentStudent?.name || studentPanelNameSetting ]]</h2>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ studentPanelNameSetting ]]</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">[[ currentStudent ? t('student_title') : studentPanelNameSetting ]]</span>
                     </div>
                 </div>
 

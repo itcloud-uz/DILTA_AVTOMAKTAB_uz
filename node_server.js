@@ -568,6 +568,27 @@ app.get('/api/v1/local-ip', (req, res) => {
     }
 });
 
+// Get public localtunnel URL of the server
+app.get('/api/v1/localtunnel-url', (req, res) => {
+    try {
+        const fs = require('fs');
+        const path = require('path');
+        const filePath = path.join(__dirname, 'localtunnel_url.txt');
+        if (fs.existsSync(filePath)) {
+            let content = fs.readFileSync(filePath, 'utf8');
+            // Extract the url from string like "your url is: https://xxxx.loca.lt"
+            const match = content.match(/https?:\/\/[^\s]+/);
+            if (match) {
+                return res.json({ url: match[0].trim() });
+            }
+        }
+        res.json({ url: null });
+    } catch (err) {
+        console.error("Localtunnel URL Fetch Error:", err);
+        res.json({ url: null });
+    }
+});
+
 // Fallback all static assets
 app.use(express.static('./public'));
 

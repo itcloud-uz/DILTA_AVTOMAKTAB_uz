@@ -2723,11 +2723,12 @@
 
                 <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-left flex flex-col gap-1">
                     <span class="text-[9px] font-mono text-gray-400 uppercase font-bold">// Ulanish manzili</span>
-                    <span class="font-mono text-xs font-bold text-slate-700 break-all">http://[[ serverLocalIp ]]:8000</span>
+                    <span class="font-mono text-xs font-bold text-slate-700 break-all">[[ serverLocaltunnelUrl || 'http://' + serverLocalIp + ':8000' ]]</span>
                 </div>
 
                 <p class="text-[10px] text-slate-500 font-bold leading-normal bg-slate-50 p-3.5 rounded-xl border">
-                    Eslatma: Telefon va kompyuter bitta Wi-Fi tarmog'iga (yoki bitta modem/routerga) ulangan bo'lishi shart.
+                    <span v-if="serverLocaltunnelUrl">Onlayn havola tayyor! Telefoningizda oddiy internet (LTE/5G) bo'lsa yetarli. Bitta Wi-Fi shart emas.</span>
+                    <span v-else>Eslatma: Telefon va kompyuter bitta Wi-Fi tarmog'iga (yoki bitta modem/routerga) ulangan bo'lishi shart.</span>
                 </p>
 
                 <button 
@@ -5213,6 +5214,7 @@
                 const showQrModal = ref(false);
                 const showMobileAccessModal = ref(false);
                 const serverLocalIp = ref('');
+                const serverLocaltunnelUrl = ref('');
 
                 const currentStudent = computed(() => {
                     const id = loggedInStudentId.value || selectedStudentId.value;
@@ -5422,7 +5424,9 @@
                     const student = currentStudent.value;
                     if (!student) return '';
                     let baseOrigin = window.location.origin;
-                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    if (serverLocaltunnelUrl.value) {
+                        baseOrigin = serverLocaltunnelUrl.value;
+                    } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                         if (serverLocalIp.value) {
                             baseOrigin = 'http://' + serverLocalIp.value + ':8000';
                         }
@@ -5431,6 +5435,9 @@
                 });
 
                 const mobileAccessQrCodeUrl = computed(() => {
+                    if (serverLocaltunnelUrl.value) {
+                        return 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(serverLocaltunnelUrl.value);
+                    }
                     if (!serverLocalIp.value) return '';
                     return 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('http://' + serverLocalIp.value + ':8000');
                 });
@@ -5520,6 +5527,16 @@
                     } catch (err) {
                         console.error("Local IP fetch failed:", err);
                         serverLocalIp.value = window.location.hostname;
+                    }
+
+                    try {
+                        const resLt = await fetch('/api/v1/localtunnel-url');
+                        const dataLt = await resLt.json();
+                        if (dataLt.url) {
+                            serverLocaltunnelUrl.value = dataLt.url;
+                        }
+                    } catch (err) {
+                        console.error("Localtunnel URL fetch failed:", err);
                     }
 
                     // Check for URL check-in parameter from scanned QR code
@@ -5721,6 +5738,7 @@
                     studentPanelNameSetting,
                     studentPanelUsernameSetting,
                     studentPanelPasswordSetting,
+                    serverLocaltunnelUrl,
                     saveSystemSettings,
                     handleStudentPanelUnlock,
                     handleLogin,

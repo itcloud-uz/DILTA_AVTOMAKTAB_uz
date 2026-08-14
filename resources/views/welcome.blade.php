@@ -523,7 +523,7 @@
                 </form>
                 
                 <button 
-                    @click="showMobileAccessModal = true" 
+                    @click="openMobileAccessModal" 
                     type="button"
                     class="btn-neumorphic w-full py-3.5 text-xs font-extrabold transition-all border-none flex items-center justify-center gap-2 mt-2"
                 >
@@ -5216,6 +5216,26 @@
                 const serverLocalIp = ref('');
                 const serverLocaltunnelUrl = ref('');
 
+                const openMobileAccessModal = async () => {
+                    showMobileAccessModal.value = true;
+                    try {
+                        const resIp = await fetch('/api/v1/local-ip');
+                        const dataIp = await resIp.json();
+                        serverLocalIp.value = dataIp.ip;
+                    } catch (err) {
+                        console.error("Local IP fetch failed:", err);
+                    }
+                    try {
+                        const resLt = await fetch('/api/v1/localtunnel-url');
+                        const dataLt = await resLt.json();
+                        if (dataLt.url) {
+                            serverLocaltunnelUrl.value = dataLt.url;
+                        }
+                    } catch (err) {
+                        console.error("Localtunnel URL fetch failed:", err);
+                    }
+                };
+
                 const currentStudent = computed(() => {
                     const id = loggedInStudentId.value || selectedStudentId.value;
                     return studentsList.value.find(s => s.id === id) || null;
@@ -5591,6 +5611,7 @@
                     showQrModal,
                     qrCodeUrl,
                     showMobileAccessModal,
+                    openMobileAccessModal,
                     serverLocalIp,
                     mobileAccessQrCodeUrl,
                     currentStudent,

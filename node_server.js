@@ -571,9 +571,7 @@ app.get('/api/v1/local-ip', (req, res) => {
 // Get public localtunnel URL of the server
 app.get('/api/v1/localtunnel-url', (req, res) => {
     try {
-        const fs = require('fs');
-        const path = require('path');
-        const filePath = path.join(__dirname, 'localtunnel_url.txt');
+        const filePath = path.resolve('./localtunnel_url.txt');
         if (fs.existsSync(filePath)) {
             let content = fs.readFileSync(filePath, 'utf8');
             // Extract the url from string like "your url is: https://xxxx.loca.lt"
@@ -588,7 +586,78 @@ app.get('/api/v1/localtunnel-url', (req, res) => {
         res.json({ url: null });
     }
 });
+// Helper to merge arrays by ID
+function mergeArraysById(serverArray, clientArray) {
+    const merged = [...serverArray];
+    for (const item of clientArray) {
+        if (!item || item.id === undefined) continue;
+        const idx = merged.findIndex(x => x && x.id === item.id);
+        if (idx !== -1) {
+            merged[idx] = { ...merged[idx], ...item };
+        } else {
+            merged.push(item);
+        }
+    }
+    return merged;
+}
 
+const STATE_FILE = path.resolve('./database/global_state.json');
+
+// Initialize state file if not exists
+if (!fs.existsSync(path.dirname(STATE_FILE))) {
+    fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
+}
+if (!fs.existsSync(STATE_FILE)) {
+    fs.writeFileSync(STATE_FILE, JSON.stringify({}), 'utf8');
+}
+
+// GET state
+app.get('/api/v1/sync-state', (req, res) => {
+    try {
+        const data = fs.readFileSync(STATE_FILE, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (e) {
+        console.error("GET sync-state error:", e);
+        res.status(500).json({ error: "Failed to read state" });
+    }
+});
+
+// POST state
+app.post('/api/v1/sync-state', (req, res) => {
+    try {
+        const clientState = req.body;
+        let serverState = {};
+        if (fs.existsSync(STATE_FILE)) {
+            serverState = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+        }
+        
+        const keys = [
+            'students_list',
+            'staff_list',
+            'classes_list',
+            'partners_list',
+            'finance_transactions_list',
+            'attempts_list',
+            'student_attendance_list',
+            'student_feedback_list',
+            'student_activity_logs',
+            'student_penalties_list'
+        ];
+        
+        const newState = {};
+        for (const key of keys) {
+            const serverArr = serverState[key] || [];
+            const clientArr = clientState[key] || [];
+            newState[key] = mergeArraysById(serverArr, clientArr);
+        }
+        
+        fs.writeFileSync(STATE_FILE, JSON.stringify(newState, null, 2), 'utf8');
+        res.json(newState);
+    } catch (e) {
+        console.error("POST sync-state error:", e);
+        res.status(500).json({ error: "Failed to save state" });
+    }
+});
 // Fallback all static assets
 app.use(express.static('./public'));
 

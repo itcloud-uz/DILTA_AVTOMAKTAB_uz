@@ -599,7 +599,8 @@ app.get('/api/v1/localtunnel-url', (req, res) => {
             // Extract the url from string like "your url is: https://xxxx.loca.lt"
             const match = content.match(/https?:\/\/[^\s]+/);
             if (match) {
-                return res.json({ url: match[0].trim() });
+                const cleanUrl = match[0].trim().replace(/[^a-zA-Z0-9-.:_/]/g, '');
+                return res.json({ url: cleanUrl });
             }
         }
         res.json({ url: null });

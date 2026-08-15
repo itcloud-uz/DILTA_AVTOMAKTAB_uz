@@ -548,6 +548,28 @@ app.post('/api/v1/questions', (req, res) => {
     }
 });
 
+// Get All Questions (For Admin Panel)
+app.get('/api/v1/all-questions', (req, res) => {
+    try {
+        const stmt = db.prepare("SELECT * FROM questions ORDER BY id ASC");
+        const rows = [];
+        while (stmt.step()) {
+            const row = stmt.getAsObject();
+            rows.push({
+                id: row.id,
+                translations: JSON.parse(row.translations),
+                correct_option_id: row.correct_option_id,
+                level: row.level
+            });
+        }
+        stmt.free();
+        res.json({ count: rows.length, data: rows });
+    } catch (e) {
+        console.error("API all-questions error:", e);
+        res.status(500).json({ error: "Failed to fetch all questions" });
+    }
+});
+
 // Get local IP of the server
 app.get('/api/v1/local-ip', (req, res) => {
     try {

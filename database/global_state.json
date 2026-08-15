@@ -231,6 +231,21 @@
       "subscription_end_date": "2026-12-31",
       "login": "shshsh",
       "password": "777"
+    },
+    {
+      "id": 16,
+      "name": "bihruz",
+      "class_name": "A-10",
+      "today_status": "keldi",
+      "grades": [
+        5,
+        5,
+        5
+      ],
+      "tuition_status": "To'lagan",
+      "subscription_end_date": "2026-11-14",
+      "login": "bbb",
+      "password": "888"
     }
   ],
   "staff_list": [
@@ -969,7 +984,19 @@
       "id": 52,
       "student_id": 15,
       "login_time": "2026-08-15 05:22",
-      "logout_time": "Ayni vaqtda faol"
+      "logout_time": "2026-08-15 05:30"
+    },
+    {
+      "id": 53,
+      "student_id": 15,
+      "login_time": "2026-08-15 05:30",
+      "logout_time": "2026-08-15 05:30"
+    },
+    {
+      "id": 54,
+      "student_id": 16,
+      "login_time": "2026-08-15 05:32",
+      "logout_time": "2026-08-15 05:32"
     }
   ],
   "student_penalties_list": [

@@ -1368,7 +1368,7 @@
                     </div>
 
                     <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between text-xs">
-                        <span class="font-bold text-blue-900">📊 Tizimda joriy yuklangan savollar soni: <strong class="text-blue-600">[[ questions.length ]] ta</strong></span>
+                        <span class="font-bold text-blue-900">📊 Tizimda jami savollar soni (baza): <strong class="text-blue-600">[[ adminQuestionsCount ]] ta</strong></span>
                         <span class="text-[11px] font-mono text-blue-700 font-semibold">WebAssembly SQLite Engine Active ✅</span>
                     </div>
 
@@ -1384,9 +1384,9 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 text-slate-700">
-                                <tr v-for="(q, idx) in questions" :key="q.id" class="hover:bg-slate-50/60 transition-all font-medium">
+                                <tr v-for="(q, idx) in adminQuestionsList" :key="q.id" class="hover:bg-slate-50/60 transition-all font-medium">
                                     <td class="p-3 font-mono font-bold text-gray-400">#[[ q.id ]]</td>
-                                    <td class="p-3 font-semibold text-slate-800 max-w-xs truncate">
+                                    <td class="p-3 font-semibold text-slate-800 max-w-xs truncate font-bold">
                                         [[ q.translations && q.translations.uz_lat ? q.translations.uz_lat.question : q.translations?.uz_cyr?.question || 'Savol matni' ]]
                                     </td>
                                     <td class="p-3 text-emerald-600 font-bold max-w-xs truncate">
@@ -3362,6 +3362,8 @@
         createApp({
             setup() {
                 const questions = ref([]);
+                const adminQuestionsList = ref([]);
+                const adminQuestionsCount = ref(0);
                 const currentLevel = ref(1);
                 const currentQuestionIndex = ref(0);
                 const currentLang = ref('uz_lat');
@@ -3968,6 +3970,17 @@
                         return true;
                     });
                 });
+
+                const loadAllQuestionsForAdmin = async () => {
+                    try {
+                        const response = await fetch('/api/v1/all-questions');
+                        const data = await response.json();
+                        adminQuestionsList.value = data.data;
+                        adminQuestionsCount.value = data.count;
+                    } catch (e) {
+                        console.error("Error loading admin questions:", e);
+                    }
+                };
 
                 // Load questions from API, shuffle choices, and shuffle questions
                 const loadQuestions = async () => {
@@ -5117,6 +5130,8 @@
                         if (response.ok && resData.data) {
                             const newQ = shuffleQuestionOptions(resData.data);
                             questions.value.push(newQ);
+                            adminQuestionsList.value.push(newQ);
+                            adminQuestionsCount.value++;
                             showAddQuestionModal.value = false;
                             alert("🎉 Yangi savolingiz ma'lumotlar bazasiga muvaffaqiyatli saqlandi hamda ushbu test ro'yxatiga qo'shildi!");
                         } else {
@@ -5276,6 +5291,12 @@
                 };
 
                 // LocalStorage sync watchers
+                watch(activeAdminTab, (newVal) => {
+                    if (newVal === 'savollar') {
+                        loadAllQuestionsForAdmin();
+                    }
+                });
+
                 watch(studentsList, (newVal) => {
                     localStorage.setItem('students_list', JSON.stringify(newVal));
                     triggerPushState();
@@ -5605,6 +5626,7 @@
 
                 onMounted(async () => {
                     await pullStateFromServer();
+                    loadAllQuestionsForAdmin();
                     syncSystemStudentToList();
                     const uniquePasswordsMap = {
                         // Teachers
@@ -5758,6 +5780,9 @@
                     submitFeedbackFromTeacher,
                     deleteFeedbackByTeacher,
                     questions,
+                    adminQuestionsList,
+                    adminQuestionsCount,
+                    loadAllQuestionsForAdmin,
                     currentLevel,
                     currentQuestionIndex,
                     currentQuestion,

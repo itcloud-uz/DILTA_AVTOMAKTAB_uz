@@ -8,8 +8,7 @@
       "grades": [
         5,
         4,
-        5,
-        2
+        5
       ],
       "tuition_status": "To'lagan",
       "subscription_end_date": "2026-08-30",
@@ -25,14 +24,10 @@
       "grades": [
         4,
         4,
-        3,
-        2,
-        3,
-        2,
-        2
+        3
       ],
       "tuition_status": "To'lagan",
-      "subscription_end_date": "2026-09-28",
+      "subscription_end_date": "2026-08-30",
       "login": "madina",
       "password": "Mdn73"
     },
@@ -246,6 +241,21 @@
       "subscription_end_date": "2026-11-14",
       "login": "bbb",
       "password": "888"
+    },
+    {
+      "id": 17,
+      "name": "O'quvchi",
+      "class_name": "A-10",
+      "today_status": "keldi",
+      "grades": [
+        5,
+        5,
+        5
+      ],
+      "tuition_status": "To'lagan",
+      "subscription_end_date": "2026-11-15",
+      "login": "talaba",
+      "password": "12345"
     }
   ],
   "staff_list": [

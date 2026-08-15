@@ -2727,7 +2727,10 @@
                 </div>
 
                 <p class="text-[10px] text-slate-500 font-bold leading-normal bg-slate-50 p-3.5 rounded-xl border">
-                    <span v-if="serverLocaltunnelUrl">Onlayn havola tayyor! Telefoningizda oddiy internet (LTE/5G) bo'lsa yetarli. Bitta Wi-Fi shart emas.</span>
+                    <span v-if="serverLocaltunnelUrl">
+                        Onlayn havola tayyor! Telefoningizda oddiy internet (LTE/5G) bo'lsa yetarli. Bitta Wi-Fi shart emas.<br>
+                        <span class="text-amber-600 block mt-1">⚠️ Eslatma: Agar brauzerda ogohlantirish sahifasi chiqsa, "Click to Continue" tugmasini bosing!</span>
+                    </span>
                     <span v-else>Eslatma: Telefon va kompyuter bitta Wi-Fi tarmog'iga (yoki bitta modem/routerga) ulangan bo'lishi shart.</span>
                 </p>
 

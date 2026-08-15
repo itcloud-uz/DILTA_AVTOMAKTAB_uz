@@ -103,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
     private void loadAppUrl(String url) {
         setupLayout.setVisibility(View.GONE);
         swipeContainer.setVisibility(View.VISIBLE);
-        webView.loadUrl(url);
+        
+        java.util.Map<String, String> extraHeaders = new java.util.HashMap<>();
+        extraHeaders.put("Bypass-Tunnel-Reminder", "true");
+        webView.loadUrl(url, extraHeaders);
     }
 
     private void showSetupLayout() {

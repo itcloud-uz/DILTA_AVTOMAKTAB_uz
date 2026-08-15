@@ -3611,7 +3611,11 @@
                                 startYear -= 1;
                             }
                             
-                            const dayStr = day < 10 ? '0' + day : day;
+                            // Cap start day to maximum days of target month (e.g. Sept 31 -> Sept 30)
+                            const maxDays = new Date(startYear, startMonth, 0).getDate();
+                            const startDay = Math.min(day, maxDays);
+                            
+                            const dayStr = startDay < 10 ? '0' + startDay : startDay;
                             const monthStr = startMonth < 10 ? '0' + startMonth : startMonth;
                             return `${dayStr}.${monthStr}.${startYear}`;
                         }
@@ -3666,8 +3670,16 @@
                 const isSubmittingCustomQuestion = ref(false);
                 const showExplanationModal = ref(false);
                 
+                const getDefaultEndDate = () => {
+                    const today = new Date();
+                    const end = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate());
+                    const mm = end.getMonth() + 1;
+                    const dd = end.getDate();
+                    return `${end.getFullYear()}-${mm < 10 ? '0' + mm : mm}-${dd < 10 ? '0' + dd : dd}`;
+                };
+
                 // Manager Panel states
-                const newStudent = ref({ name: '', class_name: 'A-10', login: '', password: '', subscription_end_date: '2026-08-08' });
+                const newStudent = ref({ name: '', class_name: 'A-10', login: '', password: '', subscription_end_date: getDefaultEndDate() });
                 const showAddClassForm = ref(false);
                 const newClass = ref({ name: '', type: '' });
                 const managerLogs = ref([
@@ -3736,6 +3748,16 @@
                     
                     if (!nameVal || !loginVal || !passVal) return;
                     
+                    // Dynamic end date calculation: 3 months from today!
+                    const today = new Date();
+                    const endDateObj = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate());
+                    const endYear = endDateObj.getFullYear();
+                    const endMonth = endDateObj.getMonth() + 1;
+                    const endDay = endDateObj.getDate();
+                    const endMonthStr = endMonth < 10 ? '0' + endMonth : endMonth;
+                    const endDayStr = endDay < 10 ? '0' + endDay : endDay;
+                    const end_date_val = `${endYear}-${endMonthStr}-${endDayStr}`;
+                    
                     // Look up by login to prevent duplicates and keep all previously added students
                     const sysStudent = studentsList.value.find(s => s.login === loginVal);
                     if (sysStudent) {
@@ -3750,7 +3772,7 @@
                             today_status: 'keldi',
                             grades: [5, 5, 5],
                             tuition_status: 'To\'lagan',
-                            subscription_end_date: '2026-12-31',
+                            subscription_end_date: end_date_val,
                             login: loginVal,
                             password: passVal
                         };
@@ -4907,7 +4929,7 @@
                         today_status: 'keldi',
                         grades: [],
                         tuition_status: 'Kutilmoqda',
-                        subscription_end_date: newStudent.value.subscription_end_date || '2026-08-08',
+                        subscription_end_date: newStudent.value.subscription_end_date || getDefaultEndDate(),
                         login: newStudent.value.login.toLowerCase().trim(),
                         password: newStudent.value.password
                     };
@@ -4923,7 +4945,7 @@
                     });
                     
                     // Reset
-                    newStudent.value = { name: '', class_name: 'A-10', login: '', password: '', subscription_end_date: '2026-08-08' };
+                    newStudent.value = { name: '', class_name: 'A-10', login: '', password: '', subscription_end_date: getDefaultEndDate() };
                     alert("O'quvchi muvaffaqiyatli ro'yxatga olindi!");
                 };
 

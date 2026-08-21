@@ -937,8 +937,110 @@
 
                 <!-- ==================== TAB: XODIMLAR & O'QITUVCHILAR ==================== -->
                 <div v-else-if="activeAdminTab === 'xodimlar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6">
-                    <div class="flex justify-between items-center border-b pb-4">
+                    <div class="flex justify-between items-center border-b pb-4 flex-wrap gap-2">
                         <h2 class="text-lg font-bold text-slate-800">// O'QITUVCHILAR VA TO'LOV TIZIMI</h2>
+                        <button 
+                            @click="showAddStaffForm = !showAddStaffForm"
+                            class="py-2 px-4 bg-[#0066cc] hover:bg-blue-700 active:scale-95 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm"
+                        >
+                            [[ showAddStaffForm ? '✕ Shaklni yopish' : '➕ Yangi o\'qituvchi / xodim qo\'shish' ]]
+                        </button>
+                    </div>
+
+                    <!-- Yangi o'qituvchi / xodim qo'shish formasi -->
+                    <div v-if="showAddStaffForm" class="p-5 bg-gradient-to-br from-blue-50/90 to-indigo-50/60 border border-blue-200 rounded-3xl flex flex-col gap-4 text-left shadow-md animate-scaleUp">
+                        <div class="flex justify-between items-center border-b border-blue-100 pb-2">
+                            <h3 class="text-xs font-black text-[#0066cc] uppercase tracking-wider flex items-center gap-1.5">
+                                👨‍🏫 Yangi O'qituvchi Profilini Yaratish
+                            </h3>
+                            <span class="text-[10px] font-mono text-gray-500">Tizimga kirish uchun login va parol o'rnating</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-700 text-[11px]">Xodim / O'qituvchi Ismi Familiyasi *</label>
+                                <input 
+                                    v-model="newStaff.name" 
+                                    type="text" 
+                                    placeholder="Masalan: Rustam Valiyev" 
+                                    class="p-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-800 focus:ring-2 focus:ring-blue-400"
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-700 text-[11px]">Lavozimi *</label>
+                                <select v-model="newStaff.role" class="p-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-800 focus:ring-2 focus:ring-blue-400">
+                                    <option value="Katta o'qituvchi">Katta o'qituvchi</option>
+                                    <option value="Nazariya o'qituvchisi">Nazariya o'qituvchisi</option>
+                                    <option value="Amaliy yo'riqchi">Amaliy yo'riqchi (Instruktor)</option>
+                                    <option value="Bosh hisobchi">Bosh hisobchi</option>
+                                    <option value="Administrator">Administrator</option>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-700 text-[11px]">To'lov Modeli *</label>
+                                <select v-model="newStaff.payment_type" class="p-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-800 focus:ring-2 focus:ring-blue-400">
+                                    <option value="percentage">Percentage (Foizli ulush)</option>
+                                    <option value="fixed">Fixed (Qat'iy oylik maosh)</option>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-700 text-[11px]">
+                                    [[ newStaff.payment_type === 'fixed' ? 'Oylik Maosh Miqdori (UZS) *' : 'O\'quvchi to\'lovidan foiz (%) *' ]]
+                                </label>
+                                <input 
+                                    v-if="newStaff.payment_type === 'fixed'"
+                                    v-model.number="newStaff.base_salary" 
+                                    type="number" 
+                                    placeholder="Masalan: 4500000" 
+                                    class="p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-bold text-slate-800 focus:ring-2 focus:ring-blue-400"
+                                />
+                                <input 
+                                    v-else
+                                    v-model.number="newStaff.percentage_rate" 
+                                    type="number" 
+                                    placeholder="Masalan: 40" 
+                                    class="p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-bold text-slate-800 focus:ring-2 focus:ring-blue-400"
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-700 text-[11px]">Tizimga Kirish Logini (Login) *</label>
+                                <input 
+                                    v-model="newStaff.login" 
+                                    type="text" 
+                                    placeholder="Masalan: rustam" 
+                                    class="p-2.5 rounded-xl border border-slate-200 bg-white font-bold text-blue-600 focus:ring-2 focus:ring-blue-400"
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-700 text-[11px]">Tizimga Kirish Paroli (Parol) *</label>
+                                <input 
+                                    v-model="newStaff.password" 
+                                    type="text" 
+                                    placeholder="Masalan: Rst82" 
+                                    class="p-2.5 rounded-xl border border-slate-200 bg-white font-mono font-bold text-slate-800 focus:ring-2 focus:ring-blue-400"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-2 mt-2">
+                            <button 
+                                @click="showAddStaffForm = false" 
+                                class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs"
+                            >
+                                Bekor qilish
+                            </button>
+                            <button 
+                                @click="addNewStaff" 
+                                class="px-6 py-2.5 bg-[#10b981] hover:bg-emerald-600 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wide border-b-2 border-b-emerald-800 shadow-md flex items-center gap-1.5"
+                            >
+                                💾 Saqlash va Profilni ochish
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Salary Computation Explanation card -->
@@ -960,6 +1062,7 @@
                                     <th class="p-3 text-gray-400 font-bold">O'QUVCHILARI</th>
                                     <th class="p-3 text-gray-400 font-bold">TIZIMGA KIRISH (LOGIN/PAROL)</th>
                                     <th class="p-3 text-gray-400 font-bold text-right">HISOB-KITOB TO'LOVI</th>
+                                    <th class="p-3 text-gray-400 font-bold text-center">AMALLAR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -994,18 +1097,36 @@
                                                 v-model="t.login" 
                                                 type="text" 
                                                 placeholder="Login" 
-                                                class="w-20 p-1 border rounded text-xs bg-white text-slate-700 font-semibold" 
+                                                class="w-20 p-1 border rounded text-xs bg-white text-slate-700 font-semibold focus:ring-1 focus:ring-blue-400" 
                                             />
                                             <input 
                                                 v-model="t.password" 
                                                 type="text" 
                                                 placeholder="Parol" 
-                                                class="w-16 p-1 border rounded text-xs bg-white text-slate-700 font-mono" 
+                                                class="w-16 p-1 border rounded text-xs bg-white text-slate-700 font-mono focus:ring-1 focus:ring-blue-400" 
                                             />
                                         </div>
                                     </td>
                                     <td class="p-3 text-right font-mono font-extrabold text-slate-800">
                                         [[ formatMoney(calculateTeacherSalary(t)) ]]
+                                    </td>
+                                    <td class="p-3 text-center">
+                                        <div class="flex items-center justify-center gap-1.5">
+                                            <button 
+                                                @click="saveStaffMember(t)" 
+                                                class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+                                                title="Login, parol va ma'lumotlarni saqlash"
+                                            >
+                                                💾 Saqlash
+                                            </button>
+                                            <button 
+                                                @click="deleteStaffMember(t.id)" 
+                                                class="px-2 py-1 bg-rose-50 hover:bg-rose-500 hover:text-white text-rose-700 border border-rose-200 rounded-lg text-xs font-bold transition-all shadow-sm"
+                                                title="O'chirish"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -3716,6 +3837,19 @@
                 const activeStudentSubTab = ref('struktura');
                 const showAddPartnerForm = ref(false);
                 
+                const showAddStaffForm = ref(false);
+                const newStaff = ref({
+                    name: '',
+                    role: 'Nazariya o\'qituvchisi',
+                    payment_type: 'percentage',
+                    base_salary: 4500000,
+                    percentage_rate: 40,
+                    students_count: 0,
+                    tuition_fee_per_student: 800000,
+                    login: '',
+                    password: ''
+                });
+
                 const newPartner = ref({
                     name: '',
                     phone: '',
@@ -4427,6 +4561,78 @@
                     });
                     newPartner.value = { name: '', phone: '', commission: 10 };
                     showAddPartnerForm.value = false;
+                };
+
+                // Add New Staff / Teacher
+                const addNewStaff = () => {
+                    if (!newStaff.value.name || !newStaff.value.login || !newStaff.value.password) {
+                        alert("Iltimos, o'qituvchi ismi, login va parolini to'liq kiriting!");
+                        return;
+                    }
+
+                    const existing = staffList.value.find(
+                        t => t.login && String(t.login).toLowerCase().trim() === String(newStaff.value.login).toLowerCase().trim()
+                    );
+                    if (existing) {
+                        alert("Bunday loginli o'qituvchi allaqachon mavjud! Iltimos, boshqa login tanlang.");
+                        return;
+                    }
+
+                    const nextId = staffList.value.length ? Math.max(...staffList.value.map(t => t.id)) + 1 : 1;
+                    const staffObj = {
+                        id: nextId,
+                        name: newStaff.value.name.trim(),
+                        role: newStaff.value.role.trim() || "O'qituvchi",
+                        payment_type: newStaff.value.payment_type || 'percentage',
+                        base_salary: Number(newStaff.value.base_salary) || 4000000,
+                        percentage_rate: Number(newStaff.value.percentage_rate) || 40,
+                        students_count: Number(newStaff.value.students_count) || 0,
+                        tuition_fee_per_student: 800000,
+                        login: String(newStaff.value.login).toLowerCase().trim(),
+                        password: String(newStaff.value.password).trim()
+                    };
+
+                    staffList.value.push(staffObj);
+                    localStorage.setItem('staff_list', JSON.stringify(staffList.value));
+                    triggerPushState();
+
+                    alert(`🎉 Yangi o'qituvchi muvaffaqiyatli saqlandi!\n\nIsmi: ${staffObj.name}\nLogin: ${staffObj.login}\nParol: ${staffObj.password}\n\nEndi ushbu o'qituvchi profili faol va tizimga to'g'ridan-to'g'ri kira oladi.`);
+                    
+                    newStaff.value = {
+                        name: '',
+                        role: 'Nazariya o\'qituvchisi',
+                        payment_type: 'percentage',
+                        base_salary: 4500000,
+                        percentage_rate: 40,
+                        students_count: 0,
+                        tuition_fee_per_student: 800000,
+                        login: '',
+                        password: ''
+                    };
+                    showAddStaffForm.value = false;
+                };
+
+                // Save individual staff member login/password and data
+                const saveStaffMember = (teacher) => {
+                    if (!teacher.login || !teacher.password) {
+                        alert("Login va parol bo'sh bo'lishi mumkin emas!");
+                        return;
+                    }
+                    localStorage.setItem('staff_list', JSON.stringify(staffList.value));
+                    triggerPushState();
+                    alert(`✅ ${teacher.name} ma'lumotlari, logini (${teacher.login}) va paroli (${teacher.password}) muvaffaqiyatli saqlandi!`);
+                };
+
+                // Delete staff member
+                const deleteStaffMember = (teacherId) => {
+                    const teacher = staffList.value.find(t => t.id === teacherId);
+                    if (!teacher) return;
+                    if (confirm(`${teacher.name}ni o'qituvchilar safidan o'chirishni tasdiqlaysizmi?`)) {
+                        staffList.value = staffList.value.filter(t => t.id !== teacherId);
+                        localStorage.setItem('staff_list', JSON.stringify(staffList.value));
+                        triggerPushState();
+                        alert("O'qituvchi muvaffaqiyatli o'chirildi.");
+                    }
                 };
 
                 // Add Student Grade
@@ -5942,8 +6148,11 @@
                     showExplanationModal,
                     openAddQuestionModal,
                     openExplanationModal,
-                    getCorrectOptionText,
-                    handleSaveCustomQuestion,
+                    showAddStaffForm,
+                    newStaff,
+                    addNewStaff,
+                    saveStaffMember,
+                    deleteStaffMember,
                     t
                 };
             },

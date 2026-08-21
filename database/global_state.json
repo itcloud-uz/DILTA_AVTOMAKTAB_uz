@@ -1045,6 +1045,18 @@
       "id": 58,
       "student_id": 2,
       "login_time": "2026-08-21 05:36",
+      "logout_time": "2026-08-21 05:56"
+    },
+    {
+      "id": 59,
+      "student_id": 2,
+      "login_time": "2026-08-21 05:56",
+      "logout_time": "2026-08-21 05:59"
+    },
+    {
+      "id": 60,
+      "student_id": 2,
+      "login_time": "2026-08-21 05:59",
       "logout_time": "Ayni vaqtda faol"
     }
   ],
@@ -1097,5 +1109,6 @@
       "date": "2026-07-31",
       "status": "To'lanmagan"
     }
-  ]
+  ],
+  "_version": 1787291980780
 }

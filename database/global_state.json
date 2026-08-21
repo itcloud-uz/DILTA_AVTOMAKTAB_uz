@@ -256,6 +256,21 @@
       "subscription_end_date": "2026-11-15",
       "login": "talaba",
       "password": "12345"
+    },
+    {
+      "id": 18,
+      "name": "Alishir",
+      "class_name": "A-10",
+      "today_status": "keldi",
+      "grades": [
+        5,
+        5,
+        5
+      ],
+      "tuition_status": "To'lagan",
+      "subscription_end_date": "2026-11-15",
+      "login": "ali",
+      "password": "2323"
     }
   ],
   "staff_list": [
@@ -1013,6 +1028,24 @@
       "student_id": 14,
       "login_time": "2026-08-15 07:38",
       "logout_time": "2026-08-15 07:38"
+    },
+    {
+      "id": 56,
+      "student_id": 18,
+      "login_time": "2026-08-15 08:58",
+      "logout_time": "2026-08-15 08:58"
+    },
+    {
+      "id": 57,
+      "student_id": 16,
+      "login_time": "2026-08-18 05:06",
+      "logout_time": "2026-08-18 05:06"
+    },
+    {
+      "id": 58,
+      "student_id": 2,
+      "login_time": "2026-08-21 05:36",
+      "logout_time": "Ayni vaqtda faol"
     }
   ],
   "student_penalties_list": [

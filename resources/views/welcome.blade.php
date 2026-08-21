@@ -4801,7 +4801,7 @@
 
                     // Check if it's a teacher login
                     const teacher = staffList.value.find(
-                        t => t.login && t.login.toLowerCase().trim() === authUsername.value.toLowerCase().trim() && t.password === authPassword.value
+                        t => t.login && String(t.login).toLowerCase().trim() === authUsername.value.toLowerCase().trim() && String(t.password).trim() === String(authPassword.value).trim()
                     );
 
                     if (teacher) {
@@ -4815,7 +4815,7 @@
                     }
 
                     const student = studentsList.value.find(
-                        s => s.login === authUsername.value.toLowerCase().trim() && s.password === authPassword.value
+                        s => s.login && String(s.login).toLowerCase().trim() === authUsername.value.toLowerCase().trim() && String(s.password).trim() === String(authPassword.value).trim()
                     );
 
                     if (student) {
@@ -5197,6 +5197,9 @@
                 // State Syncing System
                 const isSyncing = ref(false);
 
+                let lastStateVersion = 0;
+                let syncInterval = null;
+
                 const pushStateToServer = async () => {
                     if (isSyncing.value) return;
                     try {
@@ -5218,34 +5221,9 @@
                             body: JSON.stringify(payload)
                         });
                         const serverState = await res.json();
-                        
-                        isSyncing.value = true;
-                        if (serverState.students_list) studentsList.value = serverState.students_list;
-                        if (serverState.staff_list) staffList.value = serverState.staff_list;
-                        if (serverState.classes_list) classesList.value = serverState.classes_list;
-                        if (serverState.partners_list) partnersList.value = serverState.partners_list;
-                        if (serverState.finance_transactions_list) financeTransactionsList.value = serverState.finance_transactions_list;
-                        if (serverState.attempts_list) studentTestAttemptsList.value = serverState.attempts_list;
-                        if (serverState.student_attendance_list) studentAttendanceList.value = serverState.student_attendance_list;
-                        if (serverState.student_feedback_list) studentFeedbackList.value = serverState.student_feedback_list;
-                        if (serverState.student_activity_logs) studentActivityLogs.value = serverState.student_activity_logs;
-                        if (serverState.student_penalties_list) studentPenaltiesList.value = serverState.student_penalties_list;
-                        
-                        // Save all merged state to LocalStorage
-                        localStorage.setItem('students_list', JSON.stringify(studentsList.value));
-                        localStorage.setItem('staff_list', JSON.stringify(staffList.value));
-                        localStorage.setItem('classes_list', JSON.stringify(classesList.value));
-                        localStorage.setItem('partners_list', JSON.stringify(partnersList.value));
-                        localStorage.setItem('finance_transactions_list', JSON.stringify(financeTransactionsList.value));
-                        localStorage.setItem('attempts_list', JSON.stringify(studentTestAttemptsList.value));
-                        localStorage.setItem('student_attendance_list', JSON.stringify(studentAttendanceList.value));
-                        localStorage.setItem('student_feedback_list', JSON.stringify(studentFeedbackList.value));
-                        localStorage.setItem('student_activity_logs', JSON.stringify(studentActivityLogs.value));
-                        localStorage.setItem('student_penalties_list', JSON.stringify(studentPenaltiesList.value));
-                        
-                        nextTick(() => {
-                            isSyncing.value = false;
-                        });
+                        if (serverState && serverState._version) {
+                            lastStateVersion = serverState._version;
+                        }
                     } catch (err) {
                         console.error("Push state failed:", err);
                     }
@@ -5253,38 +5231,47 @@
 
                 const pullStateFromServer = async () => {
                     try {
-                        const res = await fetch('/api/v1/sync-state');
+                        const url = lastStateVersion ? `/api/v1/sync-state?v=${lastStateVersion}` : '/api/v1/sync-state';
+                        const res = await fetch(url);
                         const serverState = await res.json();
                         
+                        if (serverState.unchanged) {
+                            return;
+                        }
+                        
+                        if (serverState._version) {
+                            lastStateVersion = serverState._version;
+                        }
+                        
                         isSyncing.value = true;
-                        if (serverState.students_list && serverState.students_list.length > 0) studentsList.value = serverState.students_list;
-                        if (serverState.staff_list && serverState.staff_list.length > 0) staffList.value = serverState.staff_list;
-                        if (serverState.classes_list && serverState.classes_list.length > 0) classesList.value = serverState.classes_list;
-                        if (serverState.partners_list && serverState.partners_list.length > 0) partnersList.value = serverState.partners_list;
-                        if (serverState.finance_transactions_list && serverState.finance_transactions_list.length > 0) financeTransactionsList.value = serverState.finance_transactions_list;
-                        if (serverState.attempts_list && serverState.attempts_list.length > 0) studentTestAttemptsList.value = serverState.attempts_list;
-                        if (serverState.student_attendance_list && serverState.student_attendance_list.length > 0) studentAttendanceList.value = serverState.student_attendance_list;
-                        if (serverState.student_feedback_list && serverState.student_feedback_list.length > 0) studentFeedbackList.value = serverState.student_feedback_list;
-                        if (serverState.student_activity_logs && serverState.student_activity_logs.length > 0) studentActivityLogs.value = serverState.student_activity_logs;
-                        if (serverState.student_penalties_list && serverState.student_penalties_list.length > 0) studentPenaltiesList.value = serverState.student_penalties_list;
                         
-                        // Save to LocalStorage
-                        localStorage.setItem('students_list', JSON.stringify(studentsList.value));
-                        localStorage.setItem('staff_list', JSON.stringify(staffList.value));
-                        localStorage.setItem('classes_list', JSON.stringify(classesList.value));
-                        localStorage.setItem('partners_list', JSON.stringify(partnersList.value));
-                        localStorage.setItem('finance_transactions_list', JSON.stringify(financeTransactionsList.value));
-                        localStorage.setItem('attempts_list', JSON.stringify(studentTestAttemptsList.value));
-                        localStorage.setItem('student_attendance_list', JSON.stringify(studentAttendanceList.value));
-                        localStorage.setItem('student_feedback_list', JSON.stringify(studentFeedbackList.value));
-                        localStorage.setItem('student_activity_logs', JSON.stringify(studentActivityLogs.value));
-                        localStorage.setItem('student_penalties_list', JSON.stringify(studentPenaltiesList.value));
+                        const updateIfDiff = (targetRef, serverArr, storageKey) => {
+                            if (serverArr && Array.isArray(serverArr) && serverArr.length > 0) {
+                                if (JSON.stringify(targetRef.value) !== JSON.stringify(serverArr)) {
+                                    targetRef.value = serverArr;
+                                    localStorage.setItem(storageKey, JSON.stringify(serverArr));
+                                }
+                            }
+                        };
                         
-                        nextTick(() => {
+                        updateIfDiff(studentsList, serverState.students_list, 'students_list');
+                        updateIfDiff(staffList, serverState.staff_list, 'staff_list');
+                        updateIfDiff(classesList, serverState.classes_list, 'classes_list');
+                        updateIfDiff(partnersList, serverState.partners_list, 'partners_list');
+                        updateIfDiff(financeTransactionsList, serverState.finance_transactions_list, 'finance_transactions_list');
+                        updateIfDiff(studentTestAttemptsList, serverState.attempts_list, 'attempts_list');
+                        updateIfDiff(studentAttendanceList, serverState.student_attendance_list, 'student_attendance_list');
+                        updateIfDiff(studentFeedbackList, serverState.student_feedback_list, 'student_feedback_list');
+                        updateIfDiff(studentActivityLogs, serverState.student_activity_logs, 'student_activity_logs');
+                        updateIfDiff(studentPenaltiesList, serverState.student_penalties_list, 'student_penalties_list');
+                        
+                        setTimeout(() => {
                             isSyncing.value = false;
-                        });
+                        }, 250);
                     } catch (err) {
-                        console.error("Pull state failed:", err);
+                        setTimeout(() => {
+                            isSyncing.value = false;
+                        }, 250);
                     }
                 };
 
@@ -5716,6 +5703,22 @@
                         console.error("Localtunnel URL fetch failed:", err);
                     }
 
+                    // Background Real-Time Polling every 2 seconds for live sync across all devices
+                    if (syncInterval) clearInterval(syncInterval);
+                    syncInterval = setInterval(() => {
+                        pullStateFromServer();
+                    }, 2000);
+
+                    // Sync when page tab becomes active
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.visibilityState === 'visible') {
+                            pullStateFromServer();
+                        }
+                    });
+                    window.addEventListener('focus', () => {
+                        pullStateFromServer();
+                    });
+
                     // Check for URL check-in parameter from scanned QR code
                     const urlParams = new URLSearchParams(window.location.search);
                     const checkinLogin = urlParams.get('checkin');
@@ -5745,6 +5748,10 @@
                             window.history.replaceState({}, document.title, cleanUrl);
                         }
                     }
+                });
+
+                onUnmounted(() => {
+                    if (syncInterval) clearInterval(syncInterval);
                 });
 
                 return {

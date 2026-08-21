@@ -634,11 +634,19 @@ if (!fs.existsSync(STATE_FILE)) {
     fs.writeFileSync(STATE_FILE, JSON.stringify({}), 'utf8');
 }
 
+let lastStateUpdated = Date.now();
+
 // GET state
 app.get('/api/v1/sync-state', (req, res) => {
     try {
+        const clientVersion = req.query.v;
+        if (clientVersion && parseInt(clientVersion, 10) === lastStateUpdated) {
+            return res.json({ unchanged: true, _version: lastStateUpdated });
+        }
         const data = fs.readFileSync(STATE_FILE, 'utf8');
-        res.json(JSON.parse(data));
+        const parsed = JSON.parse(data);
+        parsed._version = lastStateUpdated;
+        res.json(parsed);
     } catch (e) {
         console.error("GET sync-state error:", e);
         res.status(500).json({ error: "Failed to read state" });
@@ -673,6 +681,9 @@ app.post('/api/v1/sync-state', (req, res) => {
             const clientArr = clientState[key] || [];
             newState[key] = mergeArraysById(serverArr, clientArr);
         }
+        
+        lastStateUpdated = Date.now();
+        newState._version = lastStateUpdated;
         
         fs.writeFileSync(STATE_FILE, JSON.stringify(newState, null, 2), 'utf8');
         res.json(newState);

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: delta_avtomaktab_app
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - HOST=0.0.0.0
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist SQLite questions database and global ERP state
+      - ./database:/app/database
+      - ./public:/app/public
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

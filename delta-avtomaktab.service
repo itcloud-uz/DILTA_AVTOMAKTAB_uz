@@ -1,0 +1,22 @@
+[Unit]
+Description=DELTA_AVTOMAKTAB_UZ Node.js LMS & Examination Server
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/delta_avtomaktab
+ExecStart=/usr/bin/node /var/www/delta_avtomaktab/node_server.js
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=8000
+Environment=HOST=0.0.0.0
+
+# Security sandbox options
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

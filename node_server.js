@@ -6,8 +6,41 @@ import initSqlJs from 'sql.js';
 import os from 'os';
 
 const app = express();
+
+// Security Headers Middleware
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+});
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
+
+// Health Check Routes for Docker, Nginx, and Kubernetes probes
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'UP',
+        service: 'DELTA_AVTOMAKTAB_UZ',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        memory: process.memoryUsage(),
+        db_loaded: !!db
+    });
+});
+app.get('/api/v1/health', (req, res) => {
+    res.json({
+        status: 'UP',
+        service: 'DELTA_AVTOMAKTAB_UZ',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        memory: process.memoryUsage(),
+        db_loaded: !!db
+    });
+});
 
 // Serve static assets from public/build
 app.use('/build', express.static('./public/build'));
@@ -510,6 +543,20 @@ app.get('/api/v1/questions', (req, res) => {
     }
 });
 
+// Helper to persist SQLite DB
+function persistDatabase() {
+    try {
+        if (db) {
+            const data = db.export();
+            const buffer = Buffer.from(data);
+            fs.writeFileSync('./database/database.sqlite', buffer);
+            console.log("SQLite database safely written to disk.");
+        }
+    } catch (err) {
+        console.error("Database persistence error:", err);
+    }
+}
+
 // Create Question Route
 app.post('/api/v1/questions', (req, res) => {
     try {
@@ -526,10 +573,7 @@ app.post('/api/v1/questions', (req, res) => {
         });
         stmt.free();
 
-        // Save SQLite database file to disk
-        const data = db.export();
-        const buffer = Buffer.from(data);
-        fs.writeFileSync('./database/database.sqlite', buffer);
+        persistDatabase();
 
         // Get last inserted ID
         const resId = db.exec("SELECT last_insert_rowid() as id")[0].values[0][0];
@@ -545,6 +589,48 @@ app.post('/api/v1/questions', (req, res) => {
     } catch (e) {
         console.error("API Create Question Error:", e);
         res.status(500).json({ error: "Server failed to save question" });
+    }
+});
+
+// Update Question Route
+app.put('/api/v1/questions/:id', (req, res) => {
+    try {
+        const { id } = req.params;
+        const { translations, correct_option_id, level } = req.body;
+        if (!translations || !correct_option_id) {
+            return res.status(422).json({ error: "Bo'sh ma'lumotlar kiritildi" });
+        }
+        const lvl = parseInt(level || 1, 10);
+        const stmt = db.prepare("UPDATE questions SET translations = :tr, correct_option_id = :cor, level = :lvl, updated_at = datetime('now') WHERE id = :id");
+        stmt.run({
+            ':tr': JSON.stringify(translations),
+            ':cor': correct_option_id,
+            ':lvl': lvl,
+            ':id': parseInt(id, 10)
+        });
+        stmt.free();
+
+        persistDatabase();
+        res.json({ success: true, id: parseInt(id, 10) });
+    } catch (e) {
+        console.error("API Update Question Error:", e);
+        res.status(500).json({ error: "Server failed to update question" });
+    }
+});
+
+// Delete Question Route
+app.delete('/api/v1/questions/:id', (req, res) => {
+    try {
+        const { id } = req.params;
+        const stmt = db.prepare("DELETE FROM questions WHERE id = :id");
+        stmt.run({ ':id': parseInt(id, 10) });
+        stmt.free();
+
+        persistDatabase();
+        res.json({ success: true, deleted_id: parseInt(id, 10) });
+    } catch (e) {
+        console.error("API Delete Question Error:", e);
+        res.status(500).json({ error: "Server failed to delete question" });
     }
 });
 
@@ -567,6 +653,22 @@ app.get('/api/v1/all-questions', (req, res) => {
     } catch (e) {
         console.error("API all-questions error:", e);
         res.status(500).json({ error: "Failed to fetch all questions" });
+    }
+});
+
+// Backup Export Endpoint
+app.get('/api/v1/backup/export', (req, res) => {
+    try {
+        if (fs.existsSync(STATE_FILE)) {
+            const data = fs.readFileSync(STATE_FILE, 'utf8');
+            res.setHeader('Content-Disposition', 'attachment; filename="delta_avtomaktab_backup.json"');
+            res.setHeader('Content-Type', 'application/json');
+            return res.send(data);
+        }
+        res.status(404).json({ error: "State file not found" });
+    } catch (err) {
+        console.error("Backup export error:", err);
+        res.status(500).json({ error: "Backup export failed" });
     }
 });
 
@@ -596,7 +698,6 @@ app.get('/api/v1/localtunnel-url', (req, res) => {
         const filePath = path.resolve('./localtunnel_url.txt');
         if (fs.existsSync(filePath)) {
             let content = fs.readFileSync(filePath, 'utf8');
-            // Extract the url from string like "your url is: https://xxxx.loca.lt"
             const match = content.match(/https?:\/\/[^\s]+/);
             if (match) {
                 const cleanUrl = match[0].trim().replace(/[^a-zA-Z0-9-.:_/]/g, '');
@@ -609,6 +710,7 @@ app.get('/api/v1/localtunnel-url', (req, res) => {
         res.json({ url: null });
     }
 });
+
 // Helper to merge arrays by ID
 function mergeArraysById(serverArray, clientArray) {
     const merged = [...serverArray];
@@ -653,7 +755,7 @@ app.get('/api/v1/sync-state', (req, res) => {
     }
 });
 
-// POST state
+// POST state (Atomic write)
 app.post('/api/v1/sync-state', (req, res) => {
     try {
         const clientState = req.body;
@@ -685,20 +787,41 @@ app.post('/api/v1/sync-state', (req, res) => {
         lastStateUpdated = Date.now();
         newState._version = lastStateUpdated;
         
-        fs.writeFileSync(STATE_FILE, JSON.stringify(newState, null, 2), 'utf8');
+        // Write to temporary file then atomic rename
+        const tempStateFile = `${STATE_FILE}.tmp`;
+        fs.writeFileSync(tempStateFile, JSON.stringify(newState, null, 2), 'utf8');
+        fs.renameSync(tempStateFile, STATE_FILE);
+
         res.json(newState);
     } catch (e) {
         console.error("POST sync-state error:", e);
         res.status(500).json({ error: "Failed to save state" });
     }
 });
+
 // Fallback all static assets
 app.use(express.static('./public'));
 
-const PORT = 8000;
-app.listen(PORT, '0.0.0.0', () => {
+const PORT = parseInt(process.env.PORT || '8000', 10);
+const HOST = process.env.HOST || '0.0.0.0';
+
+const server = app.listen(PORT, HOST, () => {
     console.log(`===================================================`);
     console.log(`  DELTA_AVTOMAKTAB_UZ Server Running on Port ${PORT}`);
-    console.log(`  Address: http://127.0.0.1:${PORT}`);
+    console.log(`  Address: http://${HOST}:${PORT}`);
+    console.log(`  Environment: ${process.env.NODE_ENV || 'production'}`);
     console.log(`===================================================`);
 });
+
+// Graceful shutdown handling
+const gracefulShutdown = () => {
+    console.log("\nReceived termination signal. Gracefully shutting down...");
+    persistDatabase();
+    server.close(() => {
+        console.log("HTTP server closed. Exiting process.");
+        process.exit(0);
+    });
+};
+
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);

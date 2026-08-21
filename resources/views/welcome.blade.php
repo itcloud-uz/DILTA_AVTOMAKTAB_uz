@@ -1067,8 +1067,22 @@
                             </thead>
                             <tbody>
                                 <tr v-for="t in staffList" :key="t.id" class="border-b hover:bg-gray-50/50">
-                                    <td class="p-3 font-bold text-slate-800">[[ t.name ]]</td>
-                                    <td class="p-3 font-semibold text-gray-600">[[ t.role ]]</td>
+                                    <td class="p-3">
+                                        <input 
+                                            v-model="t.name" 
+                                            type="text" 
+                                            placeholder="Xodim ismi"
+                                            class="w-full min-w-[140px] p-1.5 border border-slate-200 rounded-lg text-xs bg-white text-slate-800 font-bold focus:ring-2 focus:ring-blue-400 focus:border-blue-500 shadow-sm"
+                                        />
+                                    </td>
+                                    <td class="p-3">
+                                        <input 
+                                            v-model="t.role" 
+                                            type="text" 
+                                            placeholder="Lavozimi"
+                                            class="w-full min-w-[130px] p-1.5 border border-slate-200 rounded-lg text-xs bg-white text-slate-700 font-semibold focus:ring-2 focus:ring-blue-400 focus:border-blue-500 shadow-sm"
+                                        />
+                                    </td>
                                     <td class="p-3">
                                         <select v-model="t.payment_type" class="p-1 rounded border text-xs bg-white text-slate-700">
                                             <option value="fixed">Fixed (Oylik)</option>
@@ -4614,13 +4628,13 @@
 
                 // Save individual staff member login/password and data
                 const saveStaffMember = (teacher) => {
-                    if (!teacher.login || !teacher.password) {
-                        alert("Login va parol bo'sh bo'lishi mumkin emas!");
+                    if (!teacher.name || !teacher.login || !teacher.password) {
+                        alert("Xodim ismi, login va paroli bo'sh bo'lishi mumkin emas!");
                         return;
                     }
                     localStorage.setItem('staff_list', JSON.stringify(staffList.value));
                     triggerPushState();
-                    alert(`✅ ${teacher.name} ma'lumotlari, logini (${teacher.login}) va paroli (${teacher.password}) muvaffaqiyatli saqlandi!`);
+                    alert(`✅ ${teacher.name} (${teacher.role || 'Xodim'}) ma'lumotlari, logini (${teacher.login}) va paroli (${teacher.password}) muvaffaqiyatli saqlandi!`);
                 };
 
                 // Delete staff member

@@ -319,8 +319,8 @@
       "percentage_rate": 0,
       "students_count": 0,
       "tuition_fee_per_student": 0,
-      "login": "nodira",
-      "password": "Ndr39"
+      "login": "jalli",
+      "password": "98765"
     }
   ],
   "classes_list": [],
@@ -1110,5 +1110,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787291980780
+  "_version": 1787292549363
 }

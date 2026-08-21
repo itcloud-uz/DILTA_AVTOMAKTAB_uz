@@ -3360,7 +3360,7 @@
 
     <!-- Script Application -->
     <script>
-        const { createApp, ref, onMounted, computed, watch, nextTick } = Vue;
+        const { createApp, ref, onMounted, onUnmounted, computed, watch, nextTick } = Vue;
 
         createApp({
             setup() {

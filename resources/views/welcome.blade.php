@@ -5435,6 +5435,13 @@
 
                 const triggerAdminPanelToggle = () => {
                     isAdminMode.value = !isAdminMode.value;
+                    if (!isAdminMode.value) {
+                        activeStudentTab.value = 'tests';
+                        isTestStarted.value = false;
+                        if (!selectedStudentId.value && studentsList.value && studentsList.value.length) {
+                            selectedStudentId.value = studentsList.value[0].id;
+                        }
+                    }
                 };
 
                 const confirmAdminVerify = () => {

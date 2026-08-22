@@ -496,21 +496,23 @@
                     <!-- Display logout and profile name if logged in -->
                     <div v-if="isLoggedIn" class="flex items-center gap-3">
                         
-                        <!-- Admin Panel Button (Only visible if admin is logged in and in admin mode) -->
+                        <!-- Admin Mode Toggle Button (Switches seamlessly between Admin Panel and Test Workspace) -->
                         <button 
-                            v-if="loggedInUserType === 'admin' && isAdminMode"
+                            v-if="loggedInUserType === 'admin'"
                             @click="triggerAdminPanelToggle" 
-                            class="btn-3d px-3.5 py-2 rounded-xl font-bold transition-all text-[10px]"
-                            :class="isAdminMode ? 'bg-amber-500 hover:bg-amber-600 text-white border-b-4 border-b-amber-700' : 'bg-[#0066cc] text-white hover:bg-blue-700 border-b-4 border-b-[#004fad]'"
+                            class="btn-3d px-3.5 py-2 rounded-xl font-extrabold transition-all text-xs flex items-center gap-1.5 shadow-md"
+                            :class="isAdminMode ? 'bg-amber-500 hover:bg-amber-600 text-white border-b-4 border-b-amber-700' : 'bg-[#0066cc] text-white hover:bg-blue-700 border-b-4 border-b-blue-800'"
+                            :title="isAdminMode ? 'O\'quvchi va Test rejimiga o\'tish' : 'Admin boshqaruv paneliga qaytish'"
                         >
                             <span v-if="isAdminMode">🏠 TEST REJIMIGA O'TISH</span>
-                            <span v-else>⚙️ ADMIN PANEL</span>
+                            <span v-else>⚙️ ADMIN PANELGA O'TISH</span>
                         </button>
 
                         <!-- Logout Button -->
                         <button 
                             @click="handleLogout"
-                            class="btn-3d px-3.5 py-2 rounded-xl font-bold bg-rose-600 text-white hover:bg-rose-700 border-b-4 border-b-rose-800 transition-all text-[10px]"
+                            class="btn-3d px-3.5 py-2 rounded-xl font-extrabold bg-rose-600 text-white hover:bg-rose-700 border-b-4 border-b-rose-800 transition-all text-xs flex items-center gap-1.5 shadow-md"
+                            title="Tizimdan to'liq chiqish"
                         >
                             🚪 CHIQISH
                         </button>
@@ -5409,6 +5411,12 @@
                     } catch (e) {
                         console.error("Speech cancel error:", e);
                     }
+
+                    if (testInterval) {
+                        clearInterval(testInterval);
+                        testInterval = null;
+                    }
+                    
                     isLoggedIn.value = false;
                     loggedInUserType.value = '';
                     loggedInStudentId.value = null;
@@ -5417,19 +5425,16 @@
                     authPassword.value = '';
                     authError.value = '';
                     isAdminMode.value = false;
+                    isTestStarted.value = false;
+                    testFinished.value = false;
+                    userAnswers.value = {};
                     studentPanelUnlockPassword.value = '';
                     studentSelectPassword.value = '';
                     studentSelectError.value = '';
                 };
 
                 const triggerAdminPanelToggle = () => {
-                    if (isAdminMode.value) {
-                        isAdminMode.value = false;
-                    } else {
-                        showAdminVerifyModal.value = true;
-                        adminVerifyPasswordInput.value = '';
-                        adminVerifyError.value = '';
-                    }
+                    isAdminMode.value = !isAdminMode.value;
                 };
 
                 const confirmAdminVerify = () => {
@@ -6509,6 +6514,8 @@
                     saveSystemSettings,
                     handleStudentPanelUnlock,
                     handleLogin,
+                    handleLogout,
+                    triggerAdminPanelToggle,
                     showAddQuestionModal,
                     showAddQuestionForm,
                     editingQuestionId,

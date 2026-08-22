@@ -192,7 +192,7 @@
         5
       ],
       "tuition_status": "To'lagan",
-      "subscription_end_date": "2026-12-31",
+      "subscription_end_date": "2027-03-28",
       "login": "abu",
       "password": "123",
       "is_system_student": true
@@ -319,7 +319,7 @@
       "percentage_rate": 0,
       "students_count": 0,
       "tuition_fee_per_student": 0,
-      "login": "jalli",
+      "login": "jala",
       "password": "98765"
     }
   ],
@@ -483,6 +483,27 @@
       "category": "O'quvchi qo'llanmalari chop etish",
       "amount": 600000,
       "date": "2026-07-06 11:00"
+    },
+    {
+      "id": 20,
+      "type": "kirim",
+      "category": "Obuna yangilanishi (abdu rasul)",
+      "amount": 800000,
+      "date": "2026-08-22 09:11"
+    },
+    {
+      "id": 21,
+      "type": "kirim",
+      "category": "Obuna yangilanishi (abdu rasul)",
+      "amount": 800000,
+      "date": "2026-08-22 09:11"
+    },
+    {
+      "id": 22,
+      "type": "kirim",
+      "category": "Obuna yangilanishi (abdu rasul)",
+      "amount": 800000,
+      "date": "2026-08-22 09:11"
     }
   ],
   "attempts_list": [
@@ -1110,5 +1131,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787292861731
+  "_version": 1787390092192
 }

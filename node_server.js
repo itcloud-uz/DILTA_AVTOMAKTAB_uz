@@ -576,7 +576,7 @@ app.post('/api/v1/questions', (req, res) => {
         persistDatabase();
 
         // Get last inserted ID
-        const resId = db.exec("SELECT last_insert_rowid() as id")[0].values[0][0];
+        const resId = db.exec("SELECT MAX(id) FROM questions")[0].values[0][0];
 
         res.json({
             data: {
@@ -634,10 +634,10 @@ app.delete('/api/v1/questions/:id', (req, res) => {
     }
 });
 
-// Get All Questions (For Admin Panel)
+// Get All Questions (For Admin Panel - newest first)
 app.get('/api/v1/all-questions', (req, res) => {
     try {
-        const stmt = db.prepare("SELECT * FROM questions ORDER BY id ASC");
+        const stmt = db.prepare("SELECT * FROM questions ORDER BY id DESC");
         const rows = [];
         while (stmt.step()) {
             const row = stmt.getAsObject();

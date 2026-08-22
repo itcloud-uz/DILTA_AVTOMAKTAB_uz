@@ -1692,6 +1692,11 @@
                                 <option value="2">2-bosqich</option>
                                 <option value="3">3-bosqich</option>
                             </select>
+
+                            <select v-model="questionSortOrder" @change="questionCurrentPage = 1" class="p-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs shadow-sm">
+                                <option value="desc">⚡ Yangi kiritilganlar (Tepada)</option>
+                                <option value="asc">🔢 Tartib bilan (#1 dan boshlab)</option>
+                            </select>
                         </div>
                     </div>
 
@@ -4361,9 +4366,12 @@
                     });
                 });
 
-                // Filtered admin questions with search & level filter
+                // Sorting order: 'desc' (newest first) or 'asc' (oldest first)
+                const questionSortOrder = ref('desc');
+
+                // Filtered admin questions with search & level filter & sorting
                 const filteredAdminQuestions = computed(() => {
-                    let list = adminQuestionsList.value || [];
+                    let list = [...(adminQuestionsList.value || [])];
                     if (filterQuestionLevel.value !== 'all') {
                         const lvl = parseInt(filterQuestionLevel.value, 10);
                         list = list.filter(q => q.level === lvl);
@@ -4375,6 +4383,11 @@
                             const optTexts = (q.translations?.uz_lat?.options || []).map(o => o.text).join(' ');
                             return qText.toLowerCase().includes(query) || optTexts.toLowerCase().includes(query) || String(q.id).includes(query);
                         });
+                    }
+                    if (questionSortOrder.value === 'desc') {
+                        list.sort((a, b) => Number(b.id) - Number(a.id));
+                    } else {
+                        list.sort((a, b) => Number(a.id) - Number(b.id));
                     }
                     return list;
                 });
@@ -5695,8 +5708,12 @@
                                 questions.value.push(newQ);
                                 adminQuestionsList.value.unshift(newQ);
                                 adminQuestionsCount.value++;
+                                questionSortOrder.value = 'desc';
+                                questionCurrentPage.value = 1;
+                                searchQuestionQuery.value = '';
+                                filterQuestionLevel.value = 'all';
                                 showAddQuestionModal.value = false;
-                                alert("🎉 Yangi savol ma'lumotlar bazasiga muvaffaqiyatli qo'shildi!");
+                                alert(`🎉 #${newQ.id}-savol ma'lumotlar bazasiga muvaffaqiyatli saqlandi va jadvalning 1-sahifasi eng yuqorisiga joylashtirildi!`);
                                 cancelEditQuestion();
                             } else {
                                 alert("Xatolik: " + (resData.error || "Savol saqlanmadi"));
@@ -6508,6 +6525,7 @@
                     openExplanationModal,
                     searchQuestionQuery,
                     filterQuestionLevel,
+                    questionSortOrder,
                     questionCurrentPage,
                     questionPageSize,
                     filteredAdminQuestions,

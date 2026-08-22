@@ -5392,16 +5392,20 @@
                 };
 
                 const handleLogout = () => {
-                    const studentId = loggedInStudentId.value || selectedStudentId.value;
-                    if (studentId && loggedInUserType.value === 'student') {
-                        const now = new Date();
-                        const timeStr = now.toISOString().replace('T', ' ').substring(0, 16);
-                        
-                        const activeLog = studentActivityLogs.value.find(log => log.student_id === studentId && log.logout_time === "Ayni vaqtda faol");
-                        if (activeLog) {
-                            activeLog.logout_time = timeStr;
-                            localStorage.setItem('student_activity_logs', JSON.stringify(studentActivityLogs.value));
+                    try {
+                        const studentId = loggedInStudentId.value || selectedStudentId.value;
+                        if (studentId && loggedInUserType.value === 'student' && studentActivityLogs.value) {
+                            const now = new Date();
+                            const timeStr = now.toISOString().replace('T', ' ').substring(0, 16);
+                            
+                            const activeLog = studentActivityLogs.value.find(log => log.student_id === studentId && log.logout_time === "Ayni vaqtda faol");
+                            if (activeLog) {
+                                activeLog.logout_time = timeStr;
+                                localStorage.setItem('student_activity_logs', JSON.stringify(studentActivityLogs.value));
+                            }
                         }
+                    } catch (e) {
+                        console.warn("Activity log update error:", e);
                     }
 
                     try {
@@ -5409,12 +5413,16 @@
                             window.speechSynthesis.cancel();
                         }
                     } catch (e) {
-                        console.error("Speech cancel error:", e);
+                        console.warn("Speech cancel error:", e);
                     }
 
-                    if (testInterval) {
-                        clearInterval(testInterval);
-                        testInterval = null;
+                    try {
+                        if (typeof timerInterval !== 'undefined' && timerInterval) {
+                            clearInterval(timerInterval);
+                            timerInterval = null;
+                        }
+                    } catch (e) {
+                        console.warn("Timer clear error:", e);
                     }
                     
                     isLoggedIn.value = false;

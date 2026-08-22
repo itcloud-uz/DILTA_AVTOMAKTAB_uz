@@ -312,7 +312,7 @@
     },
     {
       "id": 4,
-      "name": "Nodira Azimova",
+      "name": "javoher",
       "role": "Bosh hisobchi",
       "payment_type": "fixed",
       "base_salary": 5000000,
@@ -1110,5 +1110,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787292549363
+  "_version": 1787292861731
 }

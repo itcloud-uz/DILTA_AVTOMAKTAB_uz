@@ -1487,44 +1487,183 @@
                         </div>
                     </div>
 
-                <!-- ==================== TAB: TEST QO'SHISH ==================== -->
-                <div v-else-if="activeAdminTab === 'savollar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left">
+                <!-- ==================== TAB: TEST QO'SHISH & BAZA ==================== -->
+                <div v-else-if="activeAdminTab === 'savollar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left animate-fadeIn">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// TEST QO'SHISH & BAZA BOSHQARUVI</h2>
-                            <p class="text-xs text-gray-500 font-mono">Yangi imtihon testlarini kiritish va bazadagi savollarni boshqarish</p>
+                            <h2 class="text-lg font-black text-slate-800 uppercase tracking-tight flex items-center gap-2">
+                                📝 TEST QO'SHISH VA SAVOLLAR BAZASI
+                            </h2>
+                            <p class="text-xs text-gray-500 font-mono">YHQ imtihon testlarini kiritish, tahrirlash, qidirish va bazani boshqarish</p>
                         </div>
                         <button 
-                            @click="openAddQuestionModal"
-                            class="btn-3d px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 border-b-[3px] border-b-emerald-800 flex items-center gap-2 self-start sm:self-auto"
+                            @click="showAddQuestionForm = !showAddQuestionForm; if (!editingQuestionId) cancelEditQuestion();"
+                            class="btn-3d px-5 py-2.5 bg-[#0066cc] hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl transition-all shadow-md shadow-blue-500/20 border-b-[3px] border-b-blue-800 flex items-center gap-2 self-start sm:self-auto"
                         >
-                            ➕ BAZAGA YANGI SAVOL QO'SHISH
+                            [[ showAddQuestionForm ? '✕ Formani yashirish' : '➕ Yangi savol yozish' ]]
                         </button>
                     </div>
 
-                    <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between text-xs">
-                        <span class="font-bold text-blue-900">📊 Tizimda jami savollar soni (baza): <strong class="text-blue-600">[[ adminQuestionsCount ]] ta</strong></span>
-                        <span class="text-[11px] font-mono text-blue-700 font-semibold">WebAssembly SQLite Engine Active ✅</span>
+                    <!-- Direct Embedded Question Creator / Editor Form -->
+                    <div v-if="showAddQuestionForm" class="p-5 bg-gradient-to-br from-emerald-50/80 to-teal-50/50 border border-emerald-200 rounded-3xl flex flex-col gap-4 text-left shadow-sm animate-scaleUp">
+                        <div class="flex justify-between items-center border-b border-emerald-200/60 pb-2">
+                            <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider flex items-center gap-2">
+                                [[ editingQuestionId ? '✏️ #' + editingQuestionId + '-SAVOLNI TAHRIRLASH' : '➕ YANGI TEST SAVOLI KIRITISH' ]]
+                            </h3>
+                            <span class="text-[10px] font-mono text-emerald-700 font-semibold">
+                                [[ editingQuestionId ? 'Tahrirlash rejimi' : 'Avtomatik barcha tillar uchun saqlanadi' ]]
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col gap-3 text-xs">
+                            <div class="flex flex-col gap-1">
+                                <label class="font-bold text-slate-800 text-[11px]">Savol matni (YHQ qoidasi bo'yicha) *</label>
+                                <textarea 
+                                    v-model="customQuestionText" 
+                                    rows="2"
+                                    placeholder="Masalan: Haydovchi qaysi hollarda o'z o'rnini tark etishi yoki transport vositasini qoldirishi mumkin?"
+                                    class="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-medium focus:ring-2 focus:ring-emerald-400 outline-none"
+                                ></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="flex flex-col gap-1">
+                                    <label class="font-bold text-emerald-700 text-[11px]">Variant A (To'g'ri javob ✅) *</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="customOptA" 
+                                        placeholder="To'g'ri javob matni..." 
+                                        class="p-2.5 rounded-xl border border-emerald-300 bg-white font-bold text-emerald-900 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col gap-1">
+                                    <label class="font-bold text-slate-700 text-[11px]">Variant B (Noto'g'ri javob ❌) *</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="customOptB" 
+                                        placeholder="Noto'g'ri variant 1..." 
+                                        class="p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col gap-1">
+                                    <label class="font-bold text-slate-700 text-[11px]">Variant C (Noto'g'ri javob ❌) *</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="customOptC" 
+                                        placeholder="Noto'g'ri variant 2..." 
+                                        class="p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col gap-1">
+                                    <label class="font-bold text-slate-700 text-[11px]">Variant D (Noto'g'ri javob ❌ - Ixtiyoriy)</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="customOptD" 
+                                        placeholder="Noto'g'ri variant 3 (bo'sh qoldirish mumkin)..." 
+                                        class="p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <div class="md:col-span-2 flex flex-col gap-1">
+                                    <label class="font-bold text-amber-800 text-[11px]">Qoida izohi / Tushuntirish (Ixtiyoriy)</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="customExplanation" 
+                                        placeholder="Masalan: YHQ 12.4 bandiga binoan to'xtash taqiqlanadi..." 
+                                        class="p-2.5 rounded-xl border border-amber-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-amber-400 outline-none"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col gap-1">
+                                    <label class="font-bold text-slate-700 text-[11px]">Qiyinchilik darajasi (Bosqich)</label>
+                                    <select v-model="customLevel" class="p-2.5 rounded-xl border border-slate-200 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none">
+                                        <option :value="1">1-Bosqich (Boshlang'ich)</option>
+                                        <option :value="2">2-Bosqich (O'rta)</option>
+                                        <option :value="3">3-Bosqich (Murakkab)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-2 mt-2">
+                                <button 
+                                    v-if="editingQuestionId" 
+                                    @click="cancelEditQuestion" 
+                                    class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs"
+                                >
+                                    Bekor qilish
+                                </button>
+                                <button 
+                                    @click="handleSaveCustomQuestion" 
+                                    :disabled="isSubmittingCustomQuestion"
+                                    class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wide border-b-2 border-b-emerald-800 shadow-md flex items-center gap-1.5 disabled:opacity-50"
+                                >
+                                    <span v-if="!isSubmittingCustomQuestion">💾 [[ editingQuestionId ? 'O\'zgarishlarni saqlash' : 'Bazaga saqlash va qo\'shish' ]]</span>
+                                    <span v-else>Saqlanmoqda...</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="overflow-x-auto">
+                    <!-- Question Search & Statistics Bar -->
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center gap-2 w-full md:w-auto">
+                            <span class="font-black text-slate-800">📊 Jami savollar:</span>
+                            <span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-lg font-mono font-bold">[[ adminQuestionsCount ]] ta</span>
+                            <span class="text-gray-400">|</span>
+                            <span class="font-bold text-slate-600">Topildi:</span>
+                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-lg font-mono font-bold">[[ filteredAdminQuestions.length ]] ta</span>
+                        </div>
+
+                        <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+                            <div class="relative flex-grow md:w-64">
+                                <input 
+                                    type="text" 
+                                    v-model="searchQuestionQuery" 
+                                    @input="questionCurrentPage = 1"
+                                    placeholder="🔍 Savol matni bo'yicha qidiruv..." 
+                                    class="w-full pl-3 pr-8 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-blue-400 outline-none text-xs"
+                                />
+                                <button v-if="searchQuestionQuery" @click="searchQuestionQuery = ''; questionCurrentPage = 1;" class="absolute right-2.5 top-2 text-gray-400 hover:text-gray-600">✕</button>
+                            </div>
+
+                            <select v-model="filterQuestionLevel" @change="questionCurrentPage = 1" class="p-2 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 text-xs">
+                                <option value="all">Barcha bosqichlar</option>
+                                <option value="1">1-bosqich</option>
+                                <option value="2">2-bosqich</option>
+                                <option value="3">3-bosqich</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Fast Paginated Table -->
+                    <div class="overflow-x-auto w-full">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
-                                <tr class="bg-slate-50 border-b text-gray-500 font-bold uppercase tracking-wider">
-                                    <th class="p-3">ID</th>
+                                <tr class="bg-slate-100/70 border-b text-gray-500 font-bold uppercase tracking-wider">
+                                    <th class="p-3 w-16">ID</th>
                                     <th class="p-3">Savol matni</th>
-                                    <th class="p-3">To'g'ri javob</th>
-                                    <th class="p-3">Bosqich</th>
-                                    <th class="p-3 text-right">Amallar</th>
+                                    <th class="p-3">To'g'ri javob (Variant A)</th>
+                                    <th class="p-3 w-28">Bosqich</th>
+                                    <th class="p-3 text-center w-36">Amallar</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100 text-slate-700">
-                                <tr v-for="(q, idx) in adminQuestionsList" :key="q.id" class="hover:bg-slate-50/60 transition-all font-medium">
+                                <tr v-if="paginatedAdminQuestions.length === 0">
+                                    <td colspan="5" class="p-8 text-center text-gray-400 font-bold">
+                                        Hech qanday savol topilmadi.
+                                    </td>
+                                </tr>
+                                <tr v-else v-for="q in paginatedAdminQuestions" :key="q.id" class="hover:bg-slate-50 transition-all font-medium">
                                     <td class="p-3 font-mono font-bold text-gray-400">#[[ q.id ]]</td>
-                                    <td class="p-3 font-semibold text-slate-800 max-w-xs truncate font-bold">
+                                    <td class="p-3 font-bold text-slate-800 max-w-sm">
                                         [[ q.translations && q.translations.uz_lat ? q.translations.uz_lat.question : q.translations?.uz_cyr?.question || 'Savol matni' ]]
                                     </td>
-                                    <td class="p-3 text-emerald-600 font-bold max-w-xs truncate">
+                                    <td class="p-3 text-emerald-700 font-bold max-w-xs">
                                         [[ getCorrectOptionText(q) || 'To\'g\'ri javob variant A' ]]
                                     </td>
                                     <td class="p-3">
@@ -1532,14 +1671,50 @@
                                             [[ q.level ]]-bosqich
                                         </span>
                                     </td>
-                                    <td class="p-3 text-right">
-                                        <button @click="openAddQuestionModal" class="text-xs text-[#0066cc] font-bold hover:underline">
-                                            ✏️ Tahrirlash / Nusxalash
-                                        </button>
+                                    <td class="p-3 text-center">
+                                        <div class="flex items-center justify-center gap-1.5">
+                                            <button 
+                                                @click="startEditQuestion(q)" 
+                                                class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 border border-blue-200 rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+                                                title="Tahrirlash"
+                                            >
+                                                ✏️ Tahrirlash
+                                            </button>
+                                            <button 
+                                                @click="deleteQuestionFromDb(q.id)" 
+                                                class="px-2 py-1 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 border border-rose-200 rounded-lg text-xs font-bold transition-all shadow-sm"
+                                                title="O'chirish"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="flex items-center justify-between border-t pt-4 text-xs font-bold text-slate-700">
+                        <button 
+                            @click="prevQuestionPage" 
+                            :disabled="questionCurrentPage <= 1"
+                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-1"
+                        >
+                            ← Oldingi sahifa
+                        </button>
+
+                        <div class="font-mono text-slate-600">
+                            Sahifa <strong class="text-blue-600">[[ questionCurrentPage ]]</strong> / <strong>[[ totalQuestionPages ]]</strong>
+                        </div>
+
+                        <button 
+                            @click="nextQuestionPage" 
+                            :disabled="questionCurrentPage >= totalQuestionPages"
+                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-1"
+                        >
+                            Keyingi sahifa →
+                        </button>
                     </div>
                 </div>
 
@@ -3801,14 +3976,23 @@
                 
                 // Custom question & explanation modal states
                 const showAddQuestionModal = ref(false);
+                const showAddQuestionForm = ref(true);
+                const editingQuestionId = ref(null);
                 const customQuestionText = ref('');
                 const customOptA = ref('');
                 const customOptB = ref('');
                 const customOptC = ref('');
+                const customOptD = ref('');
                 const customExplanation = ref('');
                 const customLevel = ref(1);
                 const isSubmittingCustomQuestion = ref(false);
                 const showExplanationModal = ref(false);
+
+                // Admin Questions Filtering & Pagination states
+                const searchQuestionQuery = ref('');
+                const filterQuestionLevel = ref('all');
+                const questionCurrentPage = ref(1);
+                const questionPageSize = ref(15);
                 
                 const getDefaultEndDate = () => {
                     const today = new Date();
@@ -4121,6 +4305,45 @@
                         return true;
                     });
                 });
+
+                // Filtered admin questions with search & level filter
+                const filteredAdminQuestions = computed(() => {
+                    let list = adminQuestionsList.value || [];
+                    if (filterQuestionLevel.value !== 'all') {
+                        const lvl = parseInt(filterQuestionLevel.value, 10);
+                        list = list.filter(q => q.level === lvl);
+                    }
+                    if (searchQuestionQuery.value.trim()) {
+                        const query = searchQuestionQuery.value.toLowerCase().trim();
+                        list = list.filter(q => {
+                            const qText = q.translations?.uz_lat?.question || q.translations?.uz_cyr?.question || '';
+                            const optTexts = (q.translations?.uz_lat?.options || []).map(o => o.text).join(' ');
+                            return qText.toLowerCase().includes(query) || optTexts.toLowerCase().includes(query) || String(q.id).includes(query);
+                        });
+                    }
+                    return list;
+                });
+
+                const totalQuestionPages = computed(() => {
+                    return Math.max(1, Math.ceil(filteredAdminQuestions.value.length / questionPageSize.value));
+                });
+
+                const paginatedAdminQuestions = computed(() => {
+                    const start = (questionCurrentPage.value - 1) * questionPageSize.value;
+                    return filteredAdminQuestions.value.slice(start, start + questionPageSize.value);
+                });
+
+                const prevQuestionPage = () => {
+                    if (questionCurrentPage.value > 1) {
+                        questionCurrentPage.value--;
+                    }
+                };
+
+                const nextQuestionPage = () => {
+                    if (questionCurrentPage.value < totalQuestionPages.value) {
+                        questionCurrentPage.value++;
+                    }
+                };
 
                 const loadAllQuestionsForAdmin = async () => {
                     try {
@@ -5265,13 +5488,57 @@
                 };
 
                 const openAddQuestionModal = () => {
+                    cancelEditQuestion();
+                    showAddQuestionModal.value = true;
+                };
+
+                const startEditQuestion = (q) => {
+                    editingQuestionId.value = q.id;
+                    const uz = q.translations?.uz_lat || q.translations?.uz_cyr || {};
+                    customQuestionText.value = uz.question || '';
+                    const opts = uz.options || [];
+                    customOptA.value = opts.find(o => o.id === 'a')?.text || opts[0]?.text || '';
+                    customOptB.value = opts.find(o => o.id === 'b')?.text || opts[1]?.text || '';
+                    customOptC.value = opts.find(o => o.id === 'c')?.text || opts[2]?.text || '';
+                    customOptD.value = opts.find(o => o.id === 'd')?.text || (opts.length > 3 ? opts[3]?.text : '') || '';
+                    customExplanation.value = uz.explanation || '';
+                    customLevel.value = q.level || 1;
+                    showAddQuestionForm.value = true;
+                    showAddQuestionModal.value = true;
+                };
+
+                const cancelEditQuestion = () => {
+                    editingQuestionId.value = null;
                     customQuestionText.value = '';
                     customOptA.value = '';
                     customOptB.value = '';
                     customOptC.value = '';
+                    customOptD.value = '';
                     customExplanation.value = '';
                     customLevel.value = 1;
-                    showAddQuestionModal.value = true;
+                    showAddQuestionModal.value = false;
+                };
+
+                const deleteQuestionFromDb = async (questionId) => {
+                    if (!confirm(`#${questionId}-savolni ma'lumotlar bazasidan o'chirishni tasdiqlaysizmi?`)) {
+                        return;
+                    }
+                    try {
+                        const response = await fetch(`/api/v1/questions/${questionId}`, {
+                            method: 'DELETE'
+                        });
+                        if (response.ok) {
+                            adminQuestionsList.value = adminQuestionsList.value.filter(q => q.id !== questionId);
+                            adminQuestionsCount.value = adminQuestionsList.value.length;
+                            questions.value = questions.value.filter(q => q.id !== questionId);
+                            alert("✅ Savol ma'lumotlar bazasidan o'chirildi.");
+                        } else {
+                            alert("Xatolik: Savol o'chirilmadi.");
+                        }
+                    } catch (err) {
+                        console.error("Delete question error:", err);
+                        alert("Server bilan bog'lanishda xatolik yuz berdi.");
+                    }
                 };
 
                 const openExplanationModal = () => {
@@ -5283,7 +5550,7 @@
                     const langData = q.translations[currentLang.value] || q.translations['uz_lat'];
                     if (!langData || !langData.options) return '';
                     const correctOpt = langData.options.find(o => o.id === q.correct_option_id);
-                    return correctOpt ? correctOpt.text : '';
+                    return correctOpt ? correctOpt.text : (langData.options[0]?.text || '');
                 };
 
                 const handleSaveCustomQuestion = async () => {
@@ -5294,71 +5561,91 @@
 
                     isSubmittingCustomQuestion.value = true;
 
+                    const optionsList = [
+                        { id: 'a', text: customOptA.value.trim() },
+                        { id: 'b', text: customOptB.value.trim() },
+                        { id: 'c', text: customOptC.value.trim() }
+                    ];
+                    if (customOptD.value && customOptD.value.trim()) {
+                        optionsList.push({ id: 'd', text: customOptD.value.trim() });
+                    }
+
                     const translations = {
                         uz_lat: {
                             question: customQuestionText.value.trim(),
-                            options: [
-                                { id: 'a', text: customOptA.value.trim() },
-                                { id: 'b', text: customOptB.value.trim() },
-                                { id: 'c', text: customOptC.value.trim() }
-                            ],
+                            options: optionsList,
                             explanation: customExplanation.value.trim() || "Ushbu savol YHQ qoidalariga muvofiq kiritildi."
                         },
                         uz_cyr: {
                             question: customQuestionText.value.trim(),
-                            options: [
-                                { id: 'a', text: customOptA.value.trim() },
-                                { id: 'b', text: customOptB.value.trim() },
-                                { id: 'c', text: customOptC.value.trim() }
-                            ]
+                            options: optionsList
                         },
                         ru: {
                             question: customQuestionText.value.trim(),
-                            options: [
-                                { id: 'a', text: customOptA.value.trim() },
-                                { id: 'b', text: customOptB.value.trim() },
-                                { id: 'c', text: customOptC.value.trim() }
-                            ]
+                            options: optionsList
                         },
                         en: {
                             question: customQuestionText.value.trim(),
-                            options: [
-                                { id: 'a', text: customOptA.value.trim() },
-                                { id: 'b', text: customOptB.value.trim() },
-                                { id: 'c', text: customOptC.value.trim() }
-                            ]
+                            options: optionsList
                         },
                         qr: {
                             question: customQuestionText.value.trim(),
-                            options: [
-                                { id: 'a', text: customOptA.value.trim() },
-                                { id: 'b', text: customOptB.value.trim() },
-                                { id: 'c', text: customOptC.value.trim() }
-                            ]
+                            options: optionsList
                         }
                     };
 
                     try {
-                        const response = await fetch('/api/v1/questions', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                translations,
-                                correct_option_id: 'a',
-                                level: customLevel.value
-                            })
-                        });
+                        if (editingQuestionId.value) {
+                            // Update existing question
+                            const response = await fetch(`/api/v1/questions/${editingQuestionId.value}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    translations,
+                                    correct_option_id: 'a',
+                                    level: customLevel.value
+                                })
+                            });
 
-                        const resData = await response.json();
-                        if (response.ok && resData.data) {
-                            const newQ = shuffleQuestionOptions(resData.data);
-                            questions.value.push(newQ);
-                            adminQuestionsList.value.push(newQ);
-                            adminQuestionsCount.value++;
-                            showAddQuestionModal.value = false;
-                            alert("🎉 Yangi savolingiz ma'lumotlar bazasiga muvaffaqiyatli saqlandi hamda ushbu test ro'yxatiga qo'shildi!");
+                            if (response.ok) {
+                                const targetIdx = adminQuestionsList.value.findIndex(q => q.id === editingQuestionId.value);
+                                if (targetIdx !== -1) {
+                                    adminQuestionsList.value[targetIdx] = {
+                                        id: editingQuestionId.value,
+                                        translations,
+                                        correct_option_id: 'a',
+                                        level: customLevel.value
+                                    };
+                                }
+                                alert("✅ Savol muvaffaqiyatli tahrirlandi va saqlandi!");
+                                cancelEditQuestion();
+                            } else {
+                                alert("Xatolik yuz berdi, tahrirlanmadi.");
+                            }
                         } else {
-                            alert("Xatolik: " + (resData.error || "Savol saqlanmadi"));
+                            // Create new question
+                            const response = await fetch('/api/v1/questions', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    translations,
+                                    correct_option_id: 'a',
+                                    level: customLevel.value
+                                })
+                            });
+
+                            const resData = await response.json();
+                            if (response.ok && resData.data) {
+                                const newQ = resData.data;
+                                questions.value.push(newQ);
+                                adminQuestionsList.value.unshift(newQ);
+                                adminQuestionsCount.value++;
+                                showAddQuestionModal.value = false;
+                                alert("🎉 Yangi savol ma'lumotlar bazasiga muvaffaqiyatli qo'shildi!");
+                                cancelEditQuestion();
+                            } else {
+                                alert("Xatolik: " + (resData.error || "Savol saqlanmadi"));
+                            }
                         }
                     } catch (err) {
                         console.error("Save custom question error:", err);
@@ -6150,18 +6437,34 @@
                     saveSystemSettings,
                     handleStudentPanelUnlock,
                     handleLogin,
-                    handleLogout,
                     showAddQuestionModal,
+                    showAddQuestionForm,
+                    editingQuestionId,
                     customQuestionText,
                     customOptA,
                     customOptB,
                     customOptC,
+                    customOptD,
                     customExplanation,
                     customLevel,
                     isSubmittingCustomQuestion,
                     showExplanationModal,
                     openAddQuestionModal,
                     openExplanationModal,
+                    searchQuestionQuery,
+                    filterQuestionLevel,
+                    questionCurrentPage,
+                    questionPageSize,
+                    filteredAdminQuestions,
+                    totalQuestionPages,
+                    paginatedAdminQuestions,
+                    prevQuestionPage,
+                    nextQuestionPage,
+                    startEditQuestion,
+                    cancelEditQuestion,
+                    deleteQuestionFromDb,
+                    handleSaveCustomQuestion,
+                    getCorrectOptionText,
                     showAddStaffForm,
                     newStaff,
                     addNewStaff,

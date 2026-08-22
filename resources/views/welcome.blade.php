@@ -227,11 +227,29 @@
             color: #fbbf24 !important; /* bright amber/yellow */
         }
 
+        .dark-theme .text-emerald-900,
+        .dark-theme .text-emerald-800,
+        .dark-theme .text-emerald-700,
         .dark-theme .text-emerald-600,
         .dark-theme .text-emerald-500,
         .dark-theme .text-green-600,
         .dark-theme .text-green-500 {
             color: #34d399 !important;
+        }
+
+        .dark-theme .text-amber-900,
+        .dark-theme .text-amber-800,
+        .dark-theme .text-amber-700,
+        .dark-theme .text-amber-600 {
+            color: #fbbf24 !important;
+        }
+
+        .dark-theme .text-blue-900,
+        .dark-theme .text-blue-800,
+        .dark-theme .text-blue-700,
+        .dark-theme .text-blue-600,
+        .dark-theme .text-blue-500 {
+            color: #60a5fa !important;
         }
         
         .dark-theme .text-red-600,
@@ -239,11 +257,6 @@
         .dark-theme .text-rose-600,
         .dark-theme .text-rose-500 {
             color: #f87171 !important;
-        }
-        
-        .dark-theme .text-blue-600,
-        .dark-theme .text-blue-500 {
-            color: #60a5fa !important;
         }
 
         .dark-theme code,
@@ -276,23 +289,57 @@
             color: #ffffff !important;
         }
 
+        .dark-theme .text-slate-900,
         .dark-theme .text-slate-800,
         .dark-theme .text-slate-700,
+        .dark-theme .text-slate-600,
+        .dark-theme .text-gray-900,
+        .dark-theme .text-gray-800,
         .dark-theme .text-gray-700,
         .dark-theme .text-gray-600 {
-            color: #f1f5f9 !important;
+            color: #f8fafc !important;
         }
 
         .dark-theme .text-gray-500,
-        .dark-theme .text-gray-400 {
-            color: #94a3b8 !important;
+        .dark-theme .text-gray-400,
+        .dark-theme .text-slate-500,
+        .dark-theme .text-slate-400 {
+            color: #cbd5e1 !important;
         }
 
         .dark-theme input,
         .dark-theme select,
         .dark-theme textarea {
             background-color: #0f172a !important;
+            border: 1.5px solid #475569 !important;
+            color: #ffffff !important;
+        }
+
+        .dark-theme input:focus,
+        .dark-theme select:focus,
+        .dark-theme textarea:focus {
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+        }
+
+        .dark-theme input::placeholder,
+        .dark-theme textarea::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
+
+        .dark-theme .from-emerald-50\/80,
+        .dark-theme .to-teal-50\/50,
+        .dark-theme .from-emerald-50,
+        .dark-theme .to-teal-50,
+        .dark-theme .bg-gradient-to-br {
+            background: #1e293b !important;
             border-color: #334155 !important;
+        }
+
+        .dark-theme .bg-slate-100\/70,
+        .dark-theme .bg-slate-100 {
+            background-color: #0f172a !important;
             color: #f8fafc !important;
         }
 
@@ -1505,83 +1552,91 @@
                     </div>
 
                     <!-- Direct Embedded Question Creator / Editor Form -->
-                    <div v-if="showAddQuestionForm" class="p-5 bg-gradient-to-br from-emerald-50/80 to-teal-50/50 border border-emerald-200 rounded-3xl flex flex-col gap-4 text-left shadow-sm animate-scaleUp">
-                        <div class="flex justify-between items-center border-b border-emerald-200/60 pb-2">
-                            <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider flex items-center gap-2">
+                    <div v-if="showAddQuestionForm" class="p-6 bg-slate-50 border border-slate-300 rounded-3xl flex flex-col gap-5 text-left shadow-lg animate-scaleUp">
+                        <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+                            <h3 class="text-sm font-black text-emerald-600 uppercase tracking-wider flex items-center gap-2">
                                 [[ editingQuestionId ? '✏️ #' + editingQuestionId + '-SAVOLNI TAHRIRLASH' : '➕ YANGI TEST SAVOLI KIRITISH' ]]
                             </h3>
-                            <span class="text-[10px] font-mono text-emerald-700 font-semibold">
+                            <span class="text-xs font-mono text-emerald-500 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
                                 [[ editingQuestionId ? 'Tahrirlash rejimi' : 'Avtomatik barcha tillar uchun saqlanadi' ]]
                             </span>
                         </div>
 
-                        <div class="flex flex-col gap-3 text-xs">
-                            <div class="flex flex-col gap-1">
-                                <label class="font-bold text-slate-800 text-[11px]">Savol matni (YHQ qoidasi bo'yicha) *</label>
+                        <div class="flex flex-col gap-4 text-xs">
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-extrabold text-slate-800 text-xs tracking-wide">SAVOL MATNI (YHQ QOIDASI BO'YICHA) *</label>
                                 <textarea 
                                     v-model="customQuestionText" 
                                     rows="2"
                                     placeholder="Masalan: Haydovchi qaysi hollarda o'z o'rnini tark etishi yoki transport vositasini qoldirishi mumkin?"
-                                    class="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-slate-800 font-medium focus:ring-2 focus:ring-emerald-400 outline-none"
+                                    class="w-full p-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
                                 ></textarea>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="flex flex-col gap-1">
-                                    <label class="font-bold text-emerald-700 text-[11px]">Variant A (To'g'ri javob ✅) *</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-extrabold text-emerald-600 text-xs tracking-wide flex items-center gap-1">
+                                        <span>VARIANT A (TO'G'RI JAVOB ✅) *</span>
+                                    </label>
                                     <input 
                                         type="text" 
                                         v-model="customOptA" 
                                         placeholder="To'g'ri javob matni..." 
-                                        class="p-2.5 rounded-xl border border-emerald-300 bg-white font-bold text-emerald-900 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                        class="p-3 rounded-xl border-2 border-emerald-500 bg-white font-bold text-emerald-700 text-xs focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
                                     />
                                 </div>
 
-                                <div class="flex flex-col gap-1">
-                                    <label class="font-bold text-slate-700 text-[11px]">Variant B (Noto'g'ri javob ❌) *</label>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-extrabold text-rose-500 text-xs tracking-wide flex items-center gap-1">
+                                        <span>VARIANT B (NOTO'G'RI JAVOB ❌) *</span>
+                                    </label>
                                     <input 
                                         type="text" 
                                         v-model="customOptB" 
                                         placeholder="Noto'g'ri variant 1..." 
-                                        class="p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                        class="p-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs focus:ring-2 focus:ring-rose-400 outline-none shadow-sm"
                                     />
                                 </div>
 
-                                <div class="flex flex-col gap-1">
-                                    <label class="font-bold text-slate-700 text-[11px]">Variant C (Noto'g'ri javob ❌) *</label>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-extrabold text-rose-500 text-xs tracking-wide flex items-center gap-1">
+                                        <span>VARIANT C (NOTO'G'RI JAVOB ❌) *</span>
+                                    </label>
                                     <input 
                                         type="text" 
                                         v-model="customOptC" 
                                         placeholder="Noto'g'ri variant 2..." 
-                                        class="p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                        class="p-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs focus:ring-2 focus:ring-rose-400 outline-none shadow-sm"
                                     />
                                 </div>
 
-                                <div class="flex flex-col gap-1">
-                                    <label class="font-bold text-slate-700 text-[11px]">Variant D (Noto'g'ri javob ❌ - Ixtiyoriy)</label>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-extrabold text-slate-700 text-xs tracking-wide flex items-center gap-1">
+                                        <span>VARIANT D (NOTO'G'RI JAVOB ❌ - IXTIYORIY)</span>
+                                    </label>
                                     <input 
                                         type="text" 
                                         v-model="customOptD" 
                                         placeholder="Noto'g'ri variant 3 (bo'sh qoldirish mumkin)..." 
-                                        class="p-2.5 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none shadow-sm"
+                                        class="p-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs focus:ring-2 focus:ring-blue-400 outline-none shadow-sm"
                                     />
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                <div class="md:col-span-2 flex flex-col gap-1">
-                                    <label class="font-bold text-amber-800 text-[11px]">Qoida izohi / Tushuntirish (Ixtiyoriy)</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="md:col-span-2 flex flex-col gap-1.5">
+                                    <label class="font-extrabold text-amber-500 text-xs tracking-wide">QOIDA IZOHI / TUSHUNTIRISH (IXTIYORIY)</label>
                                     <input 
                                         type="text" 
                                         v-model="customExplanation" 
                                         placeholder="Masalan: YHQ 12.4 bandiga binoan to'xtash taqiqlanadi..." 
-                                        class="p-2.5 rounded-xl border border-amber-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-amber-400 outline-none"
+                                        class="p-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs focus:ring-2 focus:ring-amber-400 outline-none shadow-sm"
                                     />
                                 </div>
 
-                                <div class="flex flex-col gap-1">
-                                    <label class="font-bold text-slate-700 text-[11px]">Qiyinchilik darajasi (Bosqich)</label>
-                                    <select v-model="customLevel" class="p-2.5 rounded-xl border border-slate-200 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-extrabold text-blue-500 text-xs tracking-wide">QIYINCHILIK DARAJASI (BOSQICH)</label>
+                                    <select v-model="customLevel" class="p-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs focus:ring-2 focus:ring-blue-400 outline-none shadow-sm">
                                         <option :value="1">1-Bosqich (Boshlang'ich)</option>
                                         <option :value="2">2-Bosqich (O'rta)</option>
                                         <option :value="3">3-Bosqich (Murakkab)</option>
@@ -1589,49 +1644,49 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end gap-2 mt-2">
+                            <div class="flex justify-end gap-3 mt-2">
                                 <button 
                                     v-if="editingQuestionId" 
                                     @click="cancelEditQuestion" 
-                                    class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs"
+                                    class="px-5 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl font-extrabold text-xs transition-all shadow-sm"
                                 >
                                     Bekor qilish
                                 </button>
                                 <button 
                                     @click="handleSaveCustomQuestion" 
                                     :disabled="isSubmittingCustomQuestion"
-                                    class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wide border-b-2 border-b-emerald-800 shadow-md flex items-center gap-1.5 disabled:opacity-50"
+                                    class="px-7 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl font-black text-xs uppercase tracking-wider border-b-4 border-b-emerald-800 shadow-lg flex items-center gap-2 disabled:opacity-50 transition-all"
                                 >
-                                    <span v-if="!isSubmittingCustomQuestion">💾 [[ editingQuestionId ? 'O\'zgarishlarni saqlash' : 'Bazaga saqlash va qo\'shish' ]]</span>
-                                    <span v-else>Saqlanmoqda...</span>
+                                    <span v-if="!isSubmittingCustomQuestion">💾 [[ editingQuestionId ? 'O\'ZGARISHLARNI SAQLASH' : 'BAZAGA SAQLASH VA QO\'SHISH' ]]</span>
+                                    <span v-else>SAQLANMOQDA...</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Question Search & Statistics Bar -->
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
-                        <div class="flex items-center gap-2 w-full md:w-auto">
-                            <span class="font-black text-slate-800">📊 Jami savollar:</span>
-                            <span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-lg font-mono font-bold">[[ adminQuestionsCount ]] ta</span>
-                            <span class="text-gray-400">|</span>
-                            <span class="font-bold text-slate-600">Topildi:</span>
-                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-lg font-mono font-bold">[[ filteredAdminQuestions.length ]] ta</span>
+                    <div class="p-4 bg-slate-100 border border-slate-300 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-bold shadow-sm">
+                        <div class="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
+                            <span class="text-slate-900 uppercase tracking-wide">📊 Jami savollar:</span>
+                            <span class="px-3 py-1 bg-blue-600 text-white rounded-lg font-mono font-black text-xs shadow-sm">[[ adminQuestionsCount ]] ta</span>
+                            <span class="text-slate-400">|</span>
+                            <span class="text-slate-800">Topildi:</span>
+                            <span class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-mono font-black text-xs shadow-sm">[[ filteredAdminQuestions.length ]] ta</span>
                         </div>
 
-                        <div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
-                            <div class="relative flex-grow md:w-64">
+                        <div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
+                            <div class="relative flex-grow md:w-72">
                                 <input 
                                     type="text" 
                                     v-model="searchQuestionQuery" 
                                     @input="questionCurrentPage = 1"
                                     placeholder="🔍 Savol matni bo'yicha qidiruv..." 
-                                    class="w-full pl-3 pr-8 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-800 focus:ring-2 focus:ring-blue-400 outline-none text-xs"
+                                    class="w-full pl-3.5 pr-8 py-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 focus:ring-2 focus:ring-blue-400 outline-none text-xs shadow-sm"
                                 />
-                                <button v-if="searchQuestionQuery" @click="searchQuestionQuery = ''; questionCurrentPage = 1;" class="absolute right-2.5 top-2 text-gray-400 hover:text-gray-600">✕</button>
+                                <button v-if="searchQuestionQuery" @click="searchQuestionQuery = ''; questionCurrentPage = 1;" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700 font-black">✕</button>
                             </div>
 
-                            <select v-model="filterQuestionLevel" @change="questionCurrentPage = 1" class="p-2 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 text-xs">
+                            <select v-model="filterQuestionLevel" @change="questionCurrentPage = 1" class="p-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-900 text-xs shadow-sm">
                                 <option value="all">Barcha bosqichlar</option>
                                 <option value="1">1-bosqich</option>
                                 <option value="2">2-bosqich</option>
@@ -1641,48 +1696,48 @@
                     </div>
 
                     <!-- Fast Paginated Table -->
-                    <div class="overflow-x-auto w-full">
+                    <div class="overflow-x-auto w-full border border-slate-300 rounded-2xl shadow-sm">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
-                                <tr class="bg-slate-100/70 border-b text-gray-500 font-bold uppercase tracking-wider">
-                                    <th class="p-3 w-16">ID</th>
-                                    <th class="p-3">Savol matni</th>
-                                    <th class="p-3">To'g'ri javob (Variant A)</th>
-                                    <th class="p-3 w-28">Bosqich</th>
-                                    <th class="p-3 text-center w-36">Amallar</th>
+                                <tr class="bg-slate-200 border-b border-slate-300 text-slate-800 font-black uppercase tracking-wider">
+                                    <th class="p-3.5 w-16">ID</th>
+                                    <th class="p-3.5">SAVOL MATNI</th>
+                                    <th class="p-3.5">TO'G'RI JAVOB (VARIANT A)</th>
+                                    <th class="p-3.5 w-28">BOSQICH</th>
+                                    <th class="p-3.5 text-center w-40">AMALLAR</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100 text-slate-700">
+                            <tbody class="divide-y divide-slate-200 text-slate-800">
                                 <tr v-if="paginatedAdminQuestions.length === 0">
-                                    <td colspan="5" class="p-8 text-center text-gray-400 font-bold">
+                                    <td colspan="5" class="p-10 text-center text-slate-500 font-extrabold text-sm">
                                         Hech qanday savol topilmadi.
                                     </td>
                                 </tr>
-                                <tr v-else v-for="q in paginatedAdminQuestions" :key="q.id" class="hover:bg-slate-50 transition-all font-medium">
-                                    <td class="p-3 font-mono font-bold text-gray-400">#[[ q.id ]]</td>
-                                    <td class="p-3 font-bold text-slate-800 max-w-sm">
+                                <tr v-else v-for="q in paginatedAdminQuestions" :key="q.id" class="hover:bg-slate-100/80 transition-all font-medium">
+                                    <td class="p-3.5 font-mono font-black text-slate-400">#[[ q.id ]]</td>
+                                    <td class="p-3.5 font-bold text-slate-900 max-w-sm">
                                         [[ q.translations && q.translations.uz_lat ? q.translations.uz_lat.question : q.translations?.uz_cyr?.question || 'Savol matni' ]]
                                     </td>
-                                    <td class="p-3 text-emerald-700 font-bold max-w-xs">
+                                    <td class="p-3.5 text-emerald-600 font-black max-w-xs">
                                         [[ getCorrectOptionText(q) || 'To\'g\'ri javob variant A' ]]
                                     </td>
-                                    <td class="p-3">
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 text-blue-600 border border-blue-100">
+                                    <td class="p-3.5">
+                                        <span class="px-3 py-1 rounded-full text-[11px] font-black bg-blue-500/15 text-blue-600 border border-blue-500/30">
                                             [[ q.level ]]-bosqich
                                         </span>
                                     </td>
-                                    <td class="p-3 text-center">
-                                        <div class="flex items-center justify-center gap-1.5">
+                                    <td class="p-3.5 text-center">
+                                        <div class="flex items-center justify-center gap-2">
                                             <button 
                                                 @click="startEditQuestion(q)" 
-                                                class="px-2.5 py-1 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 border border-blue-200 rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow-sm"
+                                                class="px-3 py-1.5 bg-blue-500/15 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-400/40 rounded-xl text-xs font-black transition-all flex items-center gap-1 shadow-sm"
                                                 title="Tahrirlash"
                                             >
                                                 ✏️ Tahrirlash
                                             </button>
                                             <button 
                                                 @click="deleteQuestionFromDb(q.id)" 
-                                                class="px-2 py-1 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 border border-rose-200 rounded-lg text-xs font-bold transition-all shadow-sm"
+                                                class="px-2.5 py-1.5 bg-rose-500/15 hover:bg-rose-600 hover:text-white text-rose-600 border border-rose-400/40 rounded-xl text-xs font-black transition-all shadow-sm"
                                                 title="O'chirish"
                                             >
                                                 🗑️
@@ -1695,23 +1750,23 @@
                     </div>
 
                     <!-- Pagination Controls -->
-                    <div class="flex items-center justify-between border-t pt-4 text-xs font-bold text-slate-700">
+                    <div class="flex items-center justify-between border-t border-slate-300 pt-4 text-xs font-extrabold text-slate-800">
                         <button 
                             @click="prevQuestionPage" 
                             :disabled="questionCurrentPage <= 1"
-                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-1"
+                            class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
                         >
                             ← Oldingi sahifa
                         </button>
 
-                        <div class="font-mono text-slate-600">
-                            Sahifa <strong class="text-blue-600">[[ questionCurrentPage ]]</strong> / <strong>[[ totalQuestionPages ]]</strong>
+                        <div class="font-mono text-slate-700 font-bold">
+                            Sahifa <strong class="text-blue-600 font-black text-sm">[[ questionCurrentPage ]]</strong> / <strong class="text-sm">[[ totalQuestionPages ]]</strong>
                         </div>
 
                         <button 
                             @click="nextQuestionPage" 
                             :disabled="questionCurrentPage >= totalQuestionPages"
-                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-1"
+                            class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
                         >
                             Keyingi sahifa →
                         </button>

@@ -3073,42 +3073,90 @@
         </div>
 
         <!-- ==================== MOBILE ACCESS QR CODE MODAL ==================== -->
-        <div v-if="showMobileAccessModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-            <div class="card-3d bg-white rounded-3xl w-full max-w-sm shadow-2xl flex flex-col p-6 border border-slate-200 text-center gap-4 animate-scaleUp">
-                <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-sm border border-blue-100 mb-2">
-                    📱
+        <div v-if="showMobileAccessModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+            <div class="card-3d bg-white dark:bg-slate-800 rounded-3xl w-full max-w-md shadow-2xl flex flex-col p-6 border border-slate-200 dark:border-slate-700 text-center gap-4 animate-scaleUp">
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl shadow-sm border border-blue-100">
+                            📱
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">TELEFONDAN KIRISH</h3>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">// QR-KODNI SKANERLANG</p>
+                        </div>
+                    </div>
+
+                    <button 
+                        @click="refreshMobileUrls" 
+                        :disabled="isRefreshingMobileUrls"
+                        class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-[11px] font-bold transition-all flex items-center gap-1 shadow-sm"
+                        title="Havola va QR-kodni yangilash"
+                    >
+                        <span>🔄</span>
+                        <span v-if="!isRefreshingMobileUrls">Yangilash</span>
+                        <span v-else>Tekshirilmoqda...</span>
+                    </button>
                 </div>
-                <h3 class="text-base font-black text-slate-800 tracking-tight uppercase">TELEFONDAN KIRISH</h3>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider text-center">// QR-KODNI TELEFONINGIZ ORQALI SKANERLANG</p>
+
+                <!-- Mode Selector (Online vs Wi-Fi) -->
+                <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                    <button 
+                        @click="mobileAccessMode = 'online'"
+                        class="py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5"
+                        :class="mobileAccessMode === 'online' ? 'bg-[#0066cc] text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                    >
+                        <span>🌐 Onlayn Internet</span>
+                    </button>
+                    <button 
+                        @click="mobileAccessMode = 'wifi'"
+                        class="py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5"
+                        :class="mobileAccessMode === 'wifi' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'"
+                    >
+                        <span>📶 Bitta Wi-Fi (Lokal)</span>
+                    </button>
+                </div>
                 
-                <div class="flex justify-center p-4 bg-slate-50 border rounded-2xl shadow-inner">
+                <!-- QR Code Box -->
+                <div class="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner">
                     <img 
                         v-if="mobileAccessQrCodeUrl" 
                         :src="mobileAccessQrCodeUrl" 
                         alt="Mobile QR Code" 
-                        class="w-48 h-48 rounded-xl shadow-md border"
+                        class="w-52 h-52 rounded-xl shadow-md border-4 border-white bg-white p-2"
                     />
-                    <div v-else class="w-48 h-48 flex items-center justify-center text-xs text-gray-400 font-bold">
-                        IP yuklanmoqda...
+                    <div v-else class="w-52 h-52 flex items-center justify-center text-xs text-gray-400 font-bold">
+                        QR-kod yuklanmoqda...
                     </div>
                 </div>
 
-                <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-left flex flex-col gap-1">
-                    <span class="text-[9px] font-mono text-gray-400 uppercase font-bold">// Ulanish manzili</span>
-                    <span class="font-mono text-xs font-bold text-slate-700 break-all">[[ serverLocaltunnelUrl || 'http://' + serverLocalIp + ':8000' ]]</span>
+                <!-- URL address display & Copy Button -->
+                <div class="p-3 bg-blue-50/60 dark:bg-slate-900/80 border border-blue-100 dark:border-slate-700 rounded-2xl text-left flex items-center justify-between gap-2">
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-[9px] font-mono text-gray-400 uppercase font-bold">// Ulanish manzili</span>
+                        <span class="font-mono text-xs font-black text-blue-700 dark:text-blue-400 truncate">[[ currentMobileUrl ]]</span>
+                    </div>
+                    <button 
+                        @click="copyMobileUrl" 
+                        class="px-3 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-1 shadow-sm"
+                        title="Nusxa olish"
+                    >
+                        📋 Nusxa
+                    </button>
                 </div>
 
-                <p class="text-[10px] text-slate-500 font-bold leading-normal bg-slate-50 p-3.5 rounded-xl border">
-                    <span v-if="serverLocaltunnelUrl">
-                        Onlayn havola tayyor! Telefoningizda oddiy internet (LTE/5G) bo'lsa yetarli. Bitta Wi-Fi shart emas.<br>
-                        <span class="text-amber-600 block mt-1">⚠️ Eslatma: Agar brauzerda ogohlantirish sahifasi chiqsa, "Click to Continue" tugmasini bosing!</span>
-                    </span>
-                    <span v-else>Eslatma: Telefon va kompyuter bitta Wi-Fi tarmog'iga (yoki bitta modem/routerga) ulangan bo'lishi shart.</span>
-                </p>
+                <!-- Instructions note -->
+                <div class="text-[11px] font-medium leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-slate-700 dark:text-slate-300">
+                    <div v-if="mobileAccessMode === 'online'">
+                        <strong class="text-blue-600 dark:text-blue-400 font-black">🌐 Onlayn rejim:</strong> Telefoningizda oddiy mobil internet (LTE/4G/5G) bo'lsa yetarli. Bitta Wi-Fi shart emas.
+                    </div>
+                    <div v-else>
+                        <strong class="text-emerald-600 dark:text-emerald-400 font-black">📶 Wi-Fi rejim:</strong> Telefon va kompyuter bitta Wi-Fi routeriga ulangan bo'lsa, hech qanday internetsiz eng tezkor va barqaror ishlaydi!
+                    </div>
+                </div>
 
                 <button 
                     @click="showMobileAccessModal = false"
-                    class="w-full py-3 bg-[#0066cc] text-white rounded-xl text-xs font-bold uppercase tracking-wider mt-2 border-b-4 border-b-blue-800"
+                    class="w-full py-3 bg-slate-800 hover:bg-slate-900 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-2xl text-xs font-extrabold uppercase tracking-wider mt-1 transition-all shadow-md"
                 >
                     Tushunarli (Yopish)
                 </button>
@@ -5951,15 +5999,17 @@
                 const selectedLessonId = ref(null);
                 const showQrModal = ref(false);
                 const showMobileAccessModal = ref(false);
+                const mobileAccessMode = ref('online');
+                const isRefreshingMobileUrls = ref(false);
                 const serverLocalIp = ref('');
                 const serverLocaltunnelUrl = ref('');
 
-                const openMobileAccessModal = async () => {
-                    showMobileAccessModal.value = true;
+                const refreshMobileUrls = async () => {
+                    isRefreshingMobileUrls.value = true;
                     try {
                         const resIp = await fetch('/api/v1/local-ip');
                         const dataIp = await resIp.json();
-                        serverLocalIp.value = dataIp.ip;
+                        if (dataIp.ip) serverLocalIp.value = dataIp.ip;
                     } catch (err) {
                         console.error("Local IP fetch failed:", err);
                     }
@@ -5971,6 +6021,37 @@
                         }
                     } catch (err) {
                         console.error("Localtunnel URL fetch failed:", err);
+                    }
+                    setTimeout(() => {
+                        isRefreshingMobileUrls.value = false;
+                    }, 400);
+                };
+
+                const openMobileAccessModal = async () => {
+                    showMobileAccessModal.value = true;
+                    await refreshMobileUrls();
+                };
+
+                const currentMobileUrl = computed(() => {
+                    if (mobileAccessMode.value === 'online' && serverLocaltunnelUrl.value) {
+                        return serverLocaltunnelUrl.value;
+                    }
+                    if (serverLocalIp.value) {
+                        return 'http://' + serverLocalIp.value + ':8000';
+                    }
+                    return window.location.origin;
+                });
+
+                const copyMobileUrl = async () => {
+                    try {
+                        if (navigator.clipboard) {
+                            await navigator.clipboard.writeText(currentMobileUrl.value);
+                            alert("📋 Havola nusxalandi: " + currentMobileUrl.value);
+                        } else {
+                            prompt("Ushbu havolani nusxalang:", currentMobileUrl.value);
+                        }
+                    } catch (e) {
+                        prompt("Ushbu havolani nusxalang:", currentMobileUrl.value);
                     }
                 };
 
@@ -6195,11 +6276,9 @@
                 });
 
                 const mobileAccessQrCodeUrl = computed(() => {
-                    if (serverLocaltunnelUrl.value) {
-                        return 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(serverLocaltunnelUrl.value);
-                    }
-                    if (!serverLocalIp.value) return '';
-                    return 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('http://' + serverLocalIp.value + ':8000');
+                    const urlToEncode = currentMobileUrl.value;
+                    if (!urlToEncode) return '';
+                    return 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=' + encodeURIComponent(urlToEncode);
                 });
 
                 const studentActivityLogs = ref(JSON.parse(localStorage.getItem('student_activity_logs')) || [
@@ -6375,6 +6454,11 @@
                     qrCodeUrl,
                     showMobileAccessModal,
                     openMobileAccessModal,
+                    mobileAccessMode,
+                    isRefreshingMobileUrls,
+                    refreshMobileUrls,
+                    currentMobileUrl,
+                    copyMobileUrl,
                     serverLocalIp,
                     mobileAccessQrCodeUrl,
                     currentStudent,

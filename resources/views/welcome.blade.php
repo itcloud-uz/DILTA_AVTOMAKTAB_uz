@@ -2219,20 +2219,6 @@
                             <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
                         </div>
 
-                        <!-- Shaxsiy ma'lumotlar -->
-                        <div 
-                            @click="activeStudentTab = 'profile'"
-                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
-                        >
-                            <div class="flex items-center gap-3.5">
-                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
-                                    👤
-                                </div>
-                                <span class="text-sm font-bold text-slate-800 dark:text-white">Shaxsiy ma'lumotlar</span>
-                            </div>
-                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
-                        </div>
-
                     </div>
                 </div>
 

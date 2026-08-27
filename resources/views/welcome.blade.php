@@ -2113,7 +2113,10 @@
                 </div>
 
                 <!-- Avtodrom holati Card -->
-                <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                <div 
+                    @click="activeStudentTab = 'group_details'"
+                    class="bg-white dark:bg-slate-800 p-4 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                >
                     <div class="flex flex-col gap-0.5 text-left">
                         <h4 class="text-sm font-black text-slate-900 dark:text-white">Avtodrom holati</h4>
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">SAM AVTO CLASS</span>
@@ -2202,10 +2205,45 @@
                             <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
                         </div>
 
+                        <!-- Guruh tafsilotlari -->
+                        <div 
+                            @click="activeStudentTab = 'group_details'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    👥
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Guruh tafsilotlari</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- ==================== O'QITUVCHILAR SECTION ==================== -->
+            </div>
+
+            <!-- ==================== GURUH TAFSILOTLARI VIEW ==================== -->
+            <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'group_details'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-1 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
+                    [[ t('back_to_dashboard') ]]
+                </button>
+
+                <!-- Group Info Header Card -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">O'quv guruhi</span>
+                            <h3 class="text-base font-black text-slate-900 dark:text-white uppercase">SAM AVTO CLASS</h3>
+                        </div>
+                        <span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">
+                            Faol guruh
+                        </span>
+                    </div>
+                </div>
+
+                <!-- O'qituvchilar Section -->
                 <div class="flex flex-col gap-2 text-left mt-1">
                     <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">O'qituvchilar</h3>
                     
@@ -2226,7 +2264,7 @@
                     </div>
                 </div>
 
-                <!-- ==================== MASHINALAR SECTION ==================== -->
+                <!-- Mashinalar Section -->
                 <div class="flex flex-col gap-2 text-left mt-1">
                     <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">Mashinalar</h3>
                     

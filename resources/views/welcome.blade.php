@@ -2311,46 +2311,132 @@
                 </div>
             </div>
 
-            <!-- STUDENT PROFILE VIEW -->
+            <!-- STUDENT PROFILE / SHAXSIY MA'LUMOTLAR VIEW -->
             <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'profile'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
-                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-1 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
                 </button>
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-4">
-                    <div class="flex items-center gap-4 border-b border-slate-100 dark:border-slate-700 pb-4">
-                        <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
-                            <img v-if="currentStudent?.profile_image" :src="currentStudent.profile_image" class="w-full h-full object-cover" />
-                            <span v-else class="text-3xl">👤</span>
-                        </div>
-                        <div class="flex flex-col min-w-0">
-                            <h3 class="text-base font-black text-slate-900 dark:text-white uppercase truncate">[[ currentStudent?.name || studentPanelNameSetting || 'XAYITOV AZIZBEK' ]]</h3>
-                            <span class="text-xs font-semibold text-gray-400">Guruh: [[ currentStudent?.class_name || 'SAM AVTO CLASS' ]]</span>
+
+                <!-- Profile Top Card -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4">
+                    <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
+                        <img v-if="currentStudent?.profile_image" :src="currentStudent.profile_image" class="w-full h-full object-cover" />
+                        <span v-else class="text-3xl">👤</span>
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
+                            [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
                         </div>
                     </div>
-
-                    <div class="flex flex-col gap-2.5 text-xs">
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
-                            <span class="text-gray-400 font-bold">Login:</span>
-                            <span class="font-mono font-bold text-slate-700 dark:text-slate-200">[[ currentStudent?.login || 'student' ]]</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
-                            <span class="text-gray-400 font-bold">Telefon:</span>
-                            <span class="font-mono font-bold text-slate-700 dark:text-slate-200">[[ currentStudent?.phone || '+998 90 123-45-67' ]]</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
-                            <span class="text-gray-400 font-bold">Obuna holati:</span>
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Faol</span>
-                        </div>
+                    <div class="flex flex-col min-w-0">
+                        <h3 class="text-base font-black text-slate-900 dark:text-white uppercase truncate">[[ currentStudent?.name || studentPanelNameSetting || 'MADINA RUSTAMOVA' ]]</h3>
+                        <span class="text-xs font-semibold text-gray-400">Guruh: [[ currentStudent?.class_name || 'A-10' ]]</span>
                     </div>
-
-                    <!-- Logout Button -->
-                    <button 
-                        @click="handleLogout"
-                        class="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md mt-2"
-                    >
-                        🚪 Tizimdan chiqish
-                    </button>
                 </div>
+
+                <!-- Shaxsiy ma'lumotlar Card -->
+                <div class="flex flex-col gap-2 text-left">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">Shaxsiy ma'lumotlar</h3>
+                    
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
+                        
+                        <!-- Passport -->
+                        <div class="p-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    💳
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-800 dark:text-white">Passport</span>
+                                    <span class="text-xs font-mono font-medium text-gray-400">
+                                        [[ showPassportFull ? (currentStudent?.passport || 'AD 1234529') : (currentStudent?.passport ? currentStudent.passport.slice(0, 2) + ' ****' + currentStudent.passport.slice(-2) : 'AD ****29') ]]
+                                    </span>
+                                </div>
+                            </div>
+                            <button 
+                                @click="showPassportFull = !showPassportFull"
+                                class="text-blue-600 dark:text-blue-400 text-xl hover:scale-110 active:scale-95 transition-all p-1"
+                                title="Ko'rish / Yashirish"
+                            >
+                                👁
+                            </button>
+                        </div>
+
+                        <!-- Berilgan joy -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                🗺️
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Berilgan joy</span>
+                                <span class="text-xs font-semibold text-gray-400 uppercase">
+                                    [[ currentStudent?.issued_by || 'SAMARQAND VILOYATI URGUT TUMANI IIB' ]]
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Tug'ilgan sana -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                📅
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Tug'ilgan sana</span>
+                                <span class="text-xs font-mono font-semibold text-gray-400">
+                                    [[ currentStudent?.birthdate || '2006-09-26' ]]
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Telefon -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                📞
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Telefon</span>
+                                <span class="text-xs font-mono font-semibold text-gray-400">
+                                    [[ currentStudent?.phone || 'Noma\'lum' ]]
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Manzil -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                ↗️
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
+                                <span class="text-xs font-semibold text-gray-400">
+                                    [[ currentStudent?.address || 'Noma\'lum' ]]
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Parolni almashtirish -->
+                        <div 
+                            @click="showChangePasswordModal = true"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    🔒
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Parolni almashtirish</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Logout Button -->
+                <button 
+                    @click="handleLogout"
+                    class="w-full py-3.5 bg-rose-600 hover:bg-rose-700 active:scale-98 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md mt-1 flex items-center justify-center gap-2"
+                >
+                    <span>🚪</span>
+                    <span>TIZIMDAN CHIQISH</span>
+                </button>
             </div>
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
@@ -3408,6 +3494,65 @@
                     class="hidden" 
                     @change="uploadStudentPhoto" 
                 />
+            </div>
+        </div>
+
+        <!-- ==================== STUDENT PASSWORD CHANGE MODAL ==================== -->
+        <div v-if="showChangePasswordModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+            <div class="card-3d bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm shadow-2xl flex flex-col p-6 border border-slate-200 dark:border-slate-700 animate-scaleUp">
+                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-sm mb-3">
+                    🔒
+                </div>
+                <h3 class="text-base font-black text-slate-800 dark:text-white text-center tracking-tight uppercase mb-1">PAROLNI ALMASHTIRISH</h3>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider text-center mb-5">// YANGI MAXFIY PAROLINGIZNI KIRITING</p>
+                
+                <form @submit.prevent="handleChangePassword" class="flex flex-col gap-3.5 text-left">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Yangi parol</label>
+                        <input 
+                            type="password" 
+                            v-model="newPasswordInput" 
+                            placeholder="Yangi parol..." 
+                            class="p-3 rounded-xl border text-xs bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            required
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase">Parolni tasdiqlang</label>
+                        <input 
+                            type="password" 
+                            v-model="confirmPasswordInput" 
+                            placeholder="Qayta kiriting..." 
+                            class="p-3 rounded-xl border text-xs bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            required
+                        />
+                    </div>
+                    
+                    <div v-if="passwordChangeError" class="p-2.5 bg-red-50 dark:bg-red-950/60 border border-red-100 text-red-600 rounded-xl text-xs font-bold text-center">
+                        [[ passwordChangeError ]]
+                    </div>
+
+                    <div v-if="passwordChangeSuccess" class="p-2.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 text-emerald-600 rounded-xl text-xs font-bold text-center">
+                        [[ passwordChangeSuccess ]]
+                    </div>
+                    
+                    <div class="flex gap-2 mt-2">
+                        <button 
+                            type="button"
+                            @click="showChangePasswordModal = false; passwordChangeError = ''; passwordChangeSuccess = '';"
+                            class="w-1/2 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-xl text-xs font-bold transition-all hover:bg-slate-200"
+                        >
+                            BEKOR QILISH
+                        </button>
+                        <button 
+                            type="submit"
+                            class="w-1/2 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold transition-all hover:bg-blue-700 shadow-md"
+                        >
+                            SAQLASH
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -6330,6 +6475,40 @@
                     closePhotoSourceModal();
                 };
 
+                const showPassportFull = ref(false);
+                const showChangePasswordModal = ref(false);
+                const newPasswordInput = ref('');
+                const confirmPasswordInput = ref('');
+                const passwordChangeSuccess = ref('');
+                const passwordChangeError = ref('');
+
+                const handleChangePassword = () => {
+                    if (!newPasswordInput.value) {
+                        passwordChangeError.value = 'Yangi parolni kiriting!';
+                        return;
+                    }
+                    if (newPasswordInput.value !== confirmPasswordInput.value) {
+                        passwordChangeError.value = 'Parollar bir xil emas!';
+                        return;
+                    }
+                    if (currentStudent.value) {
+                        currentStudent.value.password = newPasswordInput.value;
+                        const idx = studentsList.value.findIndex(s => s.id === currentStudent.value.id);
+                        if (idx !== -1) {
+                            studentsList.value[idx].password = newPasswordInput.value;
+                            localStorage.setItem('students_list', JSON.stringify(studentsList.value));
+                        }
+                    }
+                    passwordChangeSuccess.value = 'Parol muvaffaqiyatli almashtirildi!';
+                    passwordChangeError.value = '';
+                    setTimeout(() => {
+                        showChangePasswordModal.value = false;
+                        newPasswordInput.value = '';
+                        confirmPasswordInput.value = '';
+                        passwordChangeSuccess.value = '';
+                    }, 1200);
+                };
+
                 const lessonsListMock = [
                     { id: 1, title: "1-dars. Umumiy qoidalar", desc: "Haydovchilar, piyodalar va yo'lovchilarning umumiy majburiyatlari, asosiy tushunchalar hamda atamalar bo'yicha nazariy qo'llanma." },
                     { id: 2, title: "2-dars. Yo'l belgilari", desc: "Ogohlantiruvchi, imtiyozli, taqiqlovchi, buyuruvchi hamda axborot-ko'rsatkich yo'l belgilarining to'liq tahlili va talablari." },
@@ -6819,6 +6998,13 @@
                     deleteStaffMember,
                     teachersDisplayList,
                     carsDisplayList,
+                    showPassportFull,
+                    showChangePasswordModal,
+                    newPasswordInput,
+                    confirmPasswordInput,
+                    passwordChangeSuccess,
+                    passwordChangeError,
+                    handleChangePassword,
                     t
                 };
             },

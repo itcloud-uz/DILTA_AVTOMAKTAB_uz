@@ -2253,7 +2253,225 @@
 
 
 
-            <!-- STUDENT LESSONS LIST -->
+            <!-- ==================== STUDENT MOBILE DASHBOARD VIEW (EXACT SCREENSHOT MATCH) ==================== -->
+            <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'dashboard'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
+                
+                <!-- Profile Header -->
+                <div class="flex items-center gap-3.5 pt-1">
+                    <div @click="openPhotoSourceModal" class="relative group w-14 h-14 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
+                        <img 
+                            v-if="currentStudent?.profile_image" 
+                            :src="currentStudent.profile_image" 
+                            class="w-full h-full object-cover" 
+                        />
+                        <span v-else class="text-3xl">👤</span>
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
+                            [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col min-w-0">
+                        <h2 class="text-base font-black text-slate-900 dark:text-white uppercase tracking-tight truncate">
+                            [[ currentStudent?.name || studentPanelNameSetting || 'XAYITOV AZIZBEK' ]]
+                        </h2>
+                        <span class="text-xs font-semibold text-gray-400">
+                            [[ currentStudent ? t('student_title') : 'O\'quvchi' ]]
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Davomat statistikasi Card -->
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-3.5">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white">Davomat statistikasi</h3>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-xs border-b border-slate-100 dark:border-slate-700/60 pb-3">
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-[11px] font-medium text-gray-400">Boshlanish sanasi</span>
+                            <span class="text-sm font-black text-slate-900 dark:text-slate-100">[[ studentStartDate(currentStudent) ]]</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5 border-l border-slate-200 dark:border-slate-700 pl-3">
+                            <span class="text-[11px] font-medium text-gray-400">Tugash sanasi</span>
+                            <span class="text-sm font-black text-slate-900 dark:text-slate-100">[[ studentEndDate(currentStudent) ]]</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar & stats -->
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="flex-grow h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-[#10b981] rounded-full transition-all duration-300" :style="{ width: currentStudentAttendanceStats.percent + '%' }"></div>
+                            </div>
+                            <span class="text-xs font-black text-slate-800 dark:text-slate-200 whitespace-nowrap">[[ currentStudentAttendanceStats.percent ]]%</span>
+                        </div>
+                        <div class="text-[11px] font-medium text-gray-400 flex items-center gap-1.5">
+                            <span>[[ currentStudentAttendanceStats.total ]] dars</span>
+                            <span>·</span>
+                            <span>[[ currentStudentAttendanceStats.present ]] tugallangan</span>
+                            <span>·</span>
+                            <span class="text-red-500 font-bold">[[ currentStudentAttendanceStats.absent ]] qoldirilgan</span>
+                        </div>
+                    </div>
+
+                    <!-- Green QR Davomat button -->
+                    <button 
+                        @click="showQrModal = true"
+                        class="w-full py-3 bg-[#22c55e] hover:bg-[#16a34a] active:scale-98 text-white rounded-2xl font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2 mt-1"
+                    >
+                        <span class="text-base">📷</span>
+                        <span>QR davomat</span>
+                    </button>
+                </div>
+
+                <!-- Avtodrom holati Card -->
+                <div class="bg-white dark:bg-slate-800 p-4 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                    <div class="flex flex-col gap-0.5 text-left">
+                        <h4 class="text-sm font-black text-slate-900 dark:text-white">Avtodrom holati</h4>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">SAM AVTO CLASS</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">
+                            Yuborilgan
+                        </span>
+                        <span class="text-gray-300 dark:text-gray-600 font-bold text-lg leading-none">›</span>
+                    </div>
+                </div>
+
+                <!-- Bo'limlar Card -->
+                <div class="flex flex-col gap-2 text-left">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">Bo'limlar</h3>
+                    
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
+                        
+                        <!-- Darslar -->
+                        <div 
+                            @click="activeStudentTab = 'lessons'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    📖
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">[[ t('lessons') ]]</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                        <!-- Testlar -->
+                        <div 
+                            @click="activeStudentTab = 'tests'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    📋
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">[[ t('tests') ]]</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                        <!-- Dars jadvali -->
+                        <div 
+                            @click="activeStudentTab = 'schedule'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    📅
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">[[ t('schedule') ]]</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                        <!-- Davomatlar -->
+                        <div 
+                            @click="activeStudentTab = 'attendance'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    🕒
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">[[ t('attendance') ]]</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                        <!-- Jarimalar -->
+                        <div 
+                            @click="activeStudentTab = 'penalties'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    ℹ️
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">[[ t('penalties') ]]</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- STUDENT SAVED VIEW -->
+            <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'saved'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
+                    [[ t('back_to_dashboard') ]]
+                </button>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-4">
+                    <h3 class="text-base font-black text-slate-800 dark:text-white">🔖 Saqlangan materiallar</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Bu yerda siz qayta ko'rish uchun saqlab qo'ygan test savollari va darsliklar ro'yxati chiqadi.</p>
+                    <div class="p-6 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-100 dark:border-slate-700 text-center text-xs text-gray-400 font-bold">
+                        Hozircha saqlangan materiallar mavjud emas
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT PROFILE VIEW -->
+            <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'profile'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
+                <button @click="activeStudentTab = 'dashboard'" class="self-start mb-2 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
+                    [[ t('back_to_dashboard') ]]
+                </button>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-4">
+                    <div class="flex items-center gap-4 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
+                            <img v-if="currentStudent?.profile_image" :src="currentStudent.profile_image" class="w-full h-full object-cover" />
+                            <span v-else class="text-3xl">👤</span>
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <h3 class="text-base font-black text-slate-900 dark:text-white uppercase truncate">[[ currentStudent?.name || studentPanelNameSetting || 'XAYITOV AZIZBEK' ]]</h3>
+                            <span class="text-xs font-semibold text-gray-400">Guruh: [[ currentStudent?.class_name || 'SAM AVTO CLASS' ]]</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2.5 text-xs">
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
+                            <span class="text-gray-400 font-bold">Login:</span>
+                            <span class="font-mono font-bold text-slate-700 dark:text-slate-200">[[ currentStudent?.login || 'student' ]]</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
+                            <span class="text-gray-400 font-bold">Telefon:</span>
+                            <span class="font-mono font-bold text-slate-700 dark:text-slate-200">[[ currentStudent?.phone || '+998 90 123-45-67' ]]</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
+                            <span class="text-gray-400 font-bold">Obuna holati:</span>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Faol</span>
+                        </div>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <button 
+                        @click="handleLogout"
+                        class="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md mt-2"
+                    >
+                        🚪 Tizimdan chiqish
+                    </button>
+                </div>
+            </div>
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
@@ -2923,6 +3141,51 @@
             </div>
 
             </div> <!-- Right Main Content Area Close -->
+
+            <!-- ==================== STUDENT MOBILE BOTTOM NAVIGATION ==================== -->
+            <nav 
+                v-if="!isTestStarted && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin'))" 
+                class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 py-2 px-6 flex justify-around items-center z-40 shadow-lg"
+            >
+                <!-- Bosh sahifa -->
+                <button 
+                    @click="activeStudentTab = 'dashboard'"
+                    class="flex flex-col items-center gap-1 transition-all"
+                    :class="activeStudentTab === 'dashboard' ? 'text-blue-600 dark:text-blue-400 font-black scale-105' : 'text-gray-400 hover:text-gray-600 font-medium'"
+                >
+                    <span class="text-xl">🏠</span>
+                    <span class="text-[10px]">Bosh sahifa</span>
+                </button>
+
+                <!-- Saqlanganlar -->
+                <button 
+                    @click="activeStudentTab = 'saved'"
+                    class="flex flex-col items-center gap-1 transition-all"
+                    :class="activeStudentTab === 'saved' ? 'text-blue-600 dark:text-blue-400 font-black scale-105' : 'text-gray-400 hover:text-gray-600 font-medium'"
+                >
+                    <span class="text-xl">🔖</span>
+                    <span class="text-[10px]">Saqlanganlar</span>
+                </button>
+
+                <!-- Kamera -->
+                <button 
+                    @click="openPhotoSourceModal"
+                    class="flex flex-col items-center gap-1 transition-all text-gray-400 hover:text-blue-600 font-medium"
+                >
+                    <span class="text-xl">📷</span>
+                    <span class="text-[10px]">Kamera</span>
+                </button>
+
+                <!-- Profil -->
+                <button 
+                    @click="activeStudentTab = 'profile'"
+                    class="flex flex-col items-center gap-1 transition-all"
+                    :class="activeStudentTab === 'profile' ? 'text-blue-600 dark:text-blue-400 font-black scale-105' : 'text-gray-400 hover:text-gray-600 font-medium'"
+                >
+                    <span class="text-xl">👤</span>
+                    <span class="text-[10px]">Profil</span>
+                </button>
+            </nav>
         </main>
         </template>
 

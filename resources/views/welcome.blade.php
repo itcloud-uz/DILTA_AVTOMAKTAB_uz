@@ -32,7 +32,10 @@
     </script>
 
     <style>
-        body {
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
             background-color: #f8fafc;
             font-family: 'Inter', sans-serif;
             color: #0f172a;
@@ -40,6 +43,12 @@
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
             letter-spacing: -0.011em;
+        }
+
+        #app {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
         }
 
         .timer-circle {
@@ -465,53 +474,52 @@
     <div id="app" v-cloak :class="{ 'dark-theme': isDarkMode }" class="flex flex-col min-h-screen justify-between transition-colors duration-200">
         
         <!-- ==================== HEADER ==================== -->
-        <header class="bg-white border-b border-gray-200/80 py-4 px-6 sticky top-0 z-50 shadow-sm">
-            <div class="max-w-full mx-auto flex items-center justify-between px-2 md:px-4">
+        <header class="bg-white dark:bg-slate-900 border-b border-gray-200/80 dark:border-slate-800 py-3 px-3 md:px-6 sticky top-0 z-50 shadow-sm max-w-full overflow-hidden">
+            <div class="max-w-full mx-auto flex items-center justify-between gap-2">
                 <!-- Logo -->
-                <div class="flex items-center gap-3">
-                    <svg width="42" height="42" viewBox="0 0 100 100" class="drop-shadow-sm">
+                <div class="flex items-center gap-2 md:gap-3 min-w-0">
+                    <svg width="32" height="32" viewBox="0 0 100 100" class="drop-shadow-sm shrink-0 md:w-[40px] md:h-[40px]">
                         <polygon points="50,5 10,85 90,85" fill="#0066cc" />
                         <text x="50" y="70" fill="#ffffff" font-family="'Inter', sans-serif" font-weight="900" font-size="54" text-anchor="middle">A</text>
                     </svg>
-                    <span class="text-[#0066cc] font-black text-2xl tracking-tighter select-none">DELTA_AVTOMAKTAB_UZ</span>
+                    <span class="text-[#0066cc] font-black text-sm md:text-2xl tracking-tighter select-none truncate">DELTA_AVTOMAKTAB</span>
                 </div>
 
                 <!-- Live Status & Admin Toggle -->
-                <div class="flex items-center gap-4 text-xs font-mono text-gray-500">
-                    <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1.5 md:gap-3 text-xs font-mono text-gray-500 shrink-0">
+                    <div class="hidden sm:flex items-center gap-1.5 text-[10px] md:text-xs">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                        <span>TIZIM: ON-LINE</span>
+                        <span>ON-LINE</span>
                     </div>
 
                     <!-- Dark Mode Toggle Button -->
                     <button 
                         @click="isDarkMode = !isDarkMode" 
-                        class="btn-3d flex items-center justify-center p-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
-                        style="width: 32px; height: 32px;"
+                        class="btn-3d flex items-center justify-center p-1.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-gray-50 transition-all cursor-pointer shadow-sm w-7 h-7 md:w-8 md:h-8 text-xs"
                         title="Mavzuni o'zgartirish"
                     >
                         <span>[[ isDarkMode ? '☀️' : '🌙' ]]</span>
                     </button>
 
                     <!-- Display logout and profile name if logged in -->
-                    <div v-if="isLoggedIn" class="flex items-center gap-3">
+                    <div v-if="isLoggedIn" class="flex items-center gap-1.5 md:gap-2">
                         
-                        <!-- Admin Mode Toggle Button (Switches seamlessly between Admin Panel and Test Workspace) -->
+                        <!-- Admin Mode Toggle Button -->
                         <button 
                             v-if="loggedInUserType === 'admin'"
                             @click="triggerAdminPanelToggle" 
-                            class="btn-3d px-3.5 py-2 rounded-xl font-extrabold transition-all text-xs flex items-center gap-1.5 shadow-md"
-                            :class="isAdminMode ? 'bg-amber-500 hover:bg-amber-600 text-white border-b-4 border-b-amber-700' : 'bg-[#0066cc] text-white hover:bg-blue-700 border-b-4 border-b-blue-800'"
+                            class="btn-3d px-2 py-1 md:px-3.5 md:py-2 rounded-xl font-extrabold transition-all text-[10px] md:text-xs flex items-center gap-1 shadow-md"
+                            :class="isAdminMode ? 'bg-amber-500 hover:bg-amber-600 text-white border-b-2 md:border-b-4 border-b-amber-700' : 'bg-[#0066cc] text-white hover:bg-blue-700 border-b-2 md:border-b-4 border-b-blue-800'"
                             :title="isAdminMode ? 'O\'quvchi va Test rejimiga o\'tish' : 'Admin boshqaruv paneliga qaytish'"
                         >
-                            <span v-if="isAdminMode">🏠 TEST REJIMIGA O'TISH</span>
-                            <span v-else>⚙️ ADMIN PANELGA O'TISH</span>
+                            <span v-if="isAdminMode">🏠 TEST</span>
+                            <span v-else>⚙️ ADMIN</span>
                         </button>
 
                         <!-- Logout Button -->
                         <button 
                             @click="handleLogout"
-                            class="btn-3d px-3.5 py-2 rounded-xl font-extrabold bg-rose-600 text-white hover:bg-rose-700 border-b-4 border-b-rose-800 transition-all text-xs flex items-center gap-1.5 shadow-md"
+                            class="btn-3d px-2 py-1 md:px-3 md:py-2 rounded-xl font-extrabold bg-rose-600 text-white hover:bg-rose-700 border-b-2 md:border-b-4 border-b-rose-800 transition-all text-[10px] md:text-xs flex items-center gap-1 shadow-md"
                             title="Tizimdan to'liq chiqish"
                         >
                             🚪 CHIQISH
@@ -2024,10 +2032,10 @@
         </div>
 
         <!-- ==================== STUDENT WORKSPACE ==================== -->
-        <main v-else class="w-full py-6 flex-grow flex flex-col items-center justify-center gap-6 px-4 md:px-8">
+        <main v-else class="w-full py-4 md:py-6 flex-grow flex flex-col items-center justify-start gap-4 px-3 sm:px-4 md:px-6 max-w-full overflow-x-hidden">
             
             <!-- Main Content Area -->
-            <div class="flex-grow flex flex-col gap-6 w-full min-w-0 max-w-2xl mx-auto">
+            <div class="flex-grow flex flex-col gap-4 w-full min-w-0 max-w-md mx-auto">
 
                 <!-- Loading State -->
                 <div v-if="loading" class="flex-grow flex flex-col items-center justify-center py-20">
@@ -3810,7 +3818,7 @@
         </div>
 
         <!-- ==================== FOOTER ==================== -->
-        <footer class="bg-white border-t border-gray-200/80 py-4 px-6 font-mono text-[10px] text-gray-400 shadow-inner">
+        <footer v-if="loggedInUserType !== 'student' && !isTestStarted" class="bg-white dark:bg-slate-900 border-t border-gray-200/80 dark:border-slate-800 py-4 px-6 font-mono text-[10px] text-gray-400 shadow-inner">
             <div class="max-w-full mx-auto flex flex-col md:flex-row justify-between items-center gap-2 px-2 md:px-4">
                 <div>
                     TAYYORLANGAN PLATFORMA: <span class="text-[#0066cc] font-bold">DELTA_AVTOMAKTAB_UZ</span> // IMTIHON SHABLONI

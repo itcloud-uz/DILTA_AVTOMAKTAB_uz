@@ -2380,6 +2380,20 @@
                         <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
                     </div>
 
+                    <!-- Maktab haqida ma'lumot Menu Item -->
+                    <div 
+                        @click="activeStudentTab = 'school_info'"
+                        class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                    >
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                                🏫
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-white">Maktab haqida ma'lumot</span>
+                        </div>
+                        <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                    </div>
+
                 </div>
 
                 <!-- Logout Button -->
@@ -2490,6 +2504,108 @@
                                 <span class="text-sm font-bold text-slate-800 dark:text-white">Parolni almashtirish</span>
                             </div>
                             <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                        <!-- Maktab haqida ma'lumot -->
+                        <div 
+                            @click="activeStudentTab = 'school_info'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                                    🏫
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Maktab haqida ma'lumot</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEDICATED MAKTAB HAQIDA MA'LUMOT VIEW -->
+            <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'school_info'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
+                <button @click="activeStudentTab = 'profile'" class="self-start mb-1 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
+                    ← Profilga qaytish
+                </button>
+
+                <!-- Maktab info header card -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-3">
+                    <div class="flex items-center gap-3.5 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#0066cc] flex items-center justify-center text-3xl shrink-0 shadow-sm border border-blue-100 dark:border-blue-900/40">
+                            🚗
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <h3 class="text-base font-black text-slate-900 dark:text-white uppercase tracking-tight truncate">DELTA AVTOMAKTAB</h3>
+                            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">✓ Davlat akkreditatsiyasidan o'tgan</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                        DELTA AVTOMAKTAB — zamonaviy o'quv xonalari, eng so'nggi rusumdagi avtomobillar hamda yuqori malakali ustozlar bilan professional haydovchilarni tayyorlaydi.
+                    </p>
+                </div>
+
+                <!-- Maktab tafsilotlari kartasi -->
+                <div class="flex flex-col gap-2 text-left">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">Maktab ma'lumotlari</h3>
+                    
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
+                        
+                        <!-- Manzil -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                📍
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
+                                <span class="text-xs font-semibold text-gray-400">Samarqand viloyati, Urgut tumani</span>
+                            </div>
+                        </div>
+
+                        <!-- Telefon -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                                📞
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Aloqa telefoni</span>
+                                <span class="text-xs font-mono font-semibold text-gray-400">+998 (90) 123-45-67 / +998 (91) 987-65-43</span>
+                            </div>
+                        </div>
+
+                        <!-- Ish vaqti -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl shrink-0">
+                                🕒
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Ish tartibi</span>
+                                <span class="text-xs font-semibold text-gray-400">Dushanba — Shanba: 08:30 - 18:00</span>
+                            </div>
+                        </div>
+
+                        <!-- O'qitish toifalari -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                🎓
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Haydovchilik toifalari</span>
+                                <span class="text-xs font-semibold text-gray-400">"A", "B", "BC", "C", "D", "E" toifalari</span>
+                            </div>
+                        </div>
+
+                        <!-- Guvohnoma / Litsenziya -->
+                        <div class="p-4 flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl shrink-0">
+                                📄
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Litsenziya raqami</span>
+                                <span class="text-xs font-mono font-semibold text-gray-400">№ AVTO-UZ-2026/8842</span>
+                            </div>
                         </div>
 
                     </div>

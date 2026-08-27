@@ -1230,6 +1230,24 @@
       "id": 84,
       "student_id": 2,
       "login_time": "2026-08-27 09:06",
+      "logout_time": "2026-08-27 09:09"
+    },
+    {
+      "id": 85,
+      "student_id": 2,
+      "login_time": "2026-08-27 09:09",
+      "logout_time": "2026-08-27 09:10"
+    },
+    {
+      "id": 86,
+      "student_id": 2,
+      "login_time": "2026-08-27 09:11",
+      "logout_time": "2026-08-27 09:12"
+    },
+    {
+      "id": 87,
+      "student_id": 2,
+      "login_time": "2026-08-27 09:12",
       "logout_time": "Ayni vaqtda faol"
     }
   ],
@@ -1283,5 +1301,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787821560720
+  "_version": 1787821949505
 }

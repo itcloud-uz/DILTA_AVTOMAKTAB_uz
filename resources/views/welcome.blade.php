@@ -4503,13 +4503,24 @@
                 }, { immediate: true });
 
                 const isAdminMode = ref(false);
-                const selectedStudentId = ref(null);
-                const isLoggedIn = ref(false);
-                const loggedInUserType = ref('');
-                const loggedInStudentId = ref(null);
+                const isLoggedIn = ref(localStorage.getItem('auth_is_logged_in') === 'true');
+                const loggedInUserType = ref(localStorage.getItem('auth_user_type') || '');
+                const loggedInStudentId = ref(localStorage.getItem('auth_student_id') ? parseInt(localStorage.getItem('auth_student_id')) : null);
+                const selectedStudentId = ref(localStorage.getItem('auth_student_id') ? parseInt(localStorage.getItem('auth_student_id')) : null);
                 const authUsername = ref('');
                 const authPassword = ref('');
                 const authError = ref('');
+
+                watch(isLoggedIn, (val) => {
+                    localStorage.setItem('auth_is_logged_in', val ? 'true' : 'false');
+                });
+                watch(loggedInUserType, (val) => {
+                    localStorage.setItem('auth_user_type', val || '');
+                });
+                watch(loggedInStudentId, (val) => {
+                    if (val) localStorage.setItem('auth_student_id', String(val));
+                    else localStorage.removeItem('auth_student_id');
+                });
                 
                 const adminUsernameSetting = ref(localStorage.getItem('admin_user') || 'admin');
                 const adminPasswordSetting = ref(localStorage.getItem('admin_pass') || 'admin777');
@@ -4519,7 +4530,10 @@
                 const studentPanelPasswordSetting = ref(localStorage.getItem('student_panel_pass') || '12345');
 
                 const loginTab = ref('student');
-                const activeStudentTab = ref('dashboard');
+                const activeStudentTab = ref(localStorage.getItem('auth_active_tab') || 'dashboard');
+                watch(activeStudentTab, (val) => {
+                    localStorage.setItem('auth_active_tab', val || 'dashboard');
+                });
                 const studentPanelUnlockPassword = ref('');
                 const studentSelectPassword = ref('');
                 const studentSelectError = ref('');
@@ -5942,6 +5956,11 @@
                         console.warn("Timer clear error:", e);
                     }
                     
+                    localStorage.removeItem('auth_is_logged_in');
+                    localStorage.removeItem('auth_user_type');
+                    localStorage.removeItem('auth_student_id');
+                    localStorage.removeItem('auth_active_tab');
+
                     isLoggedIn.value = false;
                     loggedInUserType.value = '';
                     loggedInStudentId.value = null;
@@ -6611,24 +6630,62 @@
                     if (input) input.click();
                 };
 
-                const uploadStudentPhoto = (event) => {
-                    const file = event.target.files[0];
-                    if (!file) return;
-                    if (file.size > 2 * 1024 * 1024) {
-                        alert("Rasm hajmi juda katta! Iltimos, 2MB dan kichik rasm yuklang.");
-                        return;
-                    }
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
+                const compressImage = (file, maxWidth = 400, maxHeight = 400, quality = 0.8) => {
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = (readerEvent) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                let width = img.width;
+                                let height = img.height;
+
+                                if (width > height) {
+                                    if (width > maxWidth) {
+                                        height = Math.round((height * maxWidth) / width);
+                                        width = maxWidth;
+                                    }
+                                } else {
+                                    if (height > maxHeight) {
+                                        width = Math.round((width * maxHeight) / height);
+                                        height = maxHeight;
+                                    }
+                                }
+
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, width, height);
+                                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                                resolve(dataUrl);
+                            };
+                            img.onerror = reject;
+                            img.src = readerEvent.target.result;
+                        };
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                };
+
+                const uploadStudentPhoto = async (event) => {
+                    try {
+                        const file = event.target.files && event.target.files[0];
+                        if (!file) return;
+
+                        const compressedDataUrl = await compressImage(file, 400, 400, 0.8);
                         const student = currentStudent.value;
                         if (student) {
-                            student.profile_image = e.target.result;
+                            student.profile_image = compressedDataUrl;
                             localStorage.setItem('students_list', JSON.stringify(studentsList.value));
                             alert("Rasm muvaffaqiyatli yuklandi!");
                         }
-                    };
-                    reader.readAsDataURL(file);
-                    closePhotoSourceModal();
+                    } catch (err) {
+                        console.error("Rasm yuklashda xatolik:", err);
+                        alert("Rasmni yuklab bo'lmadi, iltimos qaytadan urinib ko'ring.");
+                    } finally {
+                        closePhotoSourceModal();
+                        if (event.target) event.target.value = '';
+                    }
                 };
 
                 const showPassportFull = ref(false);

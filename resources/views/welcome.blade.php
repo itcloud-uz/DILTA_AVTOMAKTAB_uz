@@ -2487,7 +2487,7 @@
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
                                 <span class="text-xs font-semibold text-gray-400">
-                                    [[ currentStudent?.address || 'Noma\'lum' ]]
+                                    [[ currentStudent?.address || 'Samarqand viloyati, Urgut tumani' ]]
                                 </span>
                             </div>
                         </div>
@@ -2543,7 +2543,7 @@
                             </div>
                             <div class="flex flex-col min-w-0">
                                 <span class="text-sm font-bold text-slate-800 dark:text-white">Tashkilot</span>
-                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide truncate">TAYLOQ AVTO MAKTABI</span>
+                                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide truncate">DELTA AVTOMAKTAB (URGUT)</span>
                             </div>
                         </div>
 
@@ -2576,7 +2576,7 @@
                             </div>
                             <div class="flex flex-col min-w-0">
                                 <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
-                                <span class="text-xs font-semibold text-gray-400 truncate">Samarqand viloyati, Tayloq tumani, Vorsin MFY, Vors...</span>
+                                <span class="text-xs font-semibold text-gray-400 truncate">[[ currentStudent?.address || 'Samarqand viloyati, Urgut tumani' ]]</span>
                             </div>
                         </div>
 

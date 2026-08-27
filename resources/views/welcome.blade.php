@@ -2205,6 +2205,58 @@
                     </div>
                 </div>
 
+                <!-- ==================== O'QITUVCHILAR SECTION ==================== -->
+                <div class="flex flex-col gap-2 text-left mt-1">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">O'qituvchilar</h3>
+                    
+                    <div class="flex flex-col gap-2.5">
+                        <div 
+                            v-for="t in teachersDisplayList" 
+                            :key="t.name"
+                            class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-3.5 transition-all"
+                        >
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                👤
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight truncate">[[ t.name ]]</h4>
+                                <span class="text-[11px] font-semibold text-gray-500 dark:text-gray-400">[[ t.role ]]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== MASHINALAR SECTION ==================== -->
+                <div class="flex flex-col gap-2 text-left mt-1">
+                    <h3 class="text-sm font-black text-slate-900 dark:text-white px-1">Mashinalar</h3>
+                    
+                    <div class="flex flex-col gap-2.5">
+                        <div 
+                            v-for="car in carsDisplayList" 
+                            :key="car.plate"
+                            class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-3.5 transition-all"
+                        >
+                            <!-- Car thumbnail -->
+                            <div class="w-14 h-14 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 shrink-0 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+                                <img 
+                                    :src="car.image" 
+                                    :alt="car.name" 
+                                    class="w-full h-full object-cover"
+                                    onerror="this.src='https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=300&auto=format&fit=crop&q=80'"
+                                />
+                            </div>
+                            
+                            <!-- Car info & plate badge -->
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight truncate">[[ car.name ]]</h4>
+                                <span class="bg-blue-50 dark:bg-blue-950/70 text-[#0066cc] dark:text-blue-400 font-black px-2.5 py-0.5 rounded-lg text-xs tracking-wider font-mono self-start border border-blue-100 dark:border-blue-800/40">
+                                    [[ car.plate ]]
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- STUDENT SAVED VIEW -->
@@ -4340,6 +4392,31 @@
                     { id: 2, name: 'Malika Sobirova', role: 'Nazariya o\'qituvchisi', payment_type: 'fixed', base_salary: 4500000, percentage_rate: 30, students_count: 15, tuition_fee_per_student: 800000, login: 'malika', password: 'Mlk47' },
                     { id: 3, name: 'Jamshid Tojiyev', role: 'Amaliy yo\'riqchi', payment_type: 'percentage', base_salary: 2500000, percentage_rate: 50, students_count: 8, tuition_fee_per_student: 800000, login: 'jamshid', password: 'Jms62' },
                     { id: 4, name: 'Nodira Azimova', role: 'Bosh hisobchi', payment_type: 'fixed', base_salary: 5000000, percentage_rate: 0, students_count: 0, tuition_fee_per_student: 0, login: 'nodira', password: 'Ndr39' }
+                ]);
+
+                const teachersDisplayList = ref([
+                    { name: 'GULOMOVA ZARNIGOR', role: 'Tibbiyot o\'qituvchisi' },
+                    { name: 'RAXMATOV DOSTON', role: 'Amaliy usta' },
+                    { name: 'ABBOSOV SUXROB', role: 'Amaliy usta' },
+                    { name: 'ARIPOV BAXTIYOR', role: 'Amaliy usta' }
+                ]);
+
+                const carsDisplayList = ref([
+                    { 
+                        name: 'COBALT', 
+                        plate: '30 611 YBA', 
+                        image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=300&auto=format&fit=crop&q=80' 
+                    },
+                    { 
+                        name: 'NEXIA R3', 
+                        plate: '30 U 634 UA', 
+                        image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=300&auto=format&fit=crop&q=80' 
+                    },
+                    { 
+                        name: 'CHEVROLET ONIX', 
+                        plate: '30 V 642 PB', 
+                        image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&auto=format&fit=crop&q=80' 
+                    }
                 ]);
 
                 const financeTransactionsList = ref(JSON.parse(localStorage.getItem('finance_transactions_list')) || [
@@ -6702,6 +6779,8 @@
                     addNewStaff,
                     saveStaffMember,
                     deleteStaffMember,
+                    teachersDisplayList,
+                    carsDisplayList,
                     t
                 };
             },

@@ -2219,6 +2219,20 @@
                             <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
                         </div>
 
+                        <!-- Shaxsiy ma'lumotlar -->
+                        <div 
+                            @click="activeStudentTab = 'profile'"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    👤
+                                </div>
+                                <span class="text-sm font-bold text-slate-800 dark:text-white">Shaxsiy ma'lumotlar</span>
+                            </div>
+                            <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                        </div>
+
                     </div>
                 </div>
 
@@ -2341,7 +2355,7 @@
                         <!-- Passport -->
                         <div class="p-4 flex items-center justify-between">
                             <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-xl shrink-0">
                                     💳
                                 </div>
                                 <div class="flex flex-col">
@@ -2362,7 +2376,7 @@
 
                         <!-- Berilgan joy -->
                         <div class="p-4 flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center text-xl shrink-0">
                                 🗺️
                             </div>
                             <div class="flex flex-col">
@@ -2375,7 +2389,7 @@
 
                         <!-- Tug'ilgan sana -->
                         <div class="p-4 flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0">
                                 📅
                             </div>
                             <div class="flex flex-col">
@@ -2388,7 +2402,7 @@
 
                         <!-- Telefon -->
                         <div class="p-4 flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                            <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl shrink-0">
                                 📞
                             </div>
                             <div class="flex flex-col">
@@ -2418,7 +2432,7 @@
                             class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
                         >
                             <div class="flex items-center gap-3.5">
-                                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
                                     🔒
                                 </div>
                                 <span class="text-sm font-bold text-slate-800 dark:text-white">Parolni almashtirish</span>

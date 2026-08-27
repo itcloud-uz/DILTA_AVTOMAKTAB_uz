@@ -2311,26 +2311,92 @@
                 </div>
             </div>
 
-            <!-- STUDENT PROFILE / SHAXSIY MA'LUMOTLAR VIEW -->
+            <!-- STUDENT PROFIL VIEW -->
             <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'profile'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-1 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
                     [[ t('back_to_dashboard') ]]
                 </button>
 
                 <!-- Profile Top Card -->
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4">
-                    <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
-                        <img v-if="currentStudent?.profile_image" :src="currentStudent.profile_image" class="w-full h-full object-cover" />
-                        <span v-else class="text-3xl">👤</span>
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
-                            [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-4">
+                    <div class="flex items-center gap-4 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <div @click="openPhotoSourceModal" class="relative group w-16 h-16 rounded-full border-2 border-blue-500 overflow-hidden cursor-pointer shadow-md flex items-center justify-center bg-slate-50 shrink-0">
+                            <img v-if="currentStudent?.profile_image" :src="currentStudent.profile_image" class="w-full h-full object-cover" />
+                            <span v-else class="text-3xl">👤</span>
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-[8px] text-white font-extrabold uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity text-center px-0.5">
+                                [[ t('change_photo') === 'change_photo' ? 'O\'zgartirish' : t('change_photo') ]]
+                            </div>
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <h3 class="text-base font-black text-slate-900 dark:text-white uppercase truncate">[[ currentStudent?.name || studentPanelNameSetting || 'MADINA RUSTAMOVA' ]]</h3>
+                            <span class="text-xs font-semibold text-gray-400">Guruh: [[ currentStudent?.class_name || 'A-10' ]]</span>
                         </div>
                     </div>
-                    <div class="flex flex-col min-w-0">
-                        <h3 class="text-base font-black text-slate-900 dark:text-white uppercase truncate">[[ currentStudent?.name || studentPanelNameSetting || 'MADINA RUSTAMOVA' ]]</h3>
-                        <span class="text-xs font-semibold text-gray-400">Guruh: [[ currentStudent?.class_name || 'A-10' ]]</span>
+
+                    <div class="flex flex-col gap-2.5 text-xs">
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
+                            <span class="text-gray-400 font-bold">Login:</span>
+                            <span class="font-mono font-bold text-slate-700 dark:text-slate-200">[[ currentStudent?.login || 'madina' ]]</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
+                            <span class="text-gray-400 font-bold">Telefon:</span>
+                            <span class="font-mono font-bold text-slate-700 dark:text-slate-200">[[ currentStudent?.phone || '+998 90 123-45-67' ]]</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700/60">
+                            <span class="text-gray-400 font-bold">Obuna holati:</span>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Faol</span>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Profil Bo'limlari Card -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700/60 overflow-hidden">
+                    
+                    <!-- Shaxsiy ma'lumotlar Menu Item -->
+                    <div 
+                        @click="activeStudentTab = 'personal_info'"
+                        class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                    >
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                👤
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-white">Shaxsiy ma'lumotlar</span>
+                        </div>
+                        <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                    </div>
+
+                    <!-- Parolni almashtirish Menu Item -->
+                    <div 
+                        @click="showChangePasswordModal = true"
+                        class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                    >
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                🔒
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 dark:text-white">Parolni almashtirish</span>
+                        </div>
+                        <span class="text-gray-300 dark:text-gray-600 font-bold text-lg">›</span>
+                    </div>
+
+                </div>
+
+                <!-- Logout Button -->
+                <button 
+                    @click="handleLogout"
+                    class="w-full py-3.5 bg-rose-600 hover:bg-rose-700 active:scale-98 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md mt-1 flex items-center justify-center gap-2"
+                >
+                    <span>🚪</span>
+                    <span>TIZIMDAN CHIQISH</span>
+                </button>
+            </div>
+
+            <!-- DEDICATED SHAXSIY MA'LUMOTLAR VIEW -->
+            <div v-if="!loading && (loggedInUserType === 'student' || (!isAdminMode && loggedInUserType === 'admin')) && activeStudentTab === 'personal_info'" class="w-full max-w-md mx-auto flex flex-col gap-4 animate-fadeIn text-left pb-20">
+                <button @click="activeStudentTab = 'profile'" class="self-start mb-1 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">
+                    ← Profilga qaytish
+                </button>
 
                 <!-- Shaxsiy ma'lumotlar Card -->
                 <div class="flex flex-col gap-2 text-left">
@@ -2428,15 +2494,6 @@
 
                     </div>
                 </div>
-
-                <!-- Logout Button -->
-                <button 
-                    @click="handleLogout"
-                    class="w-full py-3.5 bg-rose-600 hover:bg-rose-700 active:scale-98 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md mt-1 flex items-center justify-center gap-2"
-                >
-                    <span>🚪</span>
-                    <span>TIZIMDAN CHIQISH</span>
-                </button>
             </div>
             <div v-if="!loading && loggedInUserType === 'student' && activeStudentTab === 'lessons'" class="w-full max-w-2xl ml-0 flex flex-col gap-4 animate-fadeIn text-left">
                 <button @click="activeStudentTab = 'dashboard'" class="self-start mb-4 text-sm font-bold text-[#0066cc] flex items-center gap-1.5 hover:underline">

@@ -1248,6 +1248,12 @@
       "id": 87,
       "student_id": 2,
       "login_time": "2026-08-27 09:12",
+      "logout_time": "2026-08-27 09:21"
+    },
+    {
+      "id": 88,
+      "student_id": 2,
+      "login_time": "2026-08-27 09:21",
       "logout_time": "Ayni vaqtda faol"
     }
   ],
@@ -1301,5 +1307,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787821949505
+  "_version": 1787822468047
 }

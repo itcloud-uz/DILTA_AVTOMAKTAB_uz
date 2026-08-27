@@ -5001,7 +5001,6 @@
                 };
 
                 const qrToUzbekTTS = (text) => {
-                    // Qoraqalpoq maxsus harflarini o'zbek TTS (uz-UZ) o'qiy olishi uchun moslashtirish
                     return text.replace(/ó/g, "o'").replace(/Ó/g, "O'")
                                .replace(/ǵ/g, "g'").replace(/Ǵ/g, "G'")
                                .replace(/ń/g, "ng").replace(/Ń/g, "Ng")
@@ -5011,30 +5010,44 @@
                                .replace(/ń/g, "ng").replace(/Ń/g, "Ng");
                 };
 
+                let currentAudioPlayer = null;
+
+                const stopAllSpeech = () => {
+                    try {
+                        if (currentAudioPlayer) {
+                            currentAudioPlayer.pause();
+                            currentAudioPlayer = null;
+                        }
+                    } catch (e) {}
+                    try {
+                        if (window.speechSynthesis) {
+                            window.speechSynthesis.cancel();
+                        }
+                    } catch (e) {}
+                };
+
                 const speakExplanation = (text, onEndCallback = null) => {
                     try {
+                        stopAllSpeech();
+
                         let textToSpeak = text;
                         if (currentLang.value === 'qr') {
                             textToSpeak = qrToUzbekTTS(text);
                         }
 
-                        // Estimate reading duration to prevent instant skipping
+                        let targetLangCode = 'uz';
+                        if (currentLang.value === 'ru') targetLangCode = 'ru';
+                        else if (currentLang.value === 'en') targetLangCode = 'en';
+
                         const wordCount = textToSpeak.split(' ').length;
-                        const estimatedSeconds = Math.max(3.5, (wordCount * 0.42)); // At least 3.5 seconds
+                        const estimatedSeconds = Math.max(3.5, (wordCount * 0.42));
                         const minDurationMs = estimatedSeconds * 1000;
                         let startTime = Date.now();
-
-                        let keepAliveInterval = null;
                         let callbackCalled = false;
-                        
+
                         const safeOnEndCallback = () => {
                             if (callbackCalled) return;
                             callbackCalled = true;
-                            
-                            if (keepAliveInterval) {
-                                clearInterval(keepAliveInterval);
-                            }
-
                             const elapsed = Date.now() - startTime;
                             if (elapsed < minDurationMs) {
                                 setTimeout(() => {
@@ -5045,79 +5058,58 @@
                             }
                         };
 
-                        if (!window.speechSynthesis) {
-                            setTimeout(safeOnEndCallback, minDurationMs);
-                            return;
-                        }
+                        const playWithWebSpeech = () => {
+                            if (!window.speechSynthesis) {
+                                setTimeout(safeOnEndCallback, minDurationMs);
+                                return;
+                            }
+                            try {
+                                window.speechSynthesis.cancel();
+                                const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
+                                let chosen = voices.find(v => v.lang.startsWith(targetLangCode) && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman') || v.name.toLowerCase().includes('madina') || v.name.toLowerCase().includes('zira')));
+                                if (!chosen) chosen = voices.find(v => v.lang.startsWith(targetLangCode));
+                                if (!chosen) chosen = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman'));
+                                if (!chosen) chosen = voices[0] || null;
 
-                        // Cancel current speech and prepare
-                        window.speechSynthesis.cancel();
+                                let targetSpeechLang = targetLangCode === 'uz' ? 'uz-UZ' : (targetLangCode === 'ru' ? 'ru-RU' : 'en-US');
+                                const utter = new SpeechSynthesisUtterance(textToSpeak);
+                                if (chosen) utter.voice = chosen;
+                                utter.lang = targetSpeechLang;
+                                utter.rate = 0.88;
+                                utter.pitch = 0.95;
+                                utter.volume = 1.0;
 
-                        const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
-                        
-                        // Always search for the Uzbek voice first to keep the speaker completely consistent
-                        let chosen = voices.find(v => v.lang.startsWith('uz') && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman') || v.name.toLowerCase().includes('madina') || v.name.toLowerCase().includes('zira')));
-                        if (!chosen) {
-                            chosen = voices.find(v => v.lang.startsWith('uz'));
-                        }
-                        // Fallback to any female voice if Uzbek voice is not installed on the system
-                        if (!chosen) {
-                            chosen = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman') || v.name.toLowerCase().includes('madina') || v.name.toLowerCase().includes('zira'));
-                        }
-                        if (!chosen) {
-                            chosen = voices[0] || null;
-                        }
+                                utter.onend = () => { safeOnEndCallback(); };
+                                utter.onerror = () => { safeOnEndCallback(); };
 
-                        let targetLang = 'uz-UZ';
-                        if (currentLang.value === 'ru') {
-                            targetLang = 'ru-RU';
-                        } else if (currentLang.value === 'en') {
-                            targetLang = 'en-US';
-                        }
-
-                        const utter = new SpeechSynthesisUtterance(textToSpeak);
-                        if (chosen) {
-                            utter.voice = chosen;
-                        }
-                        utter.lang = targetLang;
-                        
-                        utter.rate = 0.85;
-                        utter.pitch = 0.9;
-                        utter.volume = 0.9;
-                        
-                        window.currentUtter = utter; 
-
-                        utter.onstart = () => {
-                            startTime = Date.now();
+                                window.speechSynthesis.resume();
+                                window.speechSynthesis.speak(utter);
+                            } catch (e) {
+                                console.warn("WebSpeech failed:", e);
+                                safeOnEndCallback();
+                            }
                         };
 
-                        utter.onend = () => { safeOnEndCallback(); };
-                        utter.onerror = () => { safeOnEndCallback(); };
-                        
-                        // Failsafe: agar TTS qotib qolsa (12 soniya)
-                        setTimeout(() => {
-                            if (window.currentUtter === utter) {
-                                safeOnEndCallback();
-                                window.currentUtter = null;
-                            }
-                        }, 12000);
-
-                        // Chrome keep-alive hack: har 4 soniyada pause/resume qilamiz
-                        keepAliveInterval = setInterval(() => {
-                            if (window.speechSynthesis && window.speechSynthesis.speaking) {
-                                window.speechSynthesis.pause();
-                                window.speechSynthesis.resume();
-                            } else {
-                                clearInterval(keepAliveInterval);
-                            }
-                        }, 4000);
-
-                        // Speak immediately (do not wrap in setTimeout, otherwise mobile browsers block it due to user gesture policy)
+                        // 1. Try Google TTS online audio first for crystal-clear natural speech on all mobile devices (iOS / Android)
                         try {
-                            window.speechSynthesis.resume();
-                            window.speechSynthesis.speak(utter);
+                            const cleanText = textToSpeak.replace(/[^\w\s\u0400-\u04FF'ʻʼ‘’-]/gi, ' ').replace(/\s+/g, ' ').trim();
+                            const queryText = encodeURIComponent(cleanText.substring(0, 190));
+                            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${targetLangCode}&client=tw-ob&q=${queryText}`;
+                            
+                            const audio = new Audio(audioUrl);
+                            currentAudioPlayer = audio;
+                            audio.onended = () => { safeOnEndCallback(); };
+                            audio.onerror = () => { playWithWebSpeech(); };
+
+                            const playPromise = audio.play();
+                            if (playPromise !== undefined) {
+                                playPromise.catch((err) => {
+                                    console.warn("HTML5 Audio play blocked on mobile, falling back to WebSpeech:", err);
+                                    playWithWebSpeech();
+                                });
+                            }
                         } catch (err) {
-                            console.error("Speech play failed:", err);
+                            playWithWebSpeech();
                         }
                     } catch (e) {
                         console.error("speakExplanation dynamic error caught:", e);
@@ -6956,6 +6948,25 @@
                     window.addEventListener('focus', () => {
                         pullStateFromServer();
                     });
+
+                    // Mobile user gesture unlock for HTML5 Audio & SpeechSynthesis
+                    const unlockAudioOnMobile = () => {
+                        try {
+                            if (window.speechSynthesis) {
+                                window.speechSynthesis.resume();
+                                const silent = new SpeechSynthesisUtterance(' ');
+                                silent.volume = 0.001;
+                                window.speechSynthesis.speak(silent);
+                            }
+                        } catch (e) {}
+                        try {
+                            const a = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+                            a.play().catch(() => {});
+                        } catch (e) {}
+                    };
+
+                    window.addEventListener('touchstart', unlockAudioOnMobile, { once: true, passive: true });
+                    window.addEventListener('click', unlockAudioOnMobile, { once: true });
 
                     // Check for URL check-in parameter from scanned QR code
                     const urlParams = new URLSearchParams(window.location.search);

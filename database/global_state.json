@@ -35,7 +35,7 @@
       "id": 3,
       "name": "Sardorbek Olimov",
       "class_name": "B-12",
-      "today_status": "keldi",
+      "today_status": "kelmadi",
       "grades": [
         5,
         5,
@@ -125,7 +125,7 @@
       "id": 9,
       "name": "Otabek Sobirov",
       "class_name": "A-10",
-      "today_status": "keldi",
+      "today_status": "kelmadi",
       "grades": [
         4,
         4,
@@ -1272,6 +1272,24 @@
       "id": 91,
       "student_id": 2,
       "login_time": "2026-08-28 05:16",
+      "logout_time": "2026-08-28 06:21"
+    },
+    {
+      "id": 92,
+      "student_id": 2,
+      "login_time": "2026-08-28 09:16",
+      "logout_time": "2026-08-28 09:17"
+    },
+    {
+      "id": 93,
+      "student_id": 2,
+      "login_time": "2026-08-28 09:18",
+      "logout_time": "2026-08-28 09:20"
+    },
+    {
+      "id": 94,
+      "student_id": 2,
+      "login_time": "2026-08-28 09:20",
       "logout_time": "Ayni vaqtda faol"
     }
   ],
@@ -1325,5 +1343,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787894209993
+  "_version": 1787908811311
 }

@@ -6434,9 +6434,19 @@
                         
                         const updateIfDiff = (targetRef, serverArr, storageKey) => {
                             if (serverArr && Array.isArray(serverArr) && serverArr.length > 0) {
-                                if (JSON.stringify(targetRef.value) !== JSON.stringify(serverArr)) {
-                                    targetRef.value = serverArr;
-                                    localStorage.setItem(storageKey, JSON.stringify(serverArr));
+                                let finalArr = serverArr;
+                                if (storageKey === 'students_list' && Array.isArray(targetRef.value)) {
+                                    finalArr = serverArr.map(s => {
+                                        const localS = targetRef.value.find(ls => ls.id === s.id);
+                                        if (localS && localS.profile_image && !s.profile_image) {
+                                            return { ...s, profile_image: localS.profile_image };
+                                        }
+                                        return s;
+                                    });
+                                }
+                                if (JSON.stringify(targetRef.value) !== JSON.stringify(finalArr)) {
+                                    targetRef.value = finalArr;
+                                    localStorage.setItem(storageKey, JSON.stringify(finalArr));
                                 }
                             }
                         };
@@ -6645,31 +6655,48 @@
                 };
 
                 const capturePhoto = () => {
-                    const video = document.getElementById('webcam-preview');
-                    if (!video) return;
+                    try {
+                        const video = document.getElementById('webcam-preview');
+                        if (!video) return;
 
-                    if (video.readyState < 2) {
-                        alert("Kamera tasviri hali tayyor emas! Tasvir paydo bo'lguncha 1-2 soniya kuting.");
-                        return;
-                    }
+                        if (video.readyState < 2) {
+                            alert("Kamera tasviri hali tayyor emas! Tasvir paydo bo'lguncha 1-2 soniya kuting.");
+                            return;
+                        }
 
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth || 640;
-                    canvas.height = video.videoHeight || 480;
-                    const ctx = canvas.getContext('2d');
-                    
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                    
-                    const student = currentStudent.value;
-                    if (student) {
-                        student.profile_image = dataUrl;
-                        localStorage.setItem('students_list', JSON.stringify(studentsList.value));
-                        alert("Surat kamera orqali muvaffaqiyatli tushirildi!");
+                        // Dimensions calculation for square avatar crop (max 320x320)
+                        const vw = video.videoWidth || 640;
+                        const vh = video.videoHeight || 480;
+                        const minDim = Math.min(vw, vh);
+                        const sx = (vw - minDim) / 2;
+                        const sy = (vh - minDim) / 2;
+                        const targetSize = 320;
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = targetSize;
+                        canvas.height = targetSize;
+                        const ctx = canvas.getContext('2d');
+                        
+                        ctx.drawImage(video, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        
+                        const studentId = loggedInStudentId.value || selectedStudentId.value;
+                        const student = (studentsList.value && studentsList.value.find(s => s.id === studentId)) || currentStudent.value;
+                        if (student) {
+                            student.profile_image = dataUrl;
+                            localStorage.setItem('students_list', JSON.stringify(studentsList.value));
+                        }
+                        
+                        // Safely close webcam and modal
+                        closePhotoSourceModal();
+                        
+                        // Push updated state immediately to server
+                        triggerPushState();
+                    } catch (err) {
+                        console.error("capturePhoto error:", err);
+                        closePhotoSourceModal();
                     }
-                    
-                    closePhotoSourceModal();
                 };
 
                 const triggerNativeCamera = () => {
@@ -6682,7 +6709,7 @@
                     if (input) input.click();
                 };
 
-                const compressImage = (file, maxWidth = 400, maxHeight = 400, quality = 0.8) => {
+                const compressImage = (file, maxWidth = 320, maxHeight = 320, quality = 0.8) => {
                     return new Promise((resolve, reject) => {
                         const reader = new FileReader();
                         reader.onload = (readerEvent) => {
@@ -6724,16 +6751,17 @@
                         const file = event.target.files && event.target.files[0];
                         if (!file) return;
 
-                        const compressedDataUrl = await compressImage(file, 400, 400, 0.8);
-                        const student = currentStudent.value;
+                        const compressedDataUrl = await compressImage(file, 320, 320, 0.8);
+                        const studentId = loggedInStudentId.value || selectedStudentId.value;
+                        const student = (studentsList.value && studentsList.value.find(s => s.id === studentId)) || currentStudent.value;
                         if (student) {
                             student.profile_image = compressedDataUrl;
                             localStorage.setItem('students_list', JSON.stringify(studentsList.value));
-                            alert("Rasm muvaffaqiyatli yuklandi!");
                         }
+                        closePhotoSourceModal();
+                        triggerPushState();
                     } catch (err) {
                         console.error("Rasm yuklashda xatolik:", err);
-                        alert("Rasmni yuklab bo'lmadi, iltimos qaytadan urinib ko'ring.");
                     } finally {
                         closePhotoSourceModal();
                         if (event.target) event.target.value = '';

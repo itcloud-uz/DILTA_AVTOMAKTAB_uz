@@ -3736,32 +3736,31 @@
                 </p>
 
                 <!-- Embedded interactive map frame -->
-                <div class="w-full h-44 rounded-2xl overflow-hidden mb-4 border border-slate-200 dark:border-slate-700 shadow-inner">
+                <div class="w-full h-48 rounded-2xl overflow-hidden mb-4 border border-slate-200 dark:border-slate-700 shadow-inner relative">
                     <iframe 
                         width="100%" 
                         height="100%" 
                         frameborder="0" 
-                        scrolling="no" 
-                        marginheight="0" 
-                        marginwidth="0" 
-                        src="https://maps.google.com/maps?q=Samarqand%20viloyati%20Urgut%20tumani%20DELTA%20AVTOMAKTAB&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                        allowfullscreen="true"
+                        style="position:relative;"
+                        src="https://yandex.uz/map-widget/v1/org/delta_edu_viza/158805115409/?ll=67.239221%2C39.428629&z=17"
                     ></iframe>
                 </div>
 
                 <div class="flex flex-col gap-2.5">
+                    <button 
+                        @click="openInYandexMaps"
+                        class="w-full py-3 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
+                    >
+                        <span>🧭</span>
+                        <span>Yandex Xaritada ochish (DELTA EDU VIZA)</span>
+                    </button>
                     <button 
                         @click="openInGoogleMaps"
                         class="w-full py-3 bg-[#0066cc] hover:bg-blue-700 active:scale-95 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
                     >
                         <span>🗺️</span>
                         <span>Google Xaritada ochish</span>
-                    </button>
-                    <button 
-                        @click="openInYandexMaps"
-                        class="w-full py-3 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
-                    >
-                        <span>🧭</span>
-                        <span>Yandex Xaritada ochish</span>
                     </button>
                     <button 
                         @click="showLocationModal = false"
@@ -6784,13 +6783,11 @@
                 };
 
                 const openInGoogleMaps = () => {
-                    const query = encodeURIComponent(selectedLocationAddress.value + " DELTA AVTOMAKTAB");
-                    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                    window.open("https://www.google.com/maps/search/?api=1&query=39.428629,67.239221", '_blank');
                 };
 
                 const openInYandexMaps = () => {
-                    const query = encodeURIComponent(selectedLocationAddress.value + " DELTA AVTOMAKTAB");
-                    window.open(`https://yandex.uz/maps/?text=${query}`, '_blank');
+                    window.open("https://yandex.uz/maps/org/delta_edu_viza/158805115409/?ll=67.239221%2C39.428629&z=20.01", '_blank');
                 };
 
                 const lessonsListMock = [

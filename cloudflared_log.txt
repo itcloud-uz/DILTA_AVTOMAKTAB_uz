@@ -9,3 +9,35 @@
 2026-08-28T05:04:05Z INF GOOS: windows, GOVersion: go1.26.4, GoArch: amd64
 2026-08-28T05:04:05Z INF Settings: map[ha-connections:1 protocol:quic url:http://127.0.0.1:8000]
 2026-08-28T05:04:05Z INF cloudflared will not automatically update on Windows systems.
+2026-08-28T05:04:06Z INF Generated Connector ID: dc8e9ed7-998d-43e8-a789-54606ce75f69
+2026-08-28T05:04:07Z INF Initial protocol quic
+2026-08-28T05:04:07Z INF ICMP proxy will use 10.32.139.133 as source for IPv4
+2026-08-28T05:04:07Z INF ICMP proxy will use fe80::55b1:6d65:8c53:9aad in zone Wi-Fi as source for IPv6
+2026-08-28T05:04:10Z INF cloudflared does not support loading the system root certificate pool on Windows. Please use --origin-ca-pool <PATH> to specify the path to the certificate pool
+2026-08-28T05:04:10Z INF ICMP proxy will use 10.32.139.133 as source for IPv4
+2026-08-28T05:04:10Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveID(65074) CurveP256] connIndex=0 event=0 ip=198.41.200.233
+2026-08-28T05:04:10Z INF ICMP proxy will use fe80::55b1:6d65:8c53:9aad in zone Wi-Fi as source for IPv6
+2026-08-28T05:04:10Z INF Starting metrics server on 127.0.0.1:20241/metrics
+2026-08-28T05:04:12Z INF Registered tunnel connection connIndex=0 connection=9cf53738-cf10-4b4e-8aed-72e3342d40d1 event=0 ip=198.41.200.233 location=dme01 protocol=quic
+2026-08-28T05:04:12Z INF +-------------------------------------------------------------------------------------+
+2026-08-28T05:04:12Z INF |                               CONNECTIVITY PRE-CHECKS                               |
+2026-08-28T05:04:12Z INF +-------------------------------------------------------------------------------------+
+2026-08-28T05:04:12Z INF |  COMPONENT         TARGET                     STATUS  DETAILS                       |
+2026-08-28T05:04:12Z INF |  DNS Resolution    region1.v2.argotunnel.com  PASS    DNS Resolved successfully     |
+2026-08-28T05:04:12Z INF |  DNS Resolution    region2.v2.argotunnel.com  PASS    DNS Resolved successfully     |
+2026-08-28T05:04:12Z INF |  UDP Connectivity  region1.v2.argotunnel.com  PASS    QUIC connection successful    |
+2026-08-28T05:04:12Z INF |  UDP Connectivity  region2.v2.argotunnel.com  PASS    QUIC connection successful    |
+2026-08-28T05:04:12Z INF |  TCP Connectivity  region1.v2.argotunnel.com  PASS    HTTP/2 connection successful  |
+2026-08-28T05:04:12Z INF |  TCP Connectivity  region2.v2.argotunnel.com  PASS    HTTP/2 connection successful  |
+2026-08-28T05:04:12Z INF |  Cloudflare API    api.cloudflare.com:443     PASS    API is reachable              |
+2026-08-28T05:04:12Z INF |                                                                                     |
+2026-08-28T05:04:12Z INF |  SUMMARY: Environment is healthy. cloudflared will use 'quic' as primary protocol.  |
+2026-08-28T05:04:12Z INF +-------------------------------------------------------------------------------------+
+2026-08-28T05:04:12Z INF precheck component="DNS Resolution" details="DNS Resolved successfully" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=region1.v2.argotunnel.com
+2026-08-28T05:04:12Z INF precheck component="DNS Resolution" details="DNS Resolved successfully" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=region2.v2.argotunnel.com
+2026-08-28T05:04:12Z INF precheck component="UDP Connectivity" details="QUIC connection successful" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=region1.v2.argotunnel.com
+2026-08-28T05:04:12Z INF precheck component="UDP Connectivity" details="QUIC connection successful" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=region2.v2.argotunnel.com
+2026-08-28T05:04:12Z INF precheck component="TCP Connectivity" details="HTTP/2 connection successful" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=region1.v2.argotunnel.com
+2026-08-28T05:04:12Z INF precheck component="TCP Connectivity" details="HTTP/2 connection successful" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=region2.v2.argotunnel.com
+2026-08-28T05:04:12Z INF precheck component="Cloudflare API" details="API is reachable" run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 status=pass target=api.cloudflare.com:443
+2026-08-28T05:04:12Z INF precheck complete hard_fail=false run_id=f9ebb371-8e70-4042-83c8-3d6c5f707db9 suggested_protocol=quic

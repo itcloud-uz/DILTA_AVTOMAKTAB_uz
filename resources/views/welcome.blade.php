@@ -2480,16 +2480,22 @@
                         </div>
 
                         <!-- Manzil -->
-                        <div class="p-4 flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
-                                ↗️
+                        <div 
+                            @click="openLocationMap(currentStudent?.address || 'Samarqand viloyati, Urgut tumani')"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                    ↗️
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
+                                    <span class="text-xs font-semibold text-gray-400">
+                                        [[ currentStudent?.address || 'Samarqand viloyati, Urgut tumani' ]]
+                                    </span>
+                                </div>
                             </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
-                                <span class="text-xs font-semibold text-gray-400">
-                                    [[ currentStudent?.address || 'Samarqand viloyati, Urgut tumani' ]]
-                                </span>
-                            </div>
+                            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-lg">Lokatsiya 📍</span>
                         </div>
 
                         <!-- Parolni almashtirish -->
@@ -2570,14 +2576,20 @@
                         </div>
 
                         <!-- Manzil -->
-                        <div class="p-4 flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#0066cc] dark:text-blue-400 flex items-center justify-center text-2xl shrink-0">
-                                ↗️
+                        <div 
+                            @click="openLocationMap('Samarqand viloyati, Urgut tumani')"
+                            class="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50/80 dark:hover:bg-slate-750 transition-all"
+                        >
+                            <div class="flex items-center gap-4 min-w-0">
+                                <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#0066cc] dark:text-blue-400 flex items-center justify-center text-2xl shrink-0">
+                                    ↗️
+                                </div>
+                                <div class="flex flex-col min-w-0">
+                                    <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
+                                    <span class="text-xs font-semibold text-gray-400 truncate">[[ currentStudent?.address || 'Samarqand viloyati, Urgut tumani' ]]</span>
+                                </div>
                             </div>
-                            <div class="flex flex-col min-w-0">
-                                <span class="text-sm font-bold text-slate-800 dark:text-white">Manzil</span>
-                                <span class="text-xs font-semibold text-gray-400 truncate">[[ currentStudent?.address || 'Samarqand viloyati, Urgut tumani' ]]</span>
-                            </div>
+                            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-1 rounded-lg shrink-0">Xaritada 📍</span>
                         </div>
 
                         <!-- Telefon -->
@@ -3709,6 +3721,55 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- ==================== LOCATION / MAP MODAL ==================== -->
+        <div v-if="showLocationModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+            <div class="card-3d bg-white dark:bg-slate-800 rounded-3xl w-full max-w-sm shadow-2xl flex flex-col p-6 border border-slate-200 dark:border-slate-700 animate-scaleUp">
+                <div class="w-14 h-14 bg-blue-50 dark:bg-blue-950 text-[#0066cc] dark:text-blue-400 rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-sm mb-3">
+                    📍
+                </div>
+                <h3 class="text-base font-black text-slate-800 dark:text-white text-center tracking-tight uppercase mb-1">O'QUV MARKAZI LOKATSIYASI</h3>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-semibold text-center mb-4">
+                    [[ selectedLocationAddress ]]
+                </p>
+
+                <!-- Embedded interactive map frame -->
+                <div class="w-full h-44 rounded-2xl overflow-hidden mb-4 border border-slate-200 dark:border-slate-700 shadow-inner">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        marginheight="0" 
+                        marginwidth="0" 
+                        src="https://maps.google.com/maps?q=Samarqand%20viloyati%20Urgut%20tumani%20DELTA%20AVTOMAKTAB&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    ></iframe>
+                </div>
+
+                <div class="flex flex-col gap-2.5">
+                    <button 
+                        @click="openInGoogleMaps"
+                        class="w-full py-3 bg-[#0066cc] hover:bg-blue-700 active:scale-95 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
+                    >
+                        <span>🗺️</span>
+                        <span>Google Xaritada ochish</span>
+                    </button>
+                    <button 
+                        @click="openInYandexMaps"
+                        class="w-full py-3 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white rounded-2xl font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
+                    >
+                        <span>🧭</span>
+                        <span>Yandex Xaritada ochish</span>
+                    </button>
+                    <button 
+                        @click="showLocationModal = false"
+                        class="w-full py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-xl text-xs font-bold transition-all hover:bg-slate-200 mt-1"
+                    >
+                        YOPISH
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -6714,6 +6775,24 @@
                     }, 1200);
                 };
 
+                const showLocationModal = ref(false);
+                const selectedLocationAddress = ref('Samarqand viloyati, Urgut tumani');
+
+                const openLocationMap = (addr = 'Samarqand viloyati, Urgut tumani') => {
+                    selectedLocationAddress.value = addr || 'Samarqand viloyati, Urgut tumani';
+                    showLocationModal.value = true;
+                };
+
+                const openInGoogleMaps = () => {
+                    const query = encodeURIComponent(selectedLocationAddress.value + " DELTA AVTOMAKTAB");
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                };
+
+                const openInYandexMaps = () => {
+                    const query = encodeURIComponent(selectedLocationAddress.value + " DELTA AVTOMAKTAB");
+                    window.open(`https://yandex.uz/maps/?text=${query}`, '_blank');
+                };
+
                 const lessonsListMock = [
                     { id: 1, title: "1-dars. Umumiy qoidalar", desc: "Haydovchilar, piyodalar va yo'lovchilarning umumiy majburiyatlari, asosiy tushunchalar hamda atamalar bo'yicha nazariy qo'llanma." },
                     { id: 2, title: "2-dars. Yo'l belgilari", desc: "Ogohlantiruvchi, imtiyozli, taqiqlovchi, buyuruvchi hamda axborot-ko'rsatkich yo'l belgilarining to'liq tahlili va talablari." },
@@ -7229,6 +7308,11 @@
                     passwordChangeSuccess,
                     passwordChangeError,
                     handleChangePassword,
+                    showLocationModal,
+                    selectedLocationAddress,
+                    openLocationMap,
+                    openInGoogleMaps,
+                    openInYandexMaps,
                     t
                 };
             },

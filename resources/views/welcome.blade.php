@@ -5110,21 +5110,45 @@
                     } catch (e) {}
                 };
 
+                let isSpeechUnlocked = false;
+                const unlockSpeech = () => {
+                    if (isSpeechUnlocked) return;
+                    isSpeechUnlocked = true;
+                    try {
+                        if (window.speechSynthesis) {
+                            window.speechSynthesis.resume();
+                            const dummy = new SpeechSynthesisUtterance('');
+                            dummy.volume = 0;
+                            window.speechSynthesis.speak(dummy);
+                        }
+                    } catch (e) {}
+                };
+
+                window.addEventListener('click', unlockSpeech, { once: true });
+                window.addEventListener('touchstart', unlockSpeech, { once: true });
+
                 const speakExplanation = (text, onEndCallback = null) => {
                     try {
                         stopAllSpeech();
+                        if (!text || typeof text !== 'string') {
+                            if (onEndCallback) onEndCallback();
+                            return;
+                        }
 
                         let textToSpeak = text;
                         if (currentLang.value === 'qr') {
                             textToSpeak = qrToUzbekTTS(text);
                         }
 
+                        // Clean non-spoken technical symbols for smooth pronunciation
+                        textToSpeak = textToSpeak.replace(/\/\//g, '').replace(/[*_#`]/g, '').trim();
+
                         let targetLangCode = 'uz';
                         if (currentLang.value === 'ru') targetLangCode = 'ru';
                         else if (currentLang.value === 'en') targetLangCode = 'en';
 
                         const wordCount = textToSpeak.split(' ').length;
-                        const estimatedSeconds = Math.max(3.5, (wordCount * 0.42));
+                        const estimatedSeconds = Math.max(2.5, (wordCount * 0.38));
                         const minDurationMs = estimatedSeconds * 1000;
                         let startTime = Date.now();
                         let callbackCalled = false;
@@ -5142,58 +5166,57 @@
                             }
                         };
 
-                        const playWithWebSpeech = () => {
-                            if (!window.speechSynthesis) {
-                                setTimeout(safeOnEndCallback, minDurationMs);
-                                return;
-                            }
-                            try {
-                                window.speechSynthesis.cancel();
-                                const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
-                                let chosen = voices.find(v => v.lang.startsWith(targetLangCode) && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman') || v.name.toLowerCase().includes('madina') || v.name.toLowerCase().includes('zira')));
-                                if (!chosen) chosen = voices.find(v => v.lang.startsWith(targetLangCode));
-                                if (!chosen) chosen = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('woman'));
-                                if (!chosen) chosen = voices[0] || null;
+                        if (!window.speechSynthesis) {
+                            setTimeout(safeOnEndCallback, minDurationMs);
+                            return;
+                        }
 
-                                let targetSpeechLang = targetLangCode === 'uz' ? 'uz-UZ' : (targetLangCode === 'ru' ? 'ru-RU' : 'en-US');
-                                const utter = new SpeechSynthesisUtterance(textToSpeak);
-                                if (chosen) utter.voice = chosen;
-                                utter.lang = targetSpeechLang;
-                                utter.rate = 0.88;
-                                utter.pitch = 0.95;
-                                utter.volume = 1.0;
-
-                                utter.onend = () => { safeOnEndCallback(); };
-                                utter.onerror = () => { safeOnEndCallback(); };
-
-                                window.speechSynthesis.resume();
-                                window.speechSynthesis.speak(utter);
-                            } catch (e) {
-                                console.warn("WebSpeech failed:", e);
-                                safeOnEndCallback();
-                            }
-                        };
-
-                        // 1. Try Google TTS online audio first for crystal-clear natural speech on all mobile devices (iOS / Android)
                         try {
-                            const cleanText = textToSpeak.replace(/[^\w\s\u0400-\u04FF'ʻʼ‘’-]/gi, ' ').replace(/\s+/g, ' ').trim();
-                            const queryText = encodeURIComponent(cleanText.substring(0, 190));
-                            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${targetLangCode}&client=tw-ob&q=${queryText}`;
-                            
-                            const audio = new Audio(audioUrl);
-                            currentAudioPlayer = audio;
-                            audio.onended = () => { safeOnEndCallback(); };
-                            audio.onerror = () => { playWithWebSpeech(); };
+                            window.speechSynthesis.cancel();
+                            window.speechSynthesis.resume();
 
-                            const playPromise = audio.play();
-                            if (playPromise !== undefined) {
-                                playPromise.catch((err) => {
-                                    console.warn("HTML5 Audio play blocked on mobile, falling back to WebSpeech:", err);
-                                    playWithWebSpeech();
-                                });
+                            const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices() || [];
+                            let chosen = null;
+                            let targetSpeechLang = 'uz-UZ';
+
+                            if (targetLangCode === 'uz') {
+                                chosen = voices.find(v => v.lang && (v.lang.startsWith('uz') || v.lang.includes('UZ')));
+                                if (!chosen) chosen = voices.find(v => v.lang && v.lang.startsWith('tr')); // Turkish voice has identical phonetic pronunciation
+                                if (!chosen) chosen = voices.find(v => v.lang && v.lang.startsWith('ru'));
+                                if (!chosen) chosen = voices.find(v => v.default) || voices[0] || null;
+                                targetSpeechLang = chosen ? chosen.lang : 'uz-UZ';
+                            } else if (targetLangCode === 'ru') {
+                                chosen = voices.find(v => v.lang && v.lang.startsWith('ru'));
+                                if (!chosen) chosen = voices.find(v => v.default) || voices[0] || null;
+                                targetSpeechLang = chosen ? chosen.lang : 'ru-RU';
+                            } else {
+                                chosen = voices.find(v => v.lang && v.lang.startsWith('en'));
+                                if (!chosen) chosen = voices.find(v => v.default) || voices[0] || null;
+                                targetSpeechLang = chosen ? chosen.lang : 'en-US';
                             }
+
+                            const utter = new SpeechSynthesisUtterance(textToSpeak);
+                            if (chosen) {
+                                utter.voice = chosen;
+                                utter.lang = chosen.lang;
+                            } else {
+                                utter.lang = targetSpeechLang;
+                            }
+
+                            utter.rate = 0.95;
+                            utter.pitch = 1.0;
+                            utter.volume = 1.0;
+
+                            utter.onend = () => { safeOnEndCallback(); };
+                            utter.onerror = (err) => { 
+                                console.warn("Speech error:", err);
+                                safeOnEndCallback(); 
+                            };
+
+                            window.speechSynthesis.speak(utter);
                         } catch (err) {
-                            playWithWebSpeech();
+                            console.warn("SpeechSynthesis execution error:", err);
+                            safeOnEndCallback();
                         }
                     } catch (e) {
                         console.error("speakExplanation dynamic error caught:", e);

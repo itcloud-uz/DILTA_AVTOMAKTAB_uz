@@ -1303,7 +1303,13 @@
       "id": 96,
       "student_id": 2,
       "login_time": "2026-08-31 08:19",
-      "logout_time": "Ayni vaqtda faol"
+      "logout_time": "2026-08-31 08:29"
+    },
+    {
+      "id": 97,
+      "student_id": 2,
+      "login_time": "2026-08-31 08:29",
+      "logout_time": "2026-08-31 08:29"
     }
   ],
   "student_penalties_list": [
@@ -1356,5 +1362,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1788164387745
+  "_version": 1788164983408
 }

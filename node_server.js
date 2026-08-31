@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import initSqlJs from 'sql.js';
 import os from 'os';
+import { spawn } from 'child_process';
 
 const app = express();
 
@@ -692,8 +693,53 @@ app.get('/api/v1/local-ip', (req, res) => {
     }
 });
 
+let cloudflareProcess = null;
+let currentCloudflareUrl = '';
+
+function startCloudflareTunnel(port) {
+    try {
+        if (cloudflareProcess) {
+            try { cloudflareProcess.kill(); } catch (e) {}
+            cloudflareProcess = null;
+        }
+        
+        console.log(`[Tunnel] Launching native Cloudflare Tunnel for port ${port}...`);
+        cloudflareProcess = spawn('cloudflared.exe', ['tunnel', '--url', `http://127.0.0.1:${port}`], {
+            shell: true,
+            stdio: ['ignore', 'pipe', 'pipe']
+        });
+
+        const handleOutput = (data) => {
+            const str = data.toString();
+            const match = str.match(/https:\/\/[a-zA-Z0-9-.]+\.trycloudflare\.com/);
+            if (match) {
+                currentCloudflareUrl = match[0].trim();
+                console.log(`\n===================================================`);
+                console.log(`  >>> CLOUDFLARE LIVE TUNNEL: ${currentCloudflareUrl} <<<`);
+                console.log(`===================================================\n`);
+                try {
+                    fs.writeFileSync(path.resolve('./localtunnel_url.txt'), currentCloudflareUrl, 'utf8');
+                } catch (e) {}
+            }
+        };
+
+        if (cloudflareProcess.stdout) cloudflareProcess.stdout.on('data', handleOutput);
+        if (cloudflareProcess.stderr) cloudflareProcess.stderr.on('data', handleOutput);
+
+        cloudflareProcess.on('exit', (code) => {
+            console.log(`[Tunnel] Cloudflare process exited with code ${code}. Reconnecting in 5 seconds...`);
+            setTimeout(() => startCloudflareTunnel(port), 5000);
+        });
+    } catch (err) {
+        console.error("[Tunnel] Failed to spawn cloudflared:", err);
+    }
+}
+
 // Get public localtunnel URL of the server
 app.get('/api/v1/localtunnel-url', (req, res) => {
+    if (currentCloudflareUrl) {
+        return res.json({ url: currentCloudflareUrl });
+    }
     try {
         const filePath = path.resolve('./localtunnel_url.txt');
         if (fs.existsSync(filePath)) {
@@ -811,11 +857,17 @@ const server = app.listen(PORT, HOST, () => {
     console.log(`  Address: http://${HOST}:${PORT}`);
     console.log(`  Environment: ${process.env.NODE_ENV || 'production'}`);
     console.log(`===================================================`);
+    
+    // Automatically start live Cloudflare tunnel for external / phone access
+    startCloudflareTunnel(PORT);
 });
 
 // Graceful shutdown handling
 const gracefulShutdown = () => {
     console.log("\nReceived termination signal. Gracefully shutting down...");
+    if (cloudflareProcess) {
+        try { cloudflareProcess.kill(); } catch (e) {}
+    }
     persistDatabase();
     server.close(() => {
         console.log("HTTP server closed. Exiting process.");

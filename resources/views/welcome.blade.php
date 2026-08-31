@@ -4563,23 +4563,31 @@
                 }, { immediate: true });
 
                 const isAdminMode = ref(false);
-                const isLoggedIn = ref(localStorage.getItem('auth_is_logged_in') === 'true');
-                const loggedInUserType = ref(localStorage.getItem('auth_user_type') || '');
-                const loggedInStudentId = ref(localStorage.getItem('auth_student_id') ? parseInt(localStorage.getItem('auth_student_id')) : null);
-                const selectedStudentId = ref(localStorage.getItem('auth_student_id') ? parseInt(localStorage.getItem('auth_student_id')) : null);
+                // Clear any old permanent login from localStorage so fresh visits always start on login screen
+                try {
+                    localStorage.removeItem('auth_is_logged_in');
+                    localStorage.removeItem('auth_user_type');
+                    localStorage.removeItem('auth_student_id');
+                    localStorage.removeItem('auth_active_tab');
+                } catch(e) {}
+
+                const isLoggedIn = ref(sessionStorage.getItem('auth_is_logged_in') === 'true');
+                const loggedInUserType = ref(sessionStorage.getItem('auth_user_type') || '');
+                const loggedInStudentId = ref(sessionStorage.getItem('auth_student_id') ? parseInt(sessionStorage.getItem('auth_student_id')) : null);
+                const selectedStudentId = ref(sessionStorage.getItem('auth_student_id') ? parseInt(sessionStorage.getItem('auth_student_id')) : null);
                 const authUsername = ref('');
                 const authPassword = ref('');
                 const authError = ref('');
 
                 watch(isLoggedIn, (val) => {
-                    localStorage.setItem('auth_is_logged_in', val ? 'true' : 'false');
+                    sessionStorage.setItem('auth_is_logged_in', val ? 'true' : 'false');
                 });
                 watch(loggedInUserType, (val) => {
-                    localStorage.setItem('auth_user_type', val || '');
+                    sessionStorage.setItem('auth_user_type', val || '');
                 });
                 watch(loggedInStudentId, (val) => {
-                    if (val) localStorage.setItem('auth_student_id', String(val));
-                    else localStorage.removeItem('auth_student_id');
+                    if (val) sessionStorage.setItem('auth_student_id', String(val));
+                    else sessionStorage.removeItem('auth_student_id');
                 });
                 
                 const adminUsernameSetting = ref(localStorage.getItem('admin_user') || 'admin');
@@ -4590,9 +4598,9 @@
                 const studentPanelPasswordSetting = ref(localStorage.getItem('student_panel_pass') || '12345');
 
                 const loginTab = ref('student');
-                const activeStudentTab = ref(localStorage.getItem('auth_active_tab') || 'dashboard');
+                const activeStudentTab = ref(sessionStorage.getItem('auth_active_tab') || 'dashboard');
                 watch(activeStudentTab, (val) => {
-                    localStorage.setItem('auth_active_tab', val || 'dashboard');
+                    sessionStorage.setItem('auth_active_tab', val || 'dashboard');
                 });
                 const studentPanelUnlockPassword = ref('');
                 const studentSelectPassword = ref('');
@@ -6008,6 +6016,10 @@
                         console.warn("Timer clear error:", e);
                     }
                     
+                    sessionStorage.removeItem('auth_is_logged_in');
+                    sessionStorage.removeItem('auth_user_type');
+                    sessionStorage.removeItem('auth_student_id');
+                    sessionStorage.removeItem('auth_active_tab');
                     localStorage.removeItem('auth_is_logged_in');
                     localStorage.removeItem('auth_user_type');
                     localStorage.removeItem('auth_student_id');

@@ -7227,6 +7227,8 @@
                     score,
                     resetTest,
                     confirmAndResetTest,
+                    returnToDashboard,
+                    retakeTestImmediately,
                     getQuestionIllustration,
                     reviewFilter,
                     filteredReviewQuestions,

@@ -1292,6 +1292,18 @@
       "student_id": 2,
       "login_time": "2026-08-28 09:20",
       "logout_time": "2026-08-28 09:31"
+    },
+    {
+      "id": 95,
+      "student_id": 2,
+      "login_time": "2026-08-31 04:29",
+      "logout_time": "2026-08-31 04:30"
+    },
+    {
+      "id": 96,
+      "student_id": 2,
+      "login_time": "2026-08-31 08:19",
+      "logout_time": "Ayni vaqtda faol"
     }
   ],
   "student_penalties_list": [
@@ -1344,5 +1356,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1787909466530
+  "_version": 1788164387745
 }

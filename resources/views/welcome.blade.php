@@ -2032,10 +2032,10 @@
         </div>
 
         <!-- ==================== STUDENT WORKSPACE ==================== -->
-        <main v-else class="w-full py-4 md:py-6 flex-grow flex flex-col items-center justify-start gap-4 px-3 sm:px-4 md:px-6 max-w-full overflow-x-hidden">
+        <main v-else class="w-full py-4 md:py-6 flex-grow flex flex-col items-center justify-start gap-4 px-3 sm:px-4 md:px-8 max-w-full overflow-x-hidden">
             
             <!-- Main Content Area -->
-            <div class="flex-grow flex flex-col gap-4 w-full min-w-0 max-w-md mx-auto">
+            <div class="flex-grow flex flex-col gap-4 w-full min-w-0 transition-all duration-300" :class="isTestStarted ? 'max-w-6xl mx-auto px-1' : (activeStudentTab === 'dashboard' || activeStudentTab === 'profile' || activeStudentTab === 'group_details' || activeStudentTab === 'personal_info' || activeStudentTab === 'school_info' ? 'max-w-md mx-auto' : 'max-w-5xl mx-auto')">
 
                 <!-- Loading State -->
                 <div v-if="loading" class="flex-grow flex flex-col items-center justify-center py-20">
@@ -2920,69 +2920,74 @@
             </div>
 
             <!-- Test Interface -->
-            <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-8 animate-fadeIn">
-
+            <div v-if="!loading && isTestStarted && questions.length > 0 && !testFinished" class="w-full flex flex-col gap-6 animate-fadeIn">
                 
-                <!-- Controls and Navigation Row -->
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-[#1a2332] p-6 rounded-2xl border border-slate-700/60 shadow-lg">
+                <!-- Controls and Navigation Row (Wide & Responsive) -->
+                <div class="w-full flex flex-col xl:flex-row items-center justify-between gap-4 bg-[#1a2332] p-4 md:p-6 rounded-3xl border border-slate-700/60 shadow-xl">
                     
-                    <!-- Timer and Finish button -->
-                    <div class="flex items-center gap-6">
-                        <!-- Circular Timer -->
-                        <div class="relative w-24 h-24 flex items-center justify-center">
-                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                <circle 
-                                    cx="50" cy="50" r="42" 
-                                    stroke="#334155" stroke-width="6" 
-                                    fill="transparent" 
-                                />
-                                <circle 
-                                    cx="50" cy="50" r="42" 
-                                    stroke="#10b981" stroke-width="6" 
-                                    fill="transparent" 
-                                    class="timer-circle"
-                                    :stroke-dasharray="263.89"
-                                    :stroke-dashoffset="dashOffset"
-                                />
-                            </svg>
-                            <span class="absolute text-xl font-bold text-white">[[ formattedTime ]]</span>
+                    <!-- Timer and Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-between w-full xl:w-auto gap-3 sm:gap-4">
+                        <!-- Compact Pill Timer -->
+                        <div class="flex items-center gap-3 bg-[#0f1728] px-4 py-2 rounded-2xl border border-slate-800 shadow-inner">
+                            <div class="relative w-11 h-11 flex items-center justify-center shrink-0">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle 
+                                        cx="50" cy="50" r="42" 
+                                        stroke="#334155" stroke-width="8" 
+                                        fill="transparent" 
+                                    />
+                                    <circle 
+                                        cx="50" cy="50" r="42" 
+                                        stroke="#10b981" stroke-width="8" 
+                                        fill="transparent" 
+                                        class="timer-circle"
+                                        :stroke-dasharray="263.89"
+                                        :stroke-dashoffset="dashOffset"
+                                    />
+                                </svg>
+                                <span class="absolute text-sm font-black text-emerald-400">⏱️</span>
+                            </div>
+                            <div class="flex flex-col text-left">
+                                <span class="text-[9px] font-mono text-gray-400 uppercase font-bold">Qolgan vaqt</span>
+                                <span class="text-base font-black text-white font-mono tracking-wider">[[ formattedTime ]]</span>
+                            </div>
                         </div>
 
-                        <!-- Terminate Button -->
-                        <button 
-                            @click="finishTest"
-                            class="px-5 py-3.5 bg-slate-800/80 hover:bg-rose-900/60 hover:text-rose-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-rose-700/60"
-                        >
-                            TESTNI YAKUNLASH
-                        </button>
-
-                        <!-- Back Button -->
-                        <button 
-                            @click="confirmAndResetTest"
-                            class="px-5 py-3.5 bg-slate-800/80 hover:bg-[#0066cc]/20 hover:text-blue-300 rounded-2xl text-xs font-bold uppercase tracking-wider text-slate-300 transition-all border border-slate-700 hover:border-blue-700/60"
-                        >
-                            ORTGA QAYTISH
-                        </button>
+                        <!-- Action Buttons -->
+                        <div class="flex items-center gap-2">
+                            <button 
+                                @click="finishTest"
+                                class="px-4 py-3 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all border border-rose-500/30 shadow-sm"
+                            >
+                                🛑 Yakunlash
+                            </button>
+                            <button 
+                                @click="confirmAndResetTest"
+                                class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all border border-slate-700 shadow-sm"
+                            >
+                                ← Ortga
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Navigation Pagination Grid -->
-                    <div class="flex flex-col gap-2 w-full md:w-auto">
-                        <div class="flex flex-wrap gap-1.5 justify-center md:justify-end max-w-md">
-                            <!-- Prev Arrow -->
-                            <button 
-                                @click="prevQuestion"
-                                :disabled="currentQuestionIndex === 0"
-                                class="w-9 h-9 flex items-center justify-center border border-slate-700 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
-                            >
-                                &laquo;
-                            </button>
+                    <!-- Question Numbers Pagination Bar (Expanded Horizontally) -->
+                    <div class="flex items-center gap-1.5 w-full xl:w-auto justify-center overflow-x-auto py-1">
+                        <!-- Prev Arrow -->
+                        <button 
+                            @click="prevQuestion"
+                            :disabled="currentQuestionIndex === 0"
+                            class="w-8 h-8 md:w-9 md:h-9 shrink-0 flex items-center justify-center border border-slate-700 bg-slate-800 text-white rounded-xl text-sm hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed font-bold transition-all"
+                        >
+                            &laquo;
+                        </button>
 
-                            <!-- Question Buttons -->
+                        <!-- Question Buttons 1..20 Grid -->
+                        <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-full">
                             <button 
                                 v-for="(q, idx) in questions"
                                 :key="q.id"
                                 @click="gotoQuestion(idx)"
-                                class="w-9 h-9 flex items-center justify-center rounded-lg text-xs font-semibold transition-all duration-200"
+                                class="w-8 h-8 md:w-9 md:h-9 shrink-0 flex items-center justify-center rounded-xl text-xs font-bold transition-all duration-150"
                                 :class="[
                                     userAnswers[q.id] !== undefined
                                         ? userAnswers[q.id] === q.correct_option_id
@@ -2992,21 +2997,22 @@
                                             ? 'key-3d-active'
                                             : 'key-3d',
                                     currentQuestionIndex === idx && userAnswers[q.id] !== undefined
-                                        ? 'ring-2 ring-[#0066cc] ring-offset-2'
+                                        ? 'ring-2 ring-[#0066cc] ring-offset-2 ring-offset-slate-900'
                                         : ''
                                 ]"
                             >
                                 [[ idx + 1 ]]
                             </button>
-
-                            <!-- Next Arrow -->
-                            <button 
-                                @click="nextQuestion"
-                                class="w-9 h-9 flex items-center justify-center border border-slate-700 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
-                            >
-                                &raquo;
-                            </button>
                         </div>
+
+                        <!-- Next Arrow -->
+                        <button 
+                            @click="nextQuestion"
+                            :disabled="currentQuestionIndex === questions.length - 1"
+                            class="w-8 h-8 md:w-9 md:h-9 shrink-0 flex items-center justify-center border border-slate-700 bg-slate-800 text-white rounded-xl text-sm hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed font-bold transition-all"
+                        >
+                            &raquo;
+                        </button>
                     </div>
 
                 </div>

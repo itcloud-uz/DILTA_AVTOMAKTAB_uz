@@ -1791,7 +1791,7 @@
                 <!-- ==================== TAB: SOZLAMALAR ==================== -->
                 <div v-else-if="activeAdminTab === 'sozlamalar'" class="card-3d p-6 rounded-3xl flex flex-col gap-6 text-left">
                     <h2 class="text-lg font-bold text-slate-800 uppercase tracking-tight">// TIZIM SOZLAMALARI</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
                             <label class="text-xs font-bold text-gray-500">Maktab Nomi (Tizimda)</label>
                             <input type="text" value="DELTA_AVTOMAKTAB_UZ Haydovchilik Maktabi" class="p-2.5 rounded-xl border text-xs bg-slate-50 text-slate-500 font-medium" disabled />
@@ -1800,15 +1800,11 @@
                             <label class="text-xs font-bold text-gray-500">Test o'tish balli</label>
                             <input type="number" value="20" class="p-2.5 rounded-xl border text-xs bg-slate-50 text-slate-500 font-medium" disabled />
                         </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-xs font-bold text-gray-500">O'quvchi Tizimi Sarlavhasi (Ismi)</label>
-                            <input type="text" v-model="studentPanelNameSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
-                        </div>
                     </div>
 
                     <div class="border-t pt-6 flex flex-col gap-4">
-                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider">// PANEL PAROLLARINI O'ZGARTIRISH</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider">// ADMIN BOSH PAROLINI O'ZGARTIRISH</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-gray-500">Admin Login (Foydalanuvchi nomi)</label>
                                 <input type="text" v-model="adminUsernameSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
@@ -1816,14 +1812,6 @@
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-gray-500">Admin Maxfiy Parol</label>
                                 <input type="text" v-model="adminPasswordSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
-                            </div>
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-gray-500">O'quvchi Tizimi Logini</label>
-                                <input type="text" v-model="studentPanelUsernameSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
-                            </div>
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-gray-500">O'quvchi Tizimi Paroli</label>
-                                <input type="text" v-model="studentPanelPasswordSetting" class="p-2.5 rounded-xl border text-xs bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20" />
                             </div>
                         </div>
                         <p class="text-[10px] text-amber-600 font-bold uppercase tracking-wide bg-amber-50 p-3 rounded-xl border border-amber-200/50 mt-1">

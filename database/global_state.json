@@ -27,6 +27,8 @@
         3,
         2,
         2,
+        2,
+        2,
         2
       ],
       "tuition_status": "To'lagan",
@@ -276,6 +278,17 @@
       "subscription_end_date": "2026-11-15",
       "login": "ali",
       "password": "2323"
+    },
+    {
+      "id": 19,
+      "name": "laziz",
+      "class_name": "A-10",
+      "today_status": "keldi",
+      "grades": [],
+      "tuition_status": "Kutilmoqda",
+      "subscription_end_date": "2026-12-01",
+      "login": "",
+      "password": ""
     }
   ],
   "staff_list": [
@@ -667,6 +680,26 @@
       "student_id": 2,
       "student_name": "Madina Rustamova",
       "date": "2026-08-31 09:08",
+      "score": 0,
+      "total_questions": 20,
+      "level": 1,
+      "status": "Yiqildi (0/20)"
+    },
+    {
+      "id": 17,
+      "student_id": 2,
+      "student_name": "Madina Rustamova",
+      "date": "2026-08-31 09:17",
+      "score": 0,
+      "total_questions": 20,
+      "level": 1,
+      "status": "Yiqildi (0/20)"
+    },
+    {
+      "id": 18,
+      "student_id": 2,
+      "student_name": "Madina Rustamova",
+      "date": "2026-08-31 09:17",
       "score": 0,
       "total_questions": 20,
       "level": 1,
@@ -1360,7 +1393,7 @@
       "id": 100,
       "student_id": 2,
       "login_time": "2026-08-31 09:11",
-      "logout_time": "Ayni vaqtda faol"
+      "logout_time": "2026-08-31 09:17"
     }
   ],
   "student_penalties_list": [
@@ -1413,5 +1446,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1788167518907
+  "_version": 1788167981915
 }

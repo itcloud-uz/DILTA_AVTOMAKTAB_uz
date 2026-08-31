@@ -1444,26 +1444,29 @@
                                 <span class="font-black text-slate-700 block uppercase tracking-wide">// YANGI O'QUVCHINI RO'YXATGA OLISH</span>
                                 
                                 <div class="flex flex-col gap-1.5">
-                                    <label class="text-gray-500 font-bold">O'quvchi to'liq ismi (F.I.SH)</label>
-                                    <input type="text" v-model="newStudent.name" placeholder="Masalan: Dilshod Abduvaliyev" class="p-2.5 rounded-xl border bg-white" />
+                                    <label class="text-gray-500 dark:text-gray-400 font-bold">O'quvchi to'liq ismi (F.I.SH) *</label>
+                                    <input type="text" v-model="newStudent.name" placeholder="Masalan: Dilshod Abduvaliyev" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                                 </div>
                                 <div class="flex flex-col gap-1.5">
-                                    <label class="text-gray-500 font-bold">Guruhni tanlang</label>
-                                    <select v-model="newStudent.class_name" class="p-2.5 rounded-xl border bg-white text-xs">
-                                        <option v-for="c in classesList" :key="c.name" :value="c.name">[[ c.name ]] - [[ c.type ]]</option>
+                                    <label class="text-gray-500 dark:text-gray-400 font-bold">Guruhni tanlang *</label>
+                                    <select v-model="newStudent.class_name" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-bold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+                                        <option value="" disabled>-- Guruhni tanlang --</option>
+                                        <option v-for="c in classesList" :key="c.name" :value="c.name" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-semibold">
+                                            [[ c.name ]] - [[ c.type ]]
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="flex flex-col gap-1.5">
-                                    <label class="text-gray-500 font-bold">Tizim Logini (Username)</label>
-                                    <input type="text" v-model="newStudent.login" placeholder="Masalan: dilshod" class="p-2.5 rounded-xl border bg-white" />
+                                    <label class="text-gray-500 dark:text-gray-400 font-bold">Tizim Logini (Username) *</label>
+                                    <input type="text" v-model="newStudent.login" placeholder="Masalan: dilshod" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                                 </div>
                                 <div class="flex flex-col gap-1.5">
-                                    <label class="text-gray-500 font-bold">Kirish paroli</label>
-                                    <input type="text" v-model="newStudent.password" placeholder="Masalan: 12345" class="p-2.5 rounded-xl border bg-white" />
+                                    <label class="text-gray-500 dark:text-gray-400 font-bold">Kirish paroli *</label>
+                                    <input type="text" v-model="newStudent.password" placeholder="Masalan: 12345" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                                 </div>
                                 <div class="flex flex-col gap-1.5">
-                                    <label class="text-gray-500 font-bold">To'lov muddati tugash sanasi</label>
-                                    <input type="date" v-model="newStudent.subscription_end_date" class="p-2.5 rounded-xl border bg-white" />
+                                    <label class="text-gray-500 dark:text-gray-400 font-bold">To'lov muddati tugash sanasi</label>
+                                    <input type="date" v-model="newStudent.subscription_end_date" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-semibold text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" />
                                 </div>
                                 
                                 <button 

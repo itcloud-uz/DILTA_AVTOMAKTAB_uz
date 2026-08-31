@@ -24,7 +24,9 @@
       "grades": [
         4,
         4,
-        3
+        3,
+        2,
+        2
       ],
       "tuition_status": "To'lagan",
       "subscription_end_date": "2026-08-30",
@@ -638,6 +640,26 @@
       "total_questions": 20,
       "level": 1,
       "status": "Yiqildi (12/20)"
+    },
+    {
+      "id": 14,
+      "student_id": 2,
+      "student_name": "Madina Rustamova",
+      "date": "2026-08-31 08:43",
+      "score": 0,
+      "total_questions": 20,
+      "level": 1,
+      "status": "Yiqildi (0/20)"
+    },
+    {
+      "id": 15,
+      "student_id": 2,
+      "student_name": "Madina Rustamova",
+      "date": "2026-08-31 08:44",
+      "score": 0,
+      "total_questions": 20,
+      "level": 1,
+      "status": "Yiqildi (0/20)"
     }
   ],
   "student_attendance_list": [
@@ -1310,6 +1332,18 @@
       "student_id": 2,
       "login_time": "2026-08-31 08:29",
       "logout_time": "2026-08-31 08:29"
+    },
+    {
+      "id": 98,
+      "student_id": 2,
+      "login_time": "2026-08-31 08:42",
+      "logout_time": "2026-08-31 08:43"
+    },
+    {
+      "id": 99,
+      "student_id": 2,
+      "login_time": "2026-08-31 08:43",
+      "logout_time": "Ayni vaqtda faol"
     }
   ],
   "student_penalties_list": [
@@ -1362,5 +1396,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1788164983408
+  "_version": 1788165851822
 }

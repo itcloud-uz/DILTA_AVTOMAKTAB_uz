@@ -3160,36 +3160,46 @@
                 </div>
 
                 <!-- Retake & Level Transition Dashboard -->
-                <div class="flex flex-col gap-4 justify-center items-center w-full max-w-md mb-10">
+                <div class="flex flex-col gap-3 justify-center items-center w-full max-w-md mb-10">
                     <!-- Case 1: Passed (20/20 score) -> Can go to next level or retake -->
                     <template v-if="score === 20">
                         <button 
-                            @click="currentLevel = currentLevel + 1; resetTest();"
-                            class="w-full px-6 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-sm font-bold shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                            @click="currentLevel = currentLevel + 1; retakeTestImmediately();"
+                            class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white rounded-2xl text-sm font-black shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 border-b-4 border-b-emerald-800"
                         >
-                            <i data-lucide="play" class="w-4 h-4"></i> KEYINGI BOSQICHGA O'TISH (BOSQICH [[ currentLevel + 1 ]])
+                            🚀 KEYINGI BOSQICHGA O'TISH (BOSQICH [[ currentLevel + 1 ]])
                         </button>
                         <button 
-                            @click="resetTest"
-                            class="w-full px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2"
+                            @click="retakeTestImmediately"
+                            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-98 text-white rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 border-b-4 border-b-blue-800"
                         >
-                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> USHBU BOSQICHNI QAYTA TOPSHIRISH
+                            🔄 USHBU BOSQICHNI QAYTA TOPSHIRISH
+                        </button>
+                        <button 
+                            @click="returnToDashboard"
+                            class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 hover:text-white rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 border border-slate-700"
+                        >
+                            🏠 BOSH SAHIFAGA QAYTISH
                         </button>
                     </template>
 
-                    <!-- Case 2: Failed (score < 20) -> Must retake this level -->
+                    <!-- Case 2: Failed (score < 20) -> Must retake this level or return -->
                     <template v-else>
-                        <div class="w-full flex flex-col items-center gap-3">
-                            <span class="text-xs text-rose-500 font-bold uppercase tracking-wider bg-rose-50 px-4 py-2 rounded-full border border-rose-200 text-center">
-                                🔒 KEYINGI BOSQICH QULFLANGAN (20/20 BALL TO'PLASHINGIZ SHART)
-                            </span>
-                            <button 
-                                @click="resetTest"
-                                class="w-full px-6 py-4 bg-[#0066cc] hover:bg-blue-700 text-white rounded-2xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2"
-                            >
-                                <i data-lucide="rotate-ccw" class="w-4 h-4"></i> QAYTA TOPSHIRISH
-                            </button>
-                        </div>
+                        <span class="text-xs text-rose-500 font-bold uppercase tracking-wider bg-rose-50 px-4 py-2 rounded-full border border-rose-200 text-center w-full">
+                            🔒 KEYINGI BOSQICH QULFLANGAN (20/20 BALL TO'PLASHINGIZ SHART)
+                        </span>
+                        <button 
+                            @click="retakeTestImmediately"
+                            class="w-full py-4 bg-[#0066cc] hover:bg-blue-700 active:scale-98 text-white rounded-2xl text-sm font-black shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2 border-b-4 border-b-blue-800"
+                        >
+                            🔄 QAYTA TOPSHIRISH
+                        </button>
+                        <button 
+                            @click="returnToDashboard"
+                            class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 active:scale-98 text-slate-200 hover:text-white rounded-2xl text-xs font-bold transition-all flex items-center justify-center gap-2 border border-slate-700 shadow-sm"
+                        >
+                            🏠 BOSH SAHIFAGA QAYTISH
+                        </button>
                     </template>
 
                 </div>
@@ -5330,6 +5340,27 @@
                     }
                     // Load fresh questions for current level from backend
                     await loadQuestions();
+                };
+
+                const returnToDashboard = () => {
+                    userAnswers.value = {};
+                    currentQuestionIndex.value = 0;
+                    testFinished.value = false;
+                    reviewFilter.value = 'all';
+                    isTestStarted.value = false;
+                    if (loggedInUserType.value === 'student') {
+                        activeStudentTab.value = 'dashboard';
+                    }
+                };
+
+                const retakeTestImmediately = async () => {
+                    userAnswers.value = {};
+                    currentQuestionIndex.value = 0;
+                    testFinished.value = false;
+                    reviewFilter.value = 'all';
+                    await loadQuestions();
+                    isTestStarted.value = true;
+                    startTimer();
                 };
 
                 const confirmAndResetTest = () => {

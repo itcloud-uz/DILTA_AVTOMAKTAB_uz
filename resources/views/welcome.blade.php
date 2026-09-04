@@ -2918,29 +2918,30 @@
                     
                     <!-- Timer and Action Buttons -->
                     <div class="flex flex-wrap items-center justify-between w-full xl:w-auto gap-3 sm:gap-4">
-                        <!-- Compact Pill Timer -->
-                        <div class="flex items-center gap-3 bg-[#0f1728] px-4 py-2 rounded-2xl border border-slate-800 shadow-inner">
-                            <div class="relative w-11 h-11 flex items-center justify-center shrink-0">
+                        <!-- High-Visibility Large Pill Timer -->
+                        <div class="flex items-center gap-4 bg-[#0b1324] px-5 py-3 md:px-6 md:py-3.5 rounded-2xl border-2 border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+                            <div class="relative w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shrink-0">
                                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                     <circle 
-                                        cx="50" cy="50" r="42" 
-                                        stroke="#334155" stroke-width="8" 
+                                        cx="50" cy="50" r="40" 
+                                        stroke="#1e293b" stroke-width="10" 
                                         fill="transparent" 
                                     />
                                     <circle 
-                                        cx="50" cy="50" r="42" 
-                                        stroke="#10b981" stroke-width="8" 
+                                        cx="50" cy="50" r="40" 
+                                        stroke="#10b981" stroke-width="10" 
+                                        stroke-linecap="round"
                                         fill="transparent" 
-                                        class="timer-circle"
-                                        :stroke-dasharray="263.89"
+                                        class="timer-circle transition-all duration-1000"
+                                        :stroke-dasharray="251.32"
                                         :stroke-dashoffset="dashOffset"
                                     />
                                 </svg>
-                                <span class="absolute text-sm font-black text-emerald-400">⏱️</span>
+                                <span class="absolute text-xl md:text-2xl font-black">⏱️</span>
                             </div>
-                            <div class="flex flex-col text-left">
-                                <span class="text-[9px] font-mono text-gray-400 uppercase font-bold">Qolgan vaqt</span>
-                                <span class="text-base font-black text-white font-mono tracking-wider">[[ formattedTime ]]</span>
+                            <div class="flex flex-col text-left justify-center">
+                                <span class="text-[11px] md:text-xs font-mono text-gray-400 uppercase font-black tracking-widest">Qolgan vaqt</span>
+                                <span class="text-xl md:text-3xl font-black text-emerald-400 font-mono tracking-wider drop-shadow-sm">[[ formattedTime ]]</span>
                             </div>
                         </div>
 
@@ -4900,7 +4901,7 @@
 
                 // Circular dashoffset computation
                 const dashOffset = computed(() => {
-                    const maxOffset = 263.89; // 2 * PI * r (r=42)
+                    const maxOffset = 251.32; // 2 * PI * r (r=40)
                     const totalMaxSeconds = 25 * 60;
                     return maxOffset - (totalSeconds.value / totalMaxSeconds) * maxOffset;
                 });

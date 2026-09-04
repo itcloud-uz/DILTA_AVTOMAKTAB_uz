@@ -287,7 +287,7 @@
       "grades": [],
       "tuition_status": "Kutilmoqda",
       "subscription_end_date": "2026-12-01",
-      "login": "",
+      "login": "aaa",
       "password": ""
     }
   ],
@@ -1039,7 +1039,7 @@
       "id": 10,
       "student_id": 1,
       "login_time": "2026-08-04 08:06",
-      "logout_time": "Ayni vaqtda faol"
+      "logout_time": "2026-09-04 11:16"
     },
     {
       "id": 9,
@@ -1394,6 +1394,24 @@
       "student_id": 2,
       "login_time": "2026-08-31 09:11",
       "logout_time": "2026-08-31 09:17"
+    },
+    {
+      "id": 101,
+      "student_id": 1,
+      "login_time": "2026-09-04 11:16",
+      "logout_time": "2026-09-04 11:17"
+    },
+    {
+      "id": 102,
+      "student_id": 14,
+      "login_time": "2026-09-04 11:17",
+      "logout_time": "2026-09-04 11:17"
+    },
+    {
+      "id": 103,
+      "student_id": 2,
+      "login_time": "2026-09-04 11:18",
+      "logout_time": "2026-09-04 11:18"
     }
   ],
   "student_penalties_list": [
@@ -1446,5 +1464,5 @@
       "status": "To'lanmagan"
     }
   ],
-  "_version": 1788167981915
+  "_version": 1788520775617
 }

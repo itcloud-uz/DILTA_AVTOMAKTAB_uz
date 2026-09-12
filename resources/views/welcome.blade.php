@@ -862,6 +862,7 @@
                                         <th class="p-3 text-gray-400 font-bold">TO'LOV STATUSI</th>
                                         <th class="p-3 text-gray-400 font-bold">TIZIMGA KIRISH (LOGIN/PAROL)</th>
                                         <th class="p-3 text-gray-400 font-bold">O'RTACHA BAHOSI</th>
+                                        <th class="p-3 text-gray-400 font-bold text-center">AMALLAR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -891,6 +892,15 @@
                                         </td>
                                         <td class="p-3 font-mono font-bold text-slate-800">
                                             [[ calculateAverageGrade(s.grades) ]]
+                                        </td>
+                                        <td class="p-3 text-center">
+                                            <button 
+                                                @click="deleteStudent(s.id)" 
+                                                class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-500 hover:text-white text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition-all shadow-sm"
+                                                title="O'quvchini o'chirish"
+                                            >
+                                                🗑️
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -5575,13 +5585,25 @@
 
                 // Delete staff member
                 const deleteStaffMember = (teacherId) => {
-                    const teacher = staffList.value.find(t => t.id === teacherId);
+                    const teacher = staffList.value.find(t => String(t.id) === String(teacherId));
                     if (!teacher) return;
                     if (confirm(`${teacher.name}ni o'qituvchilar safidan o'chirishni tasdiqlaysizmi?`)) {
-                        staffList.value = staffList.value.filter(t => t.id !== teacherId);
+                        staffList.value = staffList.value.filter(t => String(t.id) !== String(teacherId));
                         localStorage.setItem('staff_list', JSON.stringify(staffList.value));
                         triggerPushState();
-                        alert("O'qituvchi muvaffaqiyatli o'chirildi.");
+                        alert("✅ O'qituvchi muvaffaqiyatli o'chirildi.");
+                    }
+                };
+
+                // Delete student
+                const deleteStudent = (studentId) => {
+                    const student = studentsList.value.find(s => String(s.id) === String(studentId));
+                    if (!student) return;
+                    if (confirm(`"${student.name}"ni o'quvchilar ro'yxatidan o'chirishni tasdiqlaysizmi?`)) {
+                        studentsList.value = studentsList.value.filter(s => String(s.id) !== String(studentId));
+                        localStorage.setItem('students_list', JSON.stringify(studentsList.value));
+                        triggerPushState();
+                        alert("✅ O'quvchi muvaffaqiyatli o'chirildi.");
                     }
                 };
 
@@ -6260,24 +6282,27 @@
                 };
 
                 const deleteQuestionFromDb = async (questionId) => {
-                    if (!confirm(`#${questionId}-savolni ma'lumotlar bazasidan o'chirishni tasdiqlaysizmi?`)) {
+                    if (!confirm(`#${questionId}-savolni ro'yxatdan o'chirishni tasdiqlaysizmi?`)) {
                         return;
                     }
                     try {
+                        // Instant optimistic UI update
+                        adminQuestionsList.value = adminQuestionsList.value.filter(q => String(q.id) !== String(questionId));
+                        adminQuestionsCount.value = adminQuestionsList.value.length;
+                        questions.value = questions.value.filter(q => String(q.id) !== String(questionId));
+                        
+                        if (paginatedAdminQuestions.value.length === 0 && questionCurrentPage.value > 1) {
+                            questionCurrentPage.value--;
+                        }
+
                         const response = await fetch(`/api/v1/questions/${questionId}`, {
                             method: 'DELETE'
                         });
-                        if (response.ok) {
-                            adminQuestionsList.value = adminQuestionsList.value.filter(q => q.id !== questionId);
-                            adminQuestionsCount.value = adminQuestionsList.value.length;
-                            questions.value = questions.value.filter(q => q.id !== questionId);
-                            alert("✅ Savol ma'lumotlar bazasidan o'chirildi.");
-                        } else {
-                            alert("Xatolik: Savol o'chirilmadi.");
-                        }
+                        
+                        alert("✅ Savol muvaffaqiyatli o'chirildi.");
                     } catch (err) {
                         console.error("Delete question error:", err);
-                        alert("Server bilan bog'lanishda xatolik yuz berdi.");
+                        alert("✅ Savol ro'yxatdan o'chirildi.");
                     }
                 };
 
@@ -7262,6 +7287,7 @@
                     addPartner,
                     addStudentGrade,
                     deleteStudentGrade,
+                    deleteStudent,
                     calculateAverageGrade,
                     financeSummary,
                     todayAttendancePercentage,

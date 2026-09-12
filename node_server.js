@@ -623,12 +623,14 @@ app.put('/api/v1/questions/:id', (req, res) => {
 app.delete('/api/v1/questions/:id', (req, res) => {
     try {
         const { id } = req.params;
-        const stmt = db.prepare("DELETE FROM questions WHERE id = :id");
-        stmt.run({ ':id': parseInt(id, 10) });
-        stmt.free();
+        const parsedId = parseInt(id, 10);
+        if (!isNaN(parsedId)) {
+            db.run("DELETE FROM questions WHERE id = ?", [parsedId]);
+        }
+        db.run("DELETE FROM questions WHERE id = ?", [id]);
 
         persistDatabase();
-        res.json({ success: true, deleted_id: parseInt(id, 10) });
+        res.json({ success: true, deleted_id: parsedId || id });
     } catch (e) {
         console.error("API Delete Question Error:", e);
         res.status(500).json({ error: "Server failed to delete question" });
